@@ -44,5 +44,4 @@ class MainActivity : AppCompatActivity() {
     private fun onDashboardClicked() {
         message.setText(R.string.title_dashboard)
     }
-
 }
