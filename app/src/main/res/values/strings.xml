@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Car Expenses</string>
+    <string name="title_lpg">Lpg</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+</resources>
