@@ -1,26 +1,29 @@
 package com.carexpenses.akhutornoy.carexpenses
 
+import android.arch.lifecycle.ViewModelProviders
 import android.widget.EditText
 import android.widget.Toast
 import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
-import com.carexpenses.akhutornoy.carexpenses.domain.Db
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill.DistanceMode
-import com.carexpenses.akhutornoy.carexpenses.domain.RefillDao
 import com.carexpenses.akhutornoy.carexpenses.utils.applySchedulersCompletable
-import com.carexpenses.akhutornoy.carexpenses.utils.applySchedulersFlowable
-import io.reactivex.Completable
+import com.carexpenses.akhutornoy.carexpenses.utils.applySchedulersSingle
 import kotlinx.android.synthetic.main.fragment_lpg.*
 
-class LpgFragment : BaseFragment() {
+private const val TEMP_REFILL_ID = 1L
 
-    private lateinit var refillDao: RefillDao
+class LpgFragment : BaseFragment<RefillViewModel>() {
+
+    override val viewModelClass = RefillViewModel::class.java
+
+//    private lateinit var refillDao: RefillDao
 
     override fun fragmentLayoutId(): Int {
         return R.layout.fragment_lpg
     }
 
-    override fun initViews() {
+    override fun init() {
+        ViewModelProviders.of(this, null)
         initListeners()
     }
 
@@ -30,7 +33,7 @@ class LpgFragment : BaseFragment() {
 
     private fun onButtonDoneClicked() {
         val refill = Refill(
-                createdAt = 1,
+                createdAt = TEMP_REFILL_ID,
                 litersCount = et_liters.getIntValue(),
                 moneyCount = et_money.getIntValue(),
                 lastDistance = et_last_distance.getIntValue(),
@@ -38,12 +41,13 @@ class LpgFragment : BaseFragment() {
                 note = et_note.text.toString()
         )
 
-        Completable
-                .fromAction({ refillDao.insert(refill) })
+        unsubscribeOnStop(
+                viewModel.insert(refill)
                 .applySchedulersCompletable()
                 .subscribe(
                         { Toast.makeText(requireActivity(), "Saved", Toast.LENGTH_SHORT).show() },
                         { onError(it) })
+        )
     }
 
     private fun EditText.getIntValue() =
@@ -59,19 +63,27 @@ class LpgFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        refillDao = Db.getInstance(requireActivity()).refillDao()
+//        refillDao = Db.getInstance(requireActivity()).refillDao()
         loadFromDb()
     }
 
     private fun loadFromDb() {
+        unsubscribeOnStop(
+                viewModel
+                        .getById(TEMP_REFILL_ID)
+                        .applySchedulersSingle()
+                        .subscribe(
+                                { showRefill(it) },
+                                { handleError(it) }
+                        )
+        )
+    }
 
-        refillDao
-                .getAll()
-                .applySchedulersFlowable()
-                .subscribe(
-                        { showRestoredFromDb(it) },
-                        { onError(it) }
-                )
+    private fun handleError(error: Throwable) {
+        if (error is ItemNotFoundExeption) {
+            showInfoMessage("No Last Refill item")
+        }
+        onError(error)
     }
 
     private fun showRestoredFromDb(it: List<Refill>) {

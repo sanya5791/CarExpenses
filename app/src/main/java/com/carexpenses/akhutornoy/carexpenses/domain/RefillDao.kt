@@ -17,4 +17,7 @@ interface RefillDao {
 
     @Delete
     fun delete(refill: Refill)
+
+    @Query("SELECT * FROM REFILL WHERE createdAt == :createdAt")
+    fun getByCreatedAt(createdAt: Long): Refill?
 }

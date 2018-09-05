@@ -1,5 +1,7 @@
 package com.carexpenses.akhutornoy.carexpenses.base
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
@@ -8,8 +10,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.carexpenses.akhutornoy.carexpenses.Injection
+import com.carexpenses.akhutornoy.carexpenses.utils.unsafeLazy
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment<T : ViewModel> : Fragment() {
+
+    abstract val viewModelClass: Class<T>
+
+    protected val viewModel: T by unsafeLazy {
+        ViewModelProviders.of(this, Injection.provideViewModelFactory(requireActivity()))
+                .get(viewModelClass)
+    }
+
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(fragmentLayoutId(), container, false)
@@ -20,10 +35,19 @@ abstract class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
+        init()
     }
 
-    protected abstract fun initViews()
+    protected abstract fun init()
+
+    protected fun unsubscribeOnStop(disposable: Disposable) {
+        this.disposable.add(disposable)
+    }
+
+    override fun onStop() {
+        disposable.clear()
+        super.onStop()
+    }
 
     protected fun onError(error: Throwable) {
         Log.e("TAG is NOT set yet", error.message, error)
