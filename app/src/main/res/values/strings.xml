@@ -3,4 +3,5 @@
     <string name="title_lpg">Lpg</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="all_ok">Ok</string>
 </resources>

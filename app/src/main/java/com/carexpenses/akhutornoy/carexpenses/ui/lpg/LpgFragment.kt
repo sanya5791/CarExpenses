@@ -1,30 +1,42 @@
-package com.carexpenses.akhutornoy.carexpenses
+package com.carexpenses.akhutornoy.carexpenses.ui.lpg
 
-import android.arch.lifecycle.ViewModelProviders
+import android.arch.lifecycle.Observer
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
+import com.carexpenses.akhutornoy.carexpenses.base.exceptions.ItemNotFoundExeption
+import com.carexpenses.akhutornoy.carexpenses.R
+import com.carexpenses.akhutornoy.carexpenses.base.BaseDaggerFragment
+import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill.DistanceMode
-import com.carexpenses.akhutornoy.carexpenses.utils.applySchedulersCompletable
-import com.carexpenses.akhutornoy.carexpenses.utils.applySchedulersSingle
 import kotlinx.android.synthetic.main.fragment_lpg.*
+import javax.inject.Inject
 
 private const val TEMP_REFILL_ID = 1L
 
-class LpgFragment : BaseFragment<RefillViewModel>() {
-
-    override val viewModelClass = RefillViewModel::class.java
-
-//    private lateinit var refillDao: RefillDao
+class LpgFragment : BaseDaggerFragment() {
+    @Inject
+    lateinit var viewModel : RefillViewModel
 
     override fun fragmentLayoutId(): Int {
         return R.layout.fragment_lpg
     }
 
+    override fun getBaseViewModel(): BaseViewModel? {
+        return viewModel
+    }
+
     override fun init() {
-        ViewModelProviders.of(this, null)
         initListeners()
+        viewModel.showProgressLiveData.observe(this, Observer {
+            needShow ->
+            if (needShow!!) {
+                progressBar.visibility = View.VISIBLE
+            } else {
+                progressBar.visibility = View.GONE
+            }
+        })
     }
 
     private fun initListeners() {
@@ -40,14 +52,19 @@ class LpgFragment : BaseFragment<RefillViewModel>() {
                 distanceMode = getSelectedDistanceMode().value,
                 note = et_note.text.toString()
         )
+        viewModel.insert(refill).observe(this, Observer {isInserted ->
+            //TODO get rid of check Null
+            if (isInserted == null) {
+                return@Observer
+            }
+            if(isInserted){
+                onInsertedSuccess()
+            }
+        })
+    }
 
-        unsubscribeOnStop(
-                viewModel.insert(refill)
-                .applySchedulersCompletable()
-                .subscribe(
-                        { Toast.makeText(requireActivity(), "Saved", Toast.LENGTH_SHORT).show() },
-                        { onError(it) })
-        )
+    private fun onInsertedSuccess() {
+        Toast.makeText(requireActivity().applicationContext, "Saved", Toast.LENGTH_SHORT).show()
     }
 
     private fun EditText.getIntValue() =
@@ -63,20 +80,12 @@ class LpgFragment : BaseFragment<RefillViewModel>() {
 
     override fun onStart() {
         super.onStart()
-//        refillDao = Db.getInstance(requireActivity()).refillDao()
         loadFromDb()
     }
 
     private fun loadFromDb() {
-        unsubscribeOnStop(
-                viewModel
-                        .getById(TEMP_REFILL_ID)
-                        .applySchedulersSingle()
-                        .subscribe(
-                                { showRefill(it) },
-                                { handleError(it) }
-                        )
-        )
+        viewModel.getById(TEMP_REFILL_ID)
+                .observe(this, Observer { showRefill(it!!) })
     }
 
     private fun handleError(error: Throwable) {

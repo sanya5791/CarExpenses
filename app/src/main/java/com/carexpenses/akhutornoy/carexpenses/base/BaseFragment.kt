@@ -1,7 +1,6 @@
 package com.carexpenses.akhutornoy.carexpenses.base
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProviders
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
@@ -10,21 +9,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.carexpenses.akhutornoy.carexpenses.Injection
-import com.carexpenses.akhutornoy.carexpenses.utils.unsafeLazy
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import com.carexpenses.akhutornoy.carexpenses.R
 
-abstract class BaseFragment<T : ViewModel> : Fragment() {
-
-    abstract val viewModelClass: Class<T>
-
-    protected val viewModel: T by unsafeLazy {
-        ViewModelProviders.of(this, Injection.provideViewModelFactory(requireActivity()))
-                .get(viewModelClass)
-    }
-
-    private val disposable = CompositeDisposable()
+abstract class BaseFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(fragmentLayoutId(), container, false)
@@ -36,18 +23,16 @@ abstract class BaseFragment<T : ViewModel> : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+        getBaseViewModel()?.showError?.observe(this, Observer { handleErrorMessage(it!!) })
+    }
+
+    protected fun handleErrorMessage(errorMessage: String) {
+        Log.e("Error", errorMessage)
     }
 
     protected abstract fun init()
 
-    protected fun unsubscribeOnStop(disposable: Disposable) {
-        this.disposable.add(disposable)
-    }
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
+    protected abstract fun getBaseViewModel(): BaseViewModel?
 
     protected fun onError(error: Throwable) {
         Log.e("TAG is NOT set yet", error.message, error)
@@ -57,7 +42,7 @@ abstract class BaseFragment<T : ViewModel> : Fragment() {
     protected fun showInfoMessage(message: String) {
         AlertDialog.Builder(requireActivity())
                 .setMessage(message)
-                .setNegativeButton("Ok", { dialog, _ -> dialog.cancel() })
+                .setNegativeButton(getString(R.string.all_ok)) { dialog, _ -> dialog.cancel() }
                 .show()
     }
 }
