@@ -39,8 +39,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun onLpgClicked() {
         setNotImplementedVisible(false)
+
+        val lpgFragmentTag = LpgFragment::class.java.simpleName
+        val lpgFragment = supportFragmentManager.findFragmentByTag(lpgFragmentTag)?: LpgFragment.newInstance()
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, LpgFragment.newInstance(), LpgFragment::class.java.simpleName)
+                .replace(R.id.fragment_container, lpgFragment, lpgFragmentTag)
                 .commit()
     }
 

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.carexpenses.akhutornoy.carexpenses.R
+import kotlinx.android.synthetic.main.fragment_lpg.*
 
 abstract class BaseFragment: Fragment() {
 
@@ -23,11 +24,27 @@ abstract class BaseFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+        handleErrors()
+        handleProgressBar()
+    }
+
+    private fun handleErrors() {
         getBaseViewModel()?.showError?.observe(this, Observer { handleErrorMessage(it!!) })
     }
 
     protected fun handleErrorMessage(errorMessage: String) {
         Log.e("Error", errorMessage)
+    }
+
+    private fun handleProgressBar() {
+        getBaseViewModel()?.showProgressLiveData?.observe(this, Observer {
+            needShow ->
+            if (needShow!!) {
+                progressBar.visibility = View.VISIBLE
+            } else {
+                progressBar.visibility = View.GONE
+            }
+        })
     }
 
     protected abstract fun init()

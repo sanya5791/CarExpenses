@@ -29,14 +29,7 @@ class LpgFragment : BaseDaggerFragment() {
 
     override fun init() {
         initListeners()
-        viewModel.showProgressLiveData.observe(this, Observer {
-            needShow ->
-            if (needShow!!) {
-                progressBar.visibility = View.VISIBLE
-            } else {
-                progressBar.visibility = View.GONE
-            }
-        })
+        loadFromDb()
     }
 
     private fun initListeners() {
@@ -77,11 +70,6 @@ class LpgFragment : BaseDaggerFragment() {
                 R.id.rb_mixed_mode -> DistanceMode.MIXED
                 else -> throw IllegalArgumentException("Not a case")
             }
-
-    override fun onStart() {
-        super.onStart()
-        loadFromDb()
-    }
 
     private fun loadFromDb() {
         viewModel.getById(TEMP_REFILL_ID)

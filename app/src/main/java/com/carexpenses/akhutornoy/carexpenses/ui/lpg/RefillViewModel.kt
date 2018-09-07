@@ -14,12 +14,11 @@ import io.reactivex.schedulers.Schedulers
 class RefillViewModel(
         private val refillDao: RefillDao) : BaseViewModel() {
 
-    val showProgressLiveData = MutableLiveData<Boolean>()
-
-    private val onInsertedLiveData = MutableLiveData<Boolean>()
-    private val onLoadByIdLiveData = MutableLiveData<Refill>()
+    private lateinit var onLoadByIdLiveData: MutableLiveData<Refill>
+    private var onInsertedLiveData = MutableLiveData<Boolean>()
 
     fun insert(refill: Refill): LiveData<Boolean> {
+
         autoUnsubscribe(
                 Completable.fromAction { refillDao.insert(refill) }
                         .subscribeOn(Schedulers.io())
@@ -35,6 +34,11 @@ class RefillViewModel(
     }
 
     fun getById(id: Long): LiveData<Refill> {
+        if (::onLoadByIdLiveData.isInitialized) {
+            return onLoadByIdLiveData
+        }
+
+        onLoadByIdLiveData = MutableLiveData()
         autoUnsubscribe(
                 Single.fromCallable { refillDao.getByCreatedAt(id)?: throw ItemNotFoundExeption() }
                         .subscribeOn(Schedulers.io())
