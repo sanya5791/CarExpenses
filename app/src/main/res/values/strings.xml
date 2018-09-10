@@ -5,4 +5,9 @@
     <string name="title_service">Service</string>
     <string name="all_not_implemented_yet">Not Implemented Yet</string>
     <string name="all_ok">Ok</string>
+    <string name="all_date">Date</string>
+    <string name="all_l">L</string>
+    <string name="all_l_per_100km">L/100Km</string>
+    <string name="all_traffic">Traffic</string>
+    <string name="all_note">Note</string>
 </resources>

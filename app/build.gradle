@@ -28,6 +28,7 @@ dependencies {
     implementation "com.android.support:design:$appcompat_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation "com.android.support:recyclerview-v7:$recyclerview_version"
 
     //Dagger 2
     implementation "com.google.dagger:dagger:$dagger_version"
@@ -43,6 +44,9 @@ dependencies {
     // RXJava
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+    //Tibmer
+    implementation "com.github.ajalt:timberkt:$timber_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

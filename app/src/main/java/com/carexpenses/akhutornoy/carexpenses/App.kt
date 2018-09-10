@@ -4,6 +4,7 @@ import com.carexpenses.akhutornoy.carexpenses.di.app.DaggerAppComponent
 import com.carexpenses.akhutornoy.carexpenses.di.app.bins.AppModule
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
+import timber.log.Timber
 
 class App : DaggerApplication() {
 
@@ -11,5 +12,10 @@ class App : DaggerApplication() {
         return DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .build()
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        Timber.plant(Timber.DebugTree())
     }
 }

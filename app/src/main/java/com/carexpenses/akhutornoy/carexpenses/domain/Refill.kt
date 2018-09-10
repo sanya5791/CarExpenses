@@ -8,29 +8,45 @@ data class Refill(
         @PrimaryKey
         val createdAt: Long,
         val editedAt: Long = createdAt,
+        val fuelType:  Int = UNSET_INT,
         val litersCount: Int = UNSET_INT,
         val moneyCount: Int = UNSET_INT,
         val lastDistance: Int = UNSET_INT,
-        val distanceMode: Int = UNSET_INT,
-        val note: String = ""
+        val trafficMode: Int = TrafficMode.CITY.value,
+        val note: String = UNSET_STR
 ) {
 
-    fun distanceMode(): DistanceMode {
-        for (value in DistanceMode.values()) {
-            if (distanceMode == value.value) {
+    fun fuelType(): FuelType {
+        for (value in FuelType.values()) {
+            if (fuelType == value.value) {
+                return value
+            }
+        }
+        throw IllegalArgumentException("Can't find '${FuelType::class.java.simpleName}' for value=$fuelType")
+    }
+
+    fun trafficMode(): TrafficMode {
+        for (value in TrafficMode.values()) {
+            if (trafficMode == value.value) {
                 return value
             }
         }
         throw IllegalArgumentException()
     }
 
-    enum class DistanceMode (val value: Int) {
+    enum class FuelType (val value: Int) {
+        PETROL(0),
+        LPG(1),
+    }
+
+    enum class TrafficMode (val value: Int) {
         CITY(0),
         HIGHWAY(1),
         MIXED(2)
     }
 
     companion object {
-        const val UNSET_INT: Int = 0
+        const val UNSET_INT: Int = -1
+        const val UNSET_STR: String = ""
     }
 }

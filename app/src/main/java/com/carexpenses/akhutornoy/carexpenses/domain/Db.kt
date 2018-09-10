@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 
-@Database(entities = [(Refill::class)], version = 1)
+@Database(entities = [(Refill::class)], version = 2, exportSchema = false)
 abstract class Db : RoomDatabase() {
     abstract fun refillDao(): RefillDao
 
@@ -19,7 +19,7 @@ abstract class Db : RoomDatabase() {
 
         private fun createInstance(context: Context) =
                 Room.databaseBuilder(context.applicationContext, Db::class.java, "CarExpenses")
-                        .allowMainThreadQueries()
+                        .fallbackToDestructiveMigration()
                         .build()
     }
 }

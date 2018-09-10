@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.carexpenses.akhutornoy.carexpenses.R
-import kotlinx.android.synthetic.main.fragment_lpg.*
 
 abstract class BaseFragment: Fragment() {
 
@@ -40,9 +39,9 @@ abstract class BaseFragment: Fragment() {
         getBaseViewModel()?.showProgressLiveData?.observe(this, Observer {
             needShow ->
             if (needShow!!) {
-                progressBar.visibility = View.VISIBLE
+                getProgressBar()?.visibility = View.VISIBLE
             } else {
-                progressBar.visibility = View.GONE
+                getProgressBar()?.visibility = View.GONE
             }
         })
     }
@@ -50,6 +49,8 @@ abstract class BaseFragment: Fragment() {
     protected abstract fun init()
 
     protected abstract fun getBaseViewModel(): BaseViewModel?
+
+    protected abstract fun getProgressBar(): View?
 
     protected fun onError(error: Throwable) {
         Log.e("TAG is NOT set yet", error.message, error)

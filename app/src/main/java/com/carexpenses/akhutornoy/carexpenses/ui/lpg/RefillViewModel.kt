@@ -6,10 +6,10 @@ import com.carexpenses.akhutornoy.carexpenses.base.exceptions.ItemNotFoundExepti
 import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.RefillDao
+import com.carexpenses.akhutornoy.carexpenses.utils.applyProgressBar
+import com.carexpenses.akhutornoy.carexpenses.utils.applySchedulers
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class RefillViewModel(
         private val refillDao: RefillDao) : BaseViewModel() {
@@ -21,10 +21,8 @@ class RefillViewModel(
 
         autoUnsubscribe(
                 Completable.fromAction { refillDao.insert(refill) }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe { showProgressLiveData.value = true }
-                        .doOnComplete { showProgressLiveData.value = false }
+                        .applySchedulers()
+                        .applyProgressBar(this)
                         .subscribe(
                                 { onInsertedLiveData.value = true },
                                 { showError.value = it.message })
@@ -41,10 +39,8 @@ class RefillViewModel(
         onLoadByIdLiveData = MutableLiveData()
         autoUnsubscribe(
                 Single.fromCallable { refillDao.getByCreatedAt(id)?: throw ItemNotFoundExeption() }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe { showProgressLiveData.value = true }
-                        .doAfterSuccess { showProgressLiveData.value = false }
+                        .applySchedulers()
+                        .applyProgressBar(this)
                         .subscribe(
                                 { onLoadByIdLiveData.value = it },
                                 { showError.value = it.message })

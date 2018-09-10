@@ -18,4 +18,7 @@ abstract class BaseViewModel : ViewModel() {
         super.onCleared()
         autoUnsubscribe.clear()
     }
+    protected fun showError(error: Throwable) {
+        showError.value = error.message
+    }
 }

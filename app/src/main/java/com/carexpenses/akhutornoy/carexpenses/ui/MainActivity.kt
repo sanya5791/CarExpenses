@@ -1,14 +1,14 @@
 package com.carexpenses.akhutornoy.carexpenses.ui
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.carexpenses.akhutornoy.carexpenses.ui.lpg.LpgFragment
 import com.carexpenses.akhutornoy.carexpenses.R
+import com.carexpenses.akhutornoy.carexpenses.base.BaseActivity
+import com.carexpenses.akhutornoy.carexpenses.ui.list.RefillListFragment
+import com.carexpenses.akhutornoy.carexpenses.ui.lpg.LpgFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.Navigation {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,11 +39,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun onLpgClicked() {
         setNotImplementedVisible(false)
-
-        val lpgFragmentTag = LpgFragment::class.java.simpleName
-        val lpgFragment = supportFragmentManager.findFragmentByTag(lpgFragmentTag)?: LpgFragment.newInstance()
+        val fragmentTag = RefillListFragment::class.java.simpleName
+        val lpgFragment = supportFragmentManager.findFragmentByTag(fragmentTag)?: RefillListFragment.newInstance()
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, lpgFragment, lpgFragmentTag)
+                .replace(R.id.fragment_container, lpgFragment, fragmentTag)
                 .commit()
     }
 
@@ -74,4 +73,13 @@ class MainActivity : AppCompatActivity() {
         }
         notImplementedTextView.visibility = visibilityState
     }
+
+    override fun navigateToCreateNewRefill() {
+        replaceFragment(LpgFragment.newInstance())
+    }
+
+    override fun navigateOnNewRefillCreated() {
+        onBackPressed()
+    }
+
 }

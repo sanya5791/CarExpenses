@@ -18,6 +18,12 @@ interface RefillDao {
     @Delete
     fun delete(refill: Refill)
 
-    @Query("SELECT * FROM REFILL WHERE createdAt == :createdAt")
+    @Query("SELECT * FROM Refill WHERE createdAt == :createdAt")
     fun getByCreatedAt(createdAt: Long): Refill?
+
+    @Query("SELECT * FROM Refill WHERE fuelType == :fuelType")
+            /**
+             * @param fuelType: use Refill.FuelType
+             */
+    fun getByFuelType(fuelType: Int): Flowable<List<Refill>>
 }
