@@ -4,11 +4,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.carexpenses.akhutornoy.carexpenses.R
 import kotlinx.android.synthetic.main.item_refill.view.*
 
-class RefillListAdapter(var items: List<RefillItem>) : RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {
+class RefillListAdapter(var items: List<RefillItem>, val listener: OnItemSelected<RefillItem>) : RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -20,17 +19,15 @@ class RefillListAdapter(var items: List<RefillItem>) : RecyclerView.Adapter<Refi
             = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
-            = holder.bind(items[position])
+            = holder.bind(items[position], listener)
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         lateinit var item: RefillItem
 
-        fun bind(item: RefillItem) {
+        fun bind(item: RefillItem, listener: OnItemSelected<RefillItem>) {
             this.item = item
 
-            view.setOnClickListener {
-                Toast.makeText(view.context, "Element $adapterPosition clicked.", Toast.LENGTH_LONG).show()
-            }
+            view.setOnClickListener { listener.onItemSelected(item) }
 
             view.dateTextView.text = item.date
             view.filledTextView.text = item.litersCount.toString()
@@ -43,5 +40,9 @@ class RefillListAdapter(var items: List<RefillItem>) : RecyclerView.Adapter<Refi
                     View.INVISIBLE
                 }
         }
+    }
+
+    interface OnItemSelected<T> {
+        fun onItemSelected(item: T)
     }
 }

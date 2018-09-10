@@ -9,6 +9,7 @@ import com.carexpenses.akhutornoy.carexpenses.ui.lpg.LpgFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.Navigation {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -76,6 +77,10 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.
 
     override fun navigateToCreateNewRefill() {
         replaceFragment(LpgFragment.newInstance())
+    }
+
+    override fun navigateToEditRefill(refillId: Long) {
+        replaceFragment(LpgFragment.newInstance(refillId))
     }
 
     override fun navigateOnNewRefillCreated() {

@@ -23,6 +23,9 @@ class LpgFragment : BaseDaggerFragment() {
 
     private lateinit var navigationCallback: Navigation
 
+    private val isEditMode: Boolean by lazy { arguments?.getLong(ARG_REFILL_ID) != null }
+    private val argRefillId: Long? by lazy { arguments?.getLong(ARG_REFILL_ID) }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
@@ -45,11 +48,7 @@ class LpgFragment : BaseDaggerFragment() {
 
     override fun init() {
         initListeners()
-        arguments?.getLong(ARG_REFILL_ID)
-                ?.let {
-                    print(it)
-                    loadFromDb(it)
-                }
+        argRefillId?.let { loadFromDb(it) }
     }
 
     private fun initListeners() {
@@ -57,8 +56,25 @@ class LpgFragment : BaseDaggerFragment() {
     }
 
     private fun onButtonDoneClicked() {
-        val refill = Refill(
-                createdAt = Date().time,
+        val refill = getRefillItem()
+        viewModel.insert(refill).observe(this, Observer {isInserted ->
+            when (isInserted) {
+                true -> onInsertedSuccess()
+            }
+//            isInserted?.takeIf { it }.apply { onInsertedSuccess() } alternate option of solution with 'when'
+        })
+    }
+
+    private fun getRefillItem(): Refill {
+        val timeNow = Date().time
+        val createdAt: Long = argRefillId ?: timeNow
+        val editedAt: Long =
+                if (isEditMode) timeNow
+                else createdAt
+
+        return Refill(
+                createdAt = createdAt,
+                editedAt = editedAt,
                 litersCount = et_liters.getIntValue(),
                 moneyCount = et_money.getIntValue(),
                 lastDistance = et_last_distance.getIntValue(),
@@ -66,15 +82,6 @@ class LpgFragment : BaseDaggerFragment() {
                 trafficMode = getSelectedDistanceMode().value,
                 note = et_note.text.toString()
         )
-        viewModel.insert(refill).observe(this, Observer {isInserted ->
-            //TODO get rid of check Null
-            if (isInserted == null) {
-                return@Observer
-            }
-            if(isInserted){
-                onInsertedSuccess()
-            }
-        })
     }
 
     private fun onInsertedSuccess() {
@@ -115,7 +122,7 @@ class LpgFragment : BaseDaggerFragment() {
         }
 
     companion object {
-        private val ARG_REFILL_ID = "ARG_REFILL_ID"
+        private const val ARG_REFILL_ID = "ARG_REFILL_ID"
 
         fun newInstance(): BaseFragment {
             return LpgFragment()

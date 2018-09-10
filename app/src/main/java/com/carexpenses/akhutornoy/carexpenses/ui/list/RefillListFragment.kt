@@ -61,7 +61,14 @@ class RefillListFragment : BaseDaggerFragment() {
 
     private fun showList(refills: List<RefillItem>) {
         //TODO investigate: why the method is called many times on LpgFragmnet.Done button clicked. Maybe because of observable.
-        val adapter = RefillListAdapter(refills)
+        val adapter = RefillListAdapter(
+                refills,
+                listener = object : RefillListAdapter.OnItemSelected<RefillItem> {
+                    override fun onItemSelected(item: RefillItem) {
+                        navigationCallback.navigateToEditRefill(item.dbId)
+                    }
+                }
+        )
         recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
             this.adapter = adapter
@@ -78,6 +85,7 @@ class RefillListFragment : BaseDaggerFragment() {
 
     interface Navigation {
         fun navigateToCreateNewRefill()
+        fun navigateToEditRefill(refillId: Long)
     }
 
 }
