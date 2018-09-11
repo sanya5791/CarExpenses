@@ -1,4 +1,4 @@
-package com.carexpenses.akhutornoy.carexpenses.ui.lpg
+package com.carexpenses.akhutornoy.carexpenses.ui.refilldetails
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -12,7 +12,7 @@ import com.github.ajalt.timberkt.Timber
 import io.reactivex.Completable
 import io.reactivex.Single
 
-class RefillViewModel(
+class RefillDetailsViewModel(
         private val refillDao: RefillDao) : BaseViewModel() {
 
     private lateinit var onLoadByIdLiveData: MutableLiveData<Refill>

@@ -7,11 +7,11 @@ import com.carexpenses.akhutornoy.carexpenses.base.BaseActivity
 import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.ui.list.RefillListFragment
-import com.carexpenses.akhutornoy.carexpenses.ui.lpg.LpgFragment
+import com.carexpenses.akhutornoy.carexpenses.ui.refilldetails.RefillDetailsFragment
 import com.carexpenses.akhutornoy.carexpenses.ui.stubscreen.StubFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.Navigation, IToolbar {
+class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetailsFragment.Navigation, IToolbar {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -88,11 +88,11 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.
     }
 
     override fun navigateToCreateNewRefill() {
-        showFragment(LpgFragment.newInstance())
+        showFragment(RefillDetailsFragment.newInstance())
     }
 
     override fun navigateToEditRefill(refillId: Long) {
-        showFragment(LpgFragment.newInstance(refillId))
+        showFragment(RefillDetailsFragment.newInstance(refillId))
     }
 
     override fun navigationFinishScreen() {

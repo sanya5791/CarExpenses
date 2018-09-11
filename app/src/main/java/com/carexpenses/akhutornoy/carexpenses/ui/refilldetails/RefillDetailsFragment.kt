@@ -1,4 +1,4 @@
-package com.carexpenses.akhutornoy.carexpenses.ui.lpg
+package com.carexpenses.akhutornoy.carexpenses.ui.refilldetails
 
 import android.arch.lifecycle.Observer
 import android.content.Context
@@ -17,15 +17,14 @@ import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill.TrafficMode
 import com.github.ajalt.timberkt.Timber
-import kotlinx.android.synthetic.main.fragment_lpg.*
+import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
 import javax.inject.Inject
 
-//TODO rename to RefillFragment, refill_layout, RefillViewModel etc
-class LpgFragment : BaseDaggerFragment() {
+class RefillDetailsFragment : BaseDaggerFragment() {
     @Inject
-    lateinit var viewModel : RefillViewModel
+    lateinit var viewModel : RefillDetailsViewModel
 
     private lateinit var navigationCallback: Navigation
     private lateinit var toolbar: IToolbar
@@ -50,7 +49,7 @@ class LpgFragment : BaseDaggerFragment() {
     }
 
     override fun fragmentLayoutId(): Int {
-        return R.layout.fragment_lpg
+        return R.layout.fragment_refill_details
     }
 
     override fun getBaseViewModel(): BaseViewModel? {
@@ -181,7 +180,7 @@ class LpgFragment : BaseDaggerFragment() {
         private const val ARG_REFILL_ID = "ARG_REFILL_ID"
 
         fun newInstance(): BaseFragment {
-            return LpgFragment()
+            return RefillDetailsFragment()
         }
 
         fun newInstance(refillId: Long): BaseFragment {

@@ -11,90 +11,7 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true">
 
-        <include
-            layout="@layout/toolbar"/>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_liters"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_view">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/et_liters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-                android:hint="@string/all_liters" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_money"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_liters">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/et_money"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-                android:hint="@string/all_money" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_last_distance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginStart="@dimen/margin_medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/til_fuel_consumption"
-            app:layout_constraintTop_toBottomOf="@id/til_money">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/et_last_distance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:hint="@string/refill_details_last_distance" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_fuel_consumption"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginStart="@dimen/margin_small"
-            android:layout_marginEnd="@dimen/margin_medium"
-            app:layout_constraintTop_toBottomOf="@id/til_money"
-            app:layout_constraintBottom_toBottomOf="@id/til_last_distance"
-            app:layout_constraintStart_toEndOf="@id/til_last_distance"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/et_fuel_consumption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:editable="false"
-                android:focusable="false"
-                android:text="@string/refill_details_0_l_100km"
-                android:hint="@string/all_consumption" />
-
-        </android.support.design.widget.TextInputLayout>
+        <include layout="@layout/toolbar" />
 
         <RadioGroup
             android:id="@+id/rg_distance_mode"
@@ -107,7 +24,7 @@
             android:weightSum="3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_last_distance">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_view">
 
             <RadioButton
                 android:id="@+id/rb_city_mode"
@@ -133,16 +50,120 @@
 
         </RadioGroup>
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_last_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@+id/rg_distance_mode"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/til_current_mileage"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_last_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/refill_details_last_distance"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_current_mileage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@+id/rg_distance_mode"
+            app:layout_constraintStart_toEndOf="@id/til_last_distance"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:layout_editor_absoluteX="16dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_current_mileage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/refill_details_current_mileage"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_liters"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/til_money"
+            app:layout_constraintTop_toBottomOf="@id/til_last_distance">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_liters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                android:hint="@string/all_liters" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_money"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintStart_toEndOf="@id/til_liters"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_current_mileage">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                android:hint="@string/all_money" />
+        </android.support.design.widget.TextInputLayout>
+
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/use_note_check_box"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             android:text="@string/refill_details_add_note"
-            app:layout_constraintTop_toBottomOf="@id/rg_distance_mode"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/til_liters"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/til_fuel_consumption"
+            app:layout_constraintBottom_toBottomOf="@id/til_fuel_consumption"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_fuel_consumption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@id/til_money"
+            app:layout_constraintStart_toEndOf="@id/use_note_check_box"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_fuel_consumption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:focusable="false"
+                android:text="@string/refill_details_0_l_100km"
+                android:hint="@string/all_consumption" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til_note"
