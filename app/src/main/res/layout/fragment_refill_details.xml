@@ -160,8 +160,8 @@
                 android:layout_height="wrap_content"
                 android:editable="false"
                 android:focusable="false"
-                android:text="@string/refill_details_0_l_100km"
-                android:hint="@string/all_consumption" />
+                tools:text="@string/refill_details_0_l_100km"
+                android:hint="@string/refill_details_0_l_100km" />
 
         </android.support.design.widget.TextInputLayout>
 

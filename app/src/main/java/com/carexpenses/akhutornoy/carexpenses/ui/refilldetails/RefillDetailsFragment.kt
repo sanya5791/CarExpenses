@@ -3,6 +3,8 @@ package com.carexpenses.akhutornoy.carexpenses.ui.refilldetails
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,7 +18,6 @@ import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill.TrafficMode
-import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
@@ -44,7 +45,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
         if (context is IToolbar) {
             toolbar = context
         } else {
-            IllegalArgumentException("Calling Activity='${context!!::class.java.simpleName}' should implement '${IToolbar::class.java.simpleName}' interface")
+            IllegalArgumentException("Calling Activity='${context::class.java.simpleName}' should implement '${IToolbar::class.java.simpleName}' interface")
         }
     }
 
@@ -62,6 +63,17 @@ class RefillDetailsFragment : BaseDaggerFragment() {
         initToolbar()
         initListeners()
         argRefillId?.let { loadFromDb(it) }
+        viewModel.onConsumptionCalculated.observe(this,
+                Observer(this@RefillDetailsFragment::onConsumptionCalculated))
+    }
+
+    private fun onConsumptionCalculated(consumption: RefillDetailsViewModel.Consumption?) {
+        if (consumption?.isCalculated!!) {
+            val str = "%.2f".format(consumption.consumption)
+            et_fuel_consumption.setText(str)
+        } else {
+            et_fuel_consumption.setText("")
+        }
     }
 
     private fun initToolbar() {
@@ -85,7 +97,6 @@ class RefillDetailsFragment : BaseDaggerFragment() {
     }
 
     private fun onDeleteClicked(): Boolean {
-        Timber.d {"Delete clicked"}
         if (argRefillId == null) {
             return false
         }
@@ -108,6 +119,20 @@ class RefillDetailsFragment : BaseDaggerFragment() {
             if(isChecked) til_note.visibility = View.VISIBLE
             else til_note.visibility = View.GONE
         }
+    }
+
+    private val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                tryCalcConsumption()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    private fun tryCalcConsumption() {
+        viewModel.onConsumptionRelatedDataChanged(getRefillItem())
     }
 
     private fun onButtonDoneClicked() {
@@ -164,9 +189,9 @@ class RefillDetailsFragment : BaseDaggerFragment() {
         et_liters.setText(refill.litersCount.toString())
         et_money.setText(refill.moneyCount.toString())
         et_last_distance.setText(refill.lastDistance.toString())
-        //todo calc consumption
         rg_distance_mode.check(getRadioButtonId(refill.trafficMode()))
         et_note.setText(refill.note)
+        tryCalcConsumption()
     }
 
     private fun getRadioButtonId(trafficMode: TrafficMode) =
@@ -175,6 +200,18 @@ class RefillDetailsFragment : BaseDaggerFragment() {
             TrafficMode.HIGHWAY -> R.id.rb_highway_mode
             TrafficMode.MIXED -> R.id.rb_mixed_mode
         }
+
+    override fun onStart() {
+        super.onStart()
+        et_last_distance.addTextChangedListener(textWatcher)
+        et_liters.addTextChangedListener(textWatcher)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        et_last_distance.removeTextChangedListener(textWatcher)
+        et_liters.removeTextChangedListener(textWatcher)
+    }
 
     companion object {
         private const val ARG_REFILL_ID = "ARG_REFILL_ID"

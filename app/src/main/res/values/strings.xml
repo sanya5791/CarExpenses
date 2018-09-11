@@ -11,6 +11,7 @@
     <string name="all_highway">Highway</string>
     <string name="all_mixed">Mixed</string>
     <string name="all_consumption">Consumption</string>
+    <string name="all_l_100_km">L/100km</string>
     <string name="all_city">City</string>
     <string name="all_liters">Liters</string>
     <string name="all_money">Money</string>

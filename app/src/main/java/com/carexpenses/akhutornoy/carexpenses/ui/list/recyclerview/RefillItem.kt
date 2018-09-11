@@ -4,7 +4,7 @@ data class RefillItem(
         val dbId: Long,
         val date: String,
         val litersCount: Int,
-        val consumption: Int,
+        val consumption: Float,
         val trafficMode: String,
         val isNoteAvailable: Boolean
         )

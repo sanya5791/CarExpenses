@@ -2,8 +2,8 @@ package com.carexpenses.akhutornoy.carexpenses.ui.refilldetails
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import com.carexpenses.akhutornoy.carexpenses.base.exceptions.ItemNotFoundException
 import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
+import com.carexpenses.akhutornoy.carexpenses.base.exceptions.ItemNotFoundException
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.RefillDao
 import com.carexpenses.akhutornoy.carexpenses.utils.applyProgressBar
@@ -18,11 +18,20 @@ class RefillDetailsViewModel(
     private lateinit var onLoadByIdLiveData: MutableLiveData<Refill>
     private val onInsertedLiveData = MutableLiveData<Boolean>()
     private val onRefillDeletedLiveData = MutableLiveData<Boolean>()
+    val onConsumptionCalculated = MutableLiveData<Consumption>()
+
+    private fun Int.isEmpty() = this == Refill.UNSET_INT
 
     fun insert(refill: Refill): LiveData<Boolean> {
 
         autoUnsubscribe(
-                Completable.fromAction { refillDao.insert(refill) }
+                Single.fromCallable { calcConsumption(refill) }
+                        .map { consumption ->
+                            if (consumption.isCalculated) {
+                                refill.consumption = consumption.consumption
+                            }
+                            refill
+                        }.flatMapCompletable { t: Refill ->  Completable.fromAction { refillDao.insert(t) } }
                         .applySchedulers()
                         .applyProgressBar(this)
                         .subscribe(
@@ -69,4 +78,21 @@ class RefillDetailsViewModel(
     private fun getRefillFromDb(dbId: Long) =
             refillDao.getByCreatedAt(dbId)?: throw ItemNotFoundException(
                     "Can't find '${Refill::class.java.simpleName}' for id='$dbId'")
+
+    fun onConsumptionRelatedDataChanged(refill: Refill) {
+        onConsumptionCalculated.value = calcConsumption(refill)
+    }
+
+    private fun calcConsumption(refill: Refill): Consumption {
+        val canCalc = !refill.lastDistance.isEmpty() && !refill.litersCount.isEmpty()
+
+        return if (canCalc) {
+            val consumption = (refill.litersCount.toFloat() / refill.lastDistance.toFloat()) * 100
+            Consumption(true, consumption)
+        } else {
+            Consumption(false)
+        }
+    }
+
+    data class Consumption(val isCalculated: Boolean, val consumption: Float = 0f)
 }

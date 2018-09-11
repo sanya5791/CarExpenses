@@ -45,7 +45,7 @@ class RefillListViewModel(
             val date = dateFormatLong.format(Date(dbItem.createdAt))
             RefillItem(
                     dbId = dbItem.createdAt,
-                    consumption = -1,
+                    consumption = dbItem.consumption,
                     date = date,
                     litersCount = dbItem.litersCount,
                     trafficMode = dbItem.trafficMode().name,

@@ -16,7 +16,9 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initListeners()
-        onLpgClicked()
+        if (savedInstanceState == null) {
+            onLpgClicked()
+        }
     }
 
     override fun onBackPressed() {
