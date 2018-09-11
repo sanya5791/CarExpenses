@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        layout="@layout/toolbar"/>
+
     <android.support.constraint.Barrier
         android:id="@+id/title_barrier"
         android:layout_width="wrap_content"
@@ -22,6 +25,7 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/all_date"
         android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@id/load_text_vew"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintHorizontal_weight="1.5"
@@ -36,6 +40,7 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/all_l"
         android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@id/consumption_text_vew"
         app:layout_constraintHorizontal_weight="0.5"
         app:layout_constraintStart_toEndOf="@+id/date_text_vew" />
@@ -47,8 +52,9 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/all_l_per_100km"
+        android:text="@string/refill_details_l_per_100km"
         android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@id/traffic_mode_text_vew"
         app:layout_constraintHorizontal_weight="1.5"
         app:layout_constraintStart_toEndOf="@+id/load_text_vew" />
@@ -62,6 +68,7 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/all_traffic"
         android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@id/note_text_vew"
         app:layout_constraintHorizontal_weight="1.5"
         app:layout_constraintStart_toEndOf="@+id/consumption_text_vew" />
@@ -76,6 +83,7 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/all_note"
         android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/traffic_mode_text_vew" />

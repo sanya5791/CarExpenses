@@ -8,9 +8,10 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small">
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/toolbar"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til_liters"
@@ -19,7 +20,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/toolbar_view">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/et_liters"
@@ -27,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
-                android:hint="Liters" />
+                android:hint="@string/all_liters" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -45,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
-                android:hint="Money" />
+                android:hint="@string/all_money" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -63,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="number"
-                android:hint="Last Distance" />
+                android:hint="@string/refill_details_last_distance" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -83,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:editable="false"
                 android:focusable="false"
-                android:text="0 l/100km"
-                android:hint="Consumption" />
+                android:text="@string/refill_details_0_l_100km"
+                android:hint="@string/all_consumption" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -105,21 +106,21 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
-                android:text="City"/>
+                android:text="@string/all_city"/>
 
             <RadioButton
                 android:id="@+id/rb_highway_mode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Highway"/>
+                android:text="@string/all_highway"/>
 
             <RadioButton
                 android:id="@+id/rb_mixed_mode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Mixed"/>
+                android:text="@string/all_mixed"/>
 
         </RadioGroup>
 
@@ -136,7 +137,7 @@
                 android:id="@+id/et_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Note"
+                android:hint="@string/all_note"
                 android:gravity="top"
                 android:lines="6"/>
 
@@ -146,7 +147,7 @@
             android:id="@+id/bt_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Done"
+            android:text="@string/all_done"
             android:textColor="@color/colorAccent"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_medium"

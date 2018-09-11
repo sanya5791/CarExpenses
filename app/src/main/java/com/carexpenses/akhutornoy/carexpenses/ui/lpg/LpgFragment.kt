@@ -3,6 +3,9 @@ package com.carexpenses.akhutornoy.carexpenses.ui.lpg
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -10,9 +13,12 @@ import com.carexpenses.akhutornoy.carexpenses.R
 import com.carexpenses.akhutornoy.carexpenses.base.BaseDaggerFragment
 import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
+import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill.TrafficMode
+import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.fragment_lpg.*
+import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
 import javax.inject.Inject
 
@@ -22,6 +28,7 @@ class LpgFragment : BaseDaggerFragment() {
     lateinit var viewModel : RefillViewModel
 
     private lateinit var navigationCallback: Navigation
+    private lateinit var toolbar: IToolbar
 
     private val isEditMode: Boolean by lazy { arguments?.getLong(ARG_REFILL_ID) != null }
     private val argRefillId: Long? by lazy { arguments?.getLong(ARG_REFILL_ID) }
@@ -33,6 +40,12 @@ class LpgFragment : BaseDaggerFragment() {
             navigationCallback = context
         } else {
             IllegalArgumentException("Calling Activity='${context!!::class.java.simpleName}' should implement '${Navigation::class.java.simpleName}' interface")
+        }
+
+        if (context is IToolbar) {
+            toolbar = context
+        } else {
+            IllegalArgumentException("Calling Activity='${context!!::class.java.simpleName}' should implement '${IToolbar::class.java.simpleName}' interface")
         }
     }
 
@@ -47,8 +60,47 @@ class LpgFragment : BaseDaggerFragment() {
     override fun getProgressBar(): View? = progress_bar
 
     override fun init() {
+        initToolbar()
         initListeners()
         argRefillId?.let { loadFromDb(it) }
+    }
+
+    private fun initToolbar() {
+        setHasOptionsMenu(true)
+        toolbar.setToolbar(toolbar_view, true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        if (isEditMode) {
+            activity?.menuInflater?.inflate(R.menu.menu_list, menu)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.action_delete -> onDeleteClicked()
+            android.R.id.home -> onBackClicked()
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun onDeleteClicked(): Boolean {
+        Timber.d {"Delete clicked"}
+        if (argRefillId == null) {
+            return false
+        }
+        viewModel.delete(argRefillId!!).observe(this, Observer { isRemoved ->
+            when (isRemoved) {
+                true -> navigationCallback.navigationFinishScreen()
+            }
+        })
+        return true
+    }
+
+    private fun onBackClicked(): Boolean {
+        navigationCallback.navigationFinishScreen()
+        return true
     }
 
     private fun initListeners() {
@@ -85,7 +137,7 @@ class LpgFragment : BaseDaggerFragment() {
     }
 
     private fun onInsertedSuccess() {
-        navigationCallback.navigateOnNewRefillCreated()
+        navigationCallback.navigationFinishScreen()
         Toast.makeText(requireActivity().applicationContext, "Saved", Toast.LENGTH_SHORT).show()
     }
 
@@ -136,7 +188,7 @@ class LpgFragment : BaseDaggerFragment() {
     }
 
     interface Navigation {
-        fun navigateOnNewRefillCreated()
+        fun navigationFinishScreen()
     }
 
 }
