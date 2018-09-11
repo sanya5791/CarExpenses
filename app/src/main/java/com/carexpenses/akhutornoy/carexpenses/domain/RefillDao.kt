@@ -21,9 +21,9 @@ interface RefillDao {
     @Query("SELECT * FROM Refill WHERE createdAt == :createdAt")
     fun getByCreatedAt(createdAt: Long): Refill?
 
-    @Query("SELECT * FROM Refill WHERE fuelType == :fuelType")
-            /**
-             * @param fuelType: use Refill.FuelType
-             */
+    @Query("SELECT * FROM Refill WHERE fuelType == :fuelType ORDER BY createdAt DESC")
+    /**
+     * @param fuelType: use Refill.FuelType
+     */
     fun getByFuelType(fuelType: Int): Flowable<List<Refill>>
 }

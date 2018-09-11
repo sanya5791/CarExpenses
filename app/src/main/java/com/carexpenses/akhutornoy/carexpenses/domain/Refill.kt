@@ -12,6 +12,7 @@ data class Refill(
         val litersCount: Int = UNSET_INT,
         val moneyCount: Int = UNSET_INT,
         val lastDistance: Int = UNSET_INT,
+        val currentMileage: Int = UNSET_INT,
         val trafficMode: Int = TrafficMode.CITY.value,
         val note: String = UNSET_STR
 ) {

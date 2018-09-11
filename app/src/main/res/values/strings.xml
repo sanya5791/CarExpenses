@@ -20,9 +20,11 @@
     <string name="refill_details_l_per_100km">L/100Km</string>
     <string name="refill_details_last_distance">Last Distance</string>
     <string name="refill_details_0_l_100km">0 l/100km</string>
+    <string name="refill_details_add_note">Add Note</string>
 
     <string name="title_lpg">Lpg</string>
     <string name="title_petrol">Petrol</string>
     <string name="title_service">Service</string>
+    <string name="all_not_implemented">Not Implemented</string>
 
 </resources>

@@ -105,6 +105,10 @@ class LpgFragment : BaseDaggerFragment() {
 
     private fun initListeners() {
         bt_done.setOnClickListener { onButtonDoneClicked() }
+        use_note_check_box.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) til_note.visibility = View.VISIBLE
+            else til_note.visibility = View.GONE
+        }
     }
 
     private fun onButtonDoneClicked() {

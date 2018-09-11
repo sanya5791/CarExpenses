@@ -2,12 +2,13 @@ package com.carexpenses.akhutornoy.carexpenses.ui
 
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
-import android.view.View
 import com.carexpenses.akhutornoy.carexpenses.R
 import com.carexpenses.akhutornoy.carexpenses.base.BaseActivity
+import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.ui.list.RefillListFragment
 import com.carexpenses.akhutornoy.carexpenses.ui.lpg.LpgFragment
+import com.carexpenses.akhutornoy.carexpenses.ui.stubscreen.StubFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.Navigation, IToolbar {
@@ -55,12 +56,9 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.
     }
 
     private fun onLpgClicked() {
-        setNotImplementedVisible(false)
-        val fragmentTag = RefillListFragment::class.java.simpleName
+        val fragmentTag = RefillListFragment::class.java.name
         val lpgFragment = supportFragmentManager.findFragmentByTag(fragmentTag)?: RefillListFragment.newInstance()
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, lpgFragment, fragmentTag)
-                .commit()
+        showTopFragment(lpgFragment as BaseFragment)
     }
 
     private fun onPetrolClicked() {
@@ -72,23 +70,7 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.
     }
 
     private fun showNotImplemented() {
-        setNotImplementedVisible(true)
-        val fragment = supportFragmentManager.findFragmentByTag(LpgFragment::class.java.simpleName)
-
-        fragment ?: return
-
-        supportFragmentManager.beginTransaction()
-                .remove(fragment)
-                .commit()
-    }
-
-    private fun setNotImplementedVisible(isVisible: Boolean) {
-        val visibilityState = if (isVisible) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-        notImplementedTextView.visibility = visibilityState
+        showTopFragment(StubFragment.newInstance())
     }
 
     override fun setToolbar(toolbar: Toolbar, showHomeAsUp: Boolean) {
@@ -106,11 +88,11 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, LpgFragment.
     }
 
     override fun navigateToCreateNewRefill() {
-        replaceFragment(LpgFragment.newInstance())
+        showFragment(LpgFragment.newInstance())
     }
 
     override fun navigateToEditRefill(refillId: Long) {
-        replaceFragment(LpgFragment.newInstance(refillId))
+        showFragment(LpgFragment.newInstance(refillId))
     }
 
     override fun navigationFinishScreen() {

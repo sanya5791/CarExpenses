@@ -12,17 +12,28 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    protected fun replaceFragment(fragment: BaseFragment) {
-        replaceFragment(fragment, true)
+    protected fun showFragment(fragment: BaseFragment) {
+        showFragment(fragment, true)
     }
 
-    protected fun replaceFragment(fragment: BaseFragment, addToBackStack: Boolean) {
+    protected fun showFragment(fragment: BaseFragment, addToBackStack: Boolean) {
+        val tag = fragment.javaClass.name
         val t = supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment, fragment.javaClass.name)
+                .replace(R.id.fragment_container, fragment, tag)
         if (addToBackStack) {
-            t.addToBackStack(fragment.javaClass.name)
+            t.addToBackStack(tag)
         }
         t.commit()
+    }
+
+    protected fun showTopFragment(fragment: BaseFragment) {
+        val fm = supportFragmentManager
+        fm.fragments.forEach {
+            if (it == fragment) return@forEach
+            fm.beginTransaction().remove(it).commit()
+        }
+
+        showFragment(fragment, false)
     }
 }
