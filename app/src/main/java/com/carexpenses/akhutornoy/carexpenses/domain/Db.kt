@@ -18,7 +18,7 @@ abstract class Db : RoomDatabase() {
                 }
 
         private fun createInstance(context: Context) =
-                Room.databaseBuilder(context.applicationContext, Db::class.java, "CarExpenses")
+                Room.databaseBuilder(context.applicationContext, Db::class.java, "CarExpenses.db")
                         .fallbackToDestructiveMigration()
                         .build()
     }

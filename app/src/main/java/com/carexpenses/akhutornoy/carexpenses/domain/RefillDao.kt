@@ -2,6 +2,7 @@ package com.carexpenses.akhutornoy.carexpenses.domain
 
 import android.arch.persistence.room.*
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface RefillDao {
@@ -26,4 +27,7 @@ interface RefillDao {
      * @param fuelType: use Refill.FuelType
      */
     fun getByFuelType(fuelType: Int): Flowable<List<Refill>>
+
+    @Query("SELECT * FROM Refill WHERE createdAt < :createdAt ORDER BY createdAt DESC LIMIT 1")
+    fun getPrevious(createdAt: Long): Single<Refill>
 }

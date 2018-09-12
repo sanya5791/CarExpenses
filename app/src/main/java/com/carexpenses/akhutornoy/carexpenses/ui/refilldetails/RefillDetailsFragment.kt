@@ -157,6 +157,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
                 editedAt = editedAt,
                 litersCount = et_liters.getIntValue(),
                 moneyCount = et_money.getIntValue(),
+                currentMileage = et_current_mileage.getIntValue(),
                 lastDistance = et_last_distance.getIntValue(),
                 fuelType = Refill.FuelType.LPG.value,
                 trafficMode = getSelectedDistanceMode().value,
@@ -185,13 +186,19 @@ class RefillDetailsFragment : BaseDaggerFragment() {
                 .observe(this, Observer { showRefill(it!!) })
     }
 
+    private fun Int.isEmpty() = this == Refill.UNSET_INT
+
     private fun showRefill(refill: Refill) {
         et_liters.setText(refill.litersCount.toString())
+        et_current_mileage.setText(refill.currentMileage.toString())
         et_money.setText(refill.moneyCount.toString())
-        et_last_distance.setText(refill.lastDistance.toString())
         rg_distance_mode.check(getRadioButtonId(refill.trafficMode()))
         et_note.setText(refill.note)
         tryCalcConsumption()
+        et_last_distance.setText(
+                if(refill.lastDistance.isEmpty()) ""
+                else refill.lastDistance.toString()
+        )
     }
 
     private fun getRadioButtonId(trafficMode: TrafficMode) =
@@ -205,12 +212,14 @@ class RefillDetailsFragment : BaseDaggerFragment() {
         super.onStart()
         et_last_distance.addTextChangedListener(textWatcher)
         et_liters.addTextChangedListener(textWatcher)
+        et_current_mileage.addTextChangedListener(textWatcher)
     }
 
     override fun onStop() {
         super.onStop()
         et_last_distance.removeTextChangedListener(textWatcher)
         et_liters.removeTextChangedListener(textWatcher)
+        et_current_mileage.removeTextChangedListener(textWatcher)
     }
 
     companion object {

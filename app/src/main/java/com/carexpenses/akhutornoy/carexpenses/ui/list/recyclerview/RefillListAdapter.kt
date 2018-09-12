@@ -31,7 +31,8 @@ class RefillListAdapter(var items: List<RefillItem>, val listener: OnItemSelecte
 
             view.dateTextView.text = item.date
             view.filledTextView.text = item.litersCount.toString()
-            view.consumptionTextView.text = item.consumption.toString()
+            val consumption = "%.2f".format(item.consumption)
+            view.consumptionTextView.text = consumption
             view.trafficModeTextView.text = item.trafficMode
             view.noteIcon.visibility =
                 if(item.isNoteAvailable) {

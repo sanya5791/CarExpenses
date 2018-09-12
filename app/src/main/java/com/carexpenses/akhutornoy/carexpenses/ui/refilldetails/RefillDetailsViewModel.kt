@@ -2,6 +2,7 @@ package com.carexpenses.akhutornoy.carexpenses.ui.refilldetails
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.persistence.room.EmptyResultSetException
 import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.base.exceptions.ItemNotFoundException
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
@@ -25,7 +26,13 @@ class RefillDetailsViewModel(
     fun insert(refill: Refill): LiveData<Boolean> {
 
         autoUnsubscribe(
-                Single.fromCallable { calcConsumption(refill) }
+                calcConsumption(refill)
+                        .onErrorResumeNext {
+                            if (isFirstDbRecordError(it))
+                                Single.fromCallable { Consumption(true, 0f) }
+                            else
+                                throw it
+                        }
                         .map { consumption ->
                             if (consumption.isCalculated) {
                                 refill.consumption = consumption.consumption
@@ -41,6 +48,8 @@ class RefillDetailsViewModel(
 
         return onInsertedLiveData
     }
+
+    private fun isFirstDbRecordError(error: Throwable) = error is EmptyResultSetException
 
     fun getById(id: Long): LiveData<Refill> {
         if (::onLoadByIdLiveData.isInitialized) {
@@ -80,18 +89,57 @@ class RefillDetailsViewModel(
                     "Can't find '${Refill::class.java.simpleName}' for id='$dbId'")
 
     fun onConsumptionRelatedDataChanged(refill: Refill) {
-        onConsumptionCalculated.value = calcConsumption(refill)
+        autoUnsubscribe(
+                calcConsumption(refill)
+                        .applySchedulers()
+                        .subscribe(
+                                { consumption -> onConsumptionCalculated.value = consumption },
+                                this::onCalcConsumptionError
+                        )
+        )
     }
 
-    private fun calcConsumption(refill: Refill): Consumption {
-        val canCalc = !refill.lastDistance.isEmpty() && !refill.litersCount.isEmpty()
+    private fun onCalcConsumptionError(error: Throwable) {
+        if(isFirstDbRecordError(error))
+            onConsumptionCalculated.value = Consumption(false)
+        else
+            showError(error)
+    }
 
-        return if (canCalc) {
-            val consumption = (refill.litersCount.toFloat() / refill.lastDistance.toFloat()) * 100
-            Consumption(true, consumption)
-        } else {
-            Consumption(false)
+    private fun calcConsumption(refill: Refill): Single<Consumption> {
+        val canCalcLocally = !refill.litersCount.isEmpty() && !refill.lastDistance.isEmpty()
+        if (canCalcLocally) {
+            return calcLocally(refill)
         }
+
+        val canCalcRemotely = !refill.litersCount.isEmpty() && !refill.currentMileage.isEmpty()
+                && (refill.currentMileage / 1000) >= 1
+
+        return if (canCalcRemotely)
+            calcRemotely(refill)
+        else
+            Single.fromCallable { Consumption(false) }
+    }
+
+    private fun calcRemotely(refill: Refill): Single<Consumption> {
+        return refillDao.getPrevious(refill.createdAt)
+                .map { lastRefill ->  Consumption(true,
+                        calcConsumption(refill.currentMileage - lastRefill.currentMileage, refill.litersCount)) }
+    }
+
+    private fun calcLocally(refill: Refill): Single<Consumption> {
+        return Single.fromCallable{
+            val consumption = calcConsumption(refill.lastDistance, refill.litersCount)
+            Consumption(true, consumption)
+        }
+    }
+
+    private fun calcConsumption(distance: Int, liters: Int): Float {
+        if(distance == 0) return 0f
+
+        val consumption = (liters.toFloat() / distance.toFloat()) * 100
+        return if(consumption >= 0) consumption
+        else 0f
     }
 
     data class Consumption(val isCalculated: Boolean, val consumption: Float = 0f)
