@@ -51,26 +51,6 @@
         </RadioGroup>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_last_distance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_medium"
-            app:layout_constraintTop_toBottomOf="@+id/rg_distance_mode"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/til_current_mileage"
-            >
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/et_last_distance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/refill_details_last_distance"
-                android:imeOptions="actionNext"
-                android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
             android:id="@+id/til_current_mileage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -78,15 +58,34 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintTop_toBottomOf="@+id/rg_distance_mode"
-            app:layout_constraintStart_toEndOf="@id/til_last_distance"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:layout_editor_absoluteX="16dp">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/til_last_distance">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/et_current_mileage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/refill_details_current_mileage"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_last_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@+id/rg_distance_mode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/til_current_mileage"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_last_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/refill_details_last_distance"
                 android:imeOptions="actionNext"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
@@ -107,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
-                android:hint="@string/all_liters" />
+                android:hint="@string/refill_details_liters" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -127,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
-                android:hint="@string/all_money" />
+                android:hint="@string/refill_details_money" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatCheckBox

@@ -13,16 +13,16 @@
     <string name="all_consumption">Consumption</string>
     <string name="all_l_100_km">L/100km</string>
     <string name="all_city">City</string>
-    <string name="all_liters">Liters</string>
-    <string name="all_money">Money</string>
 
     <string name="list_title_refills">Refills</string>
 
     <string name="refill_details_l_per_100km">L/100Km</string>
     <string name="refill_details_last_distance">Last Distance</string>
-    <string name="refill_details_current_mileage">Current Mileage</string>
+    <string name="refill_details_current_mileage">*Current Mileage</string>
     <string name="refill_details_0_l_100km">0 l/100km</string>
     <string name="refill_details_add_note">Add Note</string>
+    <string name="refill_details_liters">*Liters</string>
+    <string name="refill_details_money">*Money</string>
 
     <string name="title_lpg">Lpg</string>
     <string name="title_petrol">Petrol</string>
