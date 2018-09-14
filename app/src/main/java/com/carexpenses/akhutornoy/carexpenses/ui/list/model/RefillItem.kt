@@ -1,4 +1,4 @@
-package com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview
+package com.carexpenses.akhutornoy.carexpenses.ui.list.model
 
 data class RefillItem(
         val dbId: Long,

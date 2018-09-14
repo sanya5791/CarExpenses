@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_small"
             android:layout_gravity="center_vertical"
-            android:text="@string/refill_list_filter_title" />
+            android:text="@string/refill_list_filter_title"
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:id="@+id/filter_from_text_view"
@@ -34,7 +35,8 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/margin_small"
-            tools:text="12.08.2018 - 12.09.18" />
+            tools:text="12.08.2018 - 12.09.18"
+            android:textColor="@android:color/white"/>
 
         <ImageView
             android:id="@+id/filter_clear_image_view"
@@ -132,10 +134,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_barrier"
+        app:layout_constraintBottom_toTopOf="@+id/summary_view_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_refill" />
 
     <ProgressBar
@@ -147,10 +149,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
     <android.support.design.widget.FloatingActionButton
@@ -162,5 +164,36 @@
         android:src="@android:drawable/ic_menu_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/summary_view_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/padding_smallest"
+        android:paddingBottom="@dimen/padding_smallest"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/summary_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:text="@string/refill_list_summary_title" />
+
+        <TextView
+            android:id="@+id/summary_results_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_small"
+            tools:text="25L, 1000UAH"/>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

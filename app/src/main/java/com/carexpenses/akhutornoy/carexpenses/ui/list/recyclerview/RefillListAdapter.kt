@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.carexpenses.akhutornoy.carexpenses.R
+import com.carexpenses.akhutornoy.carexpenses.ui.list.model.RefillItem
 import kotlinx.android.synthetic.main.item_refill.view.*
 
 class RefillListAdapter(var items: List<RefillItem>, val listener: OnItemSelected<RefillItem>) : RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {

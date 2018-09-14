@@ -6,7 +6,9 @@ import android.os.Bundle
 import com.carexpenses.akhutornoy.carexpenses.base.BaseSavableViewModel
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.RefillDao
-import com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview.RefillItem
+import com.carexpenses.akhutornoy.carexpenses.ui.list.model.RefillItem
+import com.carexpenses.akhutornoy.carexpenses.ui.list.model.RefillResult
+import com.carexpenses.akhutornoy.carexpenses.ui.list.model.Summary
 import com.carexpenses.akhutornoy.carexpenses.utils.DATE_TIME_FORMAT
 import com.carexpenses.akhutornoy.carexpenses.utils.applyProgressBar
 import com.carexpenses.akhutornoy.carexpenses.utils.applySchedulers
@@ -17,7 +19,7 @@ import org.joda.time.DateTime
 class RefillListViewModel(
         private val refillDao: RefillDao) : BaseSavableViewModel() {
 
-    private lateinit var onLoadRefillsLiveData: MutableLiveData<List<RefillItem>>
+    private lateinit var onLoadRefillsLiveData: MutableLiveData<RefillResult>
 
     private var filterRange: FilterDateRange = FilterDateRange()
 
@@ -29,11 +31,11 @@ class RefillListViewModel(
         filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE)
     }
 
-    fun getRefills(fuelType: Refill.FuelType): LiveData<List<RefillItem>> {
+    fun getRefills(fuelType: Refill.FuelType): LiveData<RefillResult> {
         return getRefills(fuelType, filterRange)
     }
 
-    fun getRefills(fuelType: Refill.FuelType, filterRange: FilterDateRange): LiveData<List<RefillItem>> {
+    fun getRefills(fuelType: Refill.FuelType, filterRange: FilterDateRange): LiveData<RefillResult> {
 
         val isFilterChanged = filterRange.from != this.filterRange.from
                                     || filterRange.to != this.filterRange.to
@@ -70,10 +72,14 @@ class RefillListViewModel(
         }
     }
 
-    private fun mapToRefillItems(items: List<Refill>): List<RefillItem> {
+    private fun mapToRefillItems(items: List<Refill>): RefillResult {
+        var liters = 0
+        var money = 0
 
-        return items.map { dbItem ->
+        val refills = items.map { dbItem ->
             val date = DateTime(dbItem.createdAt).toString(DATE_TIME_FORMAT)
+            liters += dbItem.litersCount
+            money += dbItem.moneyCount
             RefillItem(
                     dbId = dbItem.createdAt,
                     consumption = dbItem.consumption,
@@ -83,6 +89,7 @@ class RefillListViewModel(
                     isNoteAvailable = dbItem.note != Refill.UNSET_STR
             )
         }
+        return RefillResult(refills, Summary(liters, money))
     }
 
     companion object {

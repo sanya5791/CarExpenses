@@ -14,9 +14,11 @@
     <string name="all_l_100_km">L/100km</string>
     <string name="all_city">City</string>
 
-    <string name="list_title_refills">Refills</string>
+    <string name="refill_list_refills_title">Refills</string>
     <string name="refill_list_filter_title">Filter:</string>
     <string name="refill_list_filter_cleared">Filter Cleared</string>
+    <string name="refill_list_summary_title">Summary:</string>
+    <string name="refill_list_summary_text">%1$dL, %2$dUAH:</string>
 
     <string name="refill_details_l_per_100km">L/100Km</string>
     <string name="refill_details_last_distance">Last Distance</string>

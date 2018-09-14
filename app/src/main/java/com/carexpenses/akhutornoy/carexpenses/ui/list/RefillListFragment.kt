@@ -18,7 +18,8 @@ import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
-import com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview.RefillItem
+import com.carexpenses.akhutornoy.carexpenses.ui.list.model.RefillItem
+import com.carexpenses.akhutornoy.carexpenses.ui.list.model.RefillResult
 import com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter
 import com.carexpenses.akhutornoy.carexpenses.utils.DATE_FORMAT
 import kotlinx.android.synthetic.main.fragment_refill_list.*
@@ -70,7 +71,7 @@ class RefillListFragment : BaseDaggerFragment() {
     private fun initToolbar() {
         setHasOptionsMenu(true)
         toolbar.setToolbar(toolbar_view, false)
-        toolbar.setToolbarTitle(R.string.list_title_refills)
+        toolbar.setToolbarTitle(R.string.refill_list_refills_title)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -139,13 +140,20 @@ class RefillListFragment : BaseDaggerFragment() {
         observeRefillsList(viewModel.getRefills(FUEL_TYPE, filterDateRange))
     }
 
-    private fun observeRefillsList(liveData: LiveData<List<RefillItem>>) {
+    private fun observeRefillsList(liveData: LiveData<RefillResult>) {
         liveData.observe(this,
-                Observer { items -> showList(items!!) })
+                Observer { items -> showResult(items!!) })
+    }
+
+    private fun showResult(result: RefillResult) {
+        //TODO investigate: why the method is called many times on LpgFragment.Done button clicked. Maybe because of observable.
+        showList(result.refills)
+        val summaryText = getString(R.string.refill_list_summary_text,
+                result.summary.liters, result.summary.money)
+        summary_results_text_view.text = summaryText
     }
 
     private fun showList(refills: List<RefillItem>) {
-        //TODO investigate: why the method is called many times on LpgFragment.Done button clicked. Maybe because of observable.
         val adapter = RefillListAdapter(
                 refills,
                 listener = object : RefillListAdapter.OnItemSelected<RefillItem> {
