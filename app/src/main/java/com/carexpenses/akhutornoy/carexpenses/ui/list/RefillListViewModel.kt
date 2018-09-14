@@ -6,26 +6,33 @@ import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.RefillDao
 import com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview.RefillItem
+import com.carexpenses.akhutornoy.carexpenses.utils.DATE_TIME_FORMAT
 import com.carexpenses.akhutornoy.carexpenses.utils.applyProgressBar
 import com.carexpenses.akhutornoy.carexpenses.utils.applySchedulers
+import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.*
+import org.joda.time.DateTime
 
 class RefillListViewModel(
         private val refillDao: RefillDao) : BaseViewModel() {
 
     private lateinit var onLoadRefillsLiveData: MutableLiveData<List<RefillItem>>
-    private val dateFormatLong = SimpleDateFormat("dd-MM-yy HH:mm", Locale.getDefault())
 
-    fun getRefills(fuelType: Refill.FuelType): LiveData<List<RefillItem>> {
-        if (::onLoadRefillsLiveData.isInitialized) {
+    private var filterRange: FilterDateRange = FilterDateRange()
+
+    fun getRefills(fuelType: Refill.FuelType, filterRange: FilterDateRange): LiveData<List<RefillItem>> {
+
+        val isFilterChanged = filterRange.from != this.filterRange.from
+                                    || filterRange.to != this.filterRange.to
+        this.filterRange = filterRange
+        if (::onLoadRefillsLiveData.isInitialized
+                && !isFilterChanged) {
             return onLoadRefillsLiveData
         }
 
         onLoadRefillsLiveData = MutableLiveData()
         autoUnsubscribe(
-                refillDao.getByFuelType(fuelType.value)
+                getRefillsFlowable(fuelType, filterRange)
                         .map { refills ->  mapToRefillItems(refills)}
                         .subscribeOn(Schedulers.io())
                         .applySchedulers()
@@ -39,10 +46,21 @@ class RefillListViewModel(
         return onLoadRefillsLiveData
     }
 
+    private fun getRefillsFlowable(fuelType: Refill.FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {
+        return if (filterRange.isEmpty()) {
+            refillDao.getByFuelType(fuelType.value)
+        } else {
+            refillDao.getByFuelType(
+                    fuelType.value,
+                    filterRange.from.toDate().time,
+                    filterRange.to.plusDays(1).toDate().time)
+        }
+    }
+
     private fun mapToRefillItems(items: List<Refill>): List<RefillItem> {
 
         return items.map { dbItem ->
-            val date = dateFormatLong.format(Date(dbItem.createdAt))
+            val date = DateTime(dbItem.createdAt).toString(DATE_TIME_FORMAT)
             RefillItem(
                     dbId = dbItem.createdAt,
                     consumption = dbItem.consumption,

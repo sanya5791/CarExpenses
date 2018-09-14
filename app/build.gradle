@@ -48,6 +48,12 @@ dependencies {
     //Tibmer
     implementation "com.github.ajalt:timberkt:$timber_version"
 
+    //JodaTime
+    implementation 'joda-time:joda-time:2.10'
+
+    //CalendarView
+    implementation 'com.applandeo:material-calendar-view:1.4.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

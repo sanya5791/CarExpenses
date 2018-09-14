@@ -83,7 +83,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         if (isEditMode) {
-            activity?.menuInflater?.inflate(R.menu.menu_list, menu)
+            activity?.menuInflater?.inflate(R.menu.menu_refill_details, menu)
         }
         super.onCreateOptionsMenu(menu, inflater)
     }

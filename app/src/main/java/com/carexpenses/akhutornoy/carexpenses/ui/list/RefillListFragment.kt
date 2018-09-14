@@ -3,7 +3,14 @@ package com.carexpenses.akhutornoy.carexpenses.ui.list
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import com.applandeo.materialcalendarview.CalendarView
+import com.applandeo.materialcalendarview.builders.DatePickerBuilder
+import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.carexpenses.akhutornoy.carexpenses.R
 import com.carexpenses.akhutornoy.carexpenses.base.BaseDaggerFragment
 import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
@@ -12,9 +19,13 @@ import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview.RefillItem
 import com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter
+import com.carexpenses.akhutornoy.carexpenses.utils.DATE_FORMAT
 import kotlinx.android.synthetic.main.fragment_refill_list.*
 import kotlinx.android.synthetic.main.toolbar.*
+import org.joda.time.LocalDate
+import java.util.*
 import javax.inject.Inject
+
 
 class RefillListFragment : BaseDaggerFragment() {
     @Inject
@@ -52,7 +63,8 @@ class RefillListFragment : BaseDaggerFragment() {
     override fun init() {
         initToolbar()
         initListeners()
-        loadFromDb()
+        //todo consider situation on rotate screen the filter will be cleared
+        loadFromDb(FilterDateRange())
     }
 
     private fun initToolbar() {
@@ -61,8 +73,49 @@ class RefillListFragment : BaseDaggerFragment() {
         toolbar.setToolbarTitle(R.string.list_title_refills)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        activity?.menuInflater?.inflate(R.menu.menu_refill_list, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.action_filter -> onFilterClicked()
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun onFilterClicked(): Boolean {
+        DatePickerBuilder(activity, onSelectedDateListener())
+                .pickerType(CalendarView.RANGE_PICKER)
+                .date(Calendar.getInstance())
+                .build()
+                .show()
+        return true
+    }
+
+    private fun onSelectedDateListener() = OnSelectDateListener { calendars ->
+        if (calendars.size > 1) {
+            val dateFrom = LocalDate(calendars[0].time)
+            val dateTo = LocalDate(calendars[calendars.size - 1].time)
+            val filterDateRange = FilterDateRange(dateFrom, dateTo)
+            showFilterView(filterDateRange)
+
+            loadFromDb(filterDateRange)
+        }
+    }
+
+    private fun showFilterView(filterDateRange: FilterDateRange) {
+        filter_view_group.visibility = View.VISIBLE
+        val sFrom = filterDateRange.from.toString(DATE_FORMAT)
+        val sTo = filterDateRange.to.toString(DATE_FORMAT)
+        val range = "$sFrom - $sTo"
+        filter_from_text_view.text = range
+    }
+
     private fun initListeners() {
         add_fab.setOnClickListener { showAddNewItemScreen() }
+        filter_clear_image_view.setOnClickListener { onClearFilterClicked() }
     }
 
     //TODO maybe should be replaced with Navigation pack library
@@ -70,13 +123,20 @@ class RefillListFragment : BaseDaggerFragment() {
         navigationCallback.navigateToCreateNewRefill()
     }
 
-    private fun loadFromDb() {
-        viewModel.getRefills(FUEL_TYPE).observe(this,
+    private fun onClearFilterClicked() {
+        filter_from_text_view.text = ""
+        filter_view_group.visibility = View.GONE
+        loadFromDb(FilterDateRange())
+        Toast.makeText(activity, getString(R.string.refill_list_filter_cleared), Toast.LENGTH_LONG).show()
+    }
+
+    private fun loadFromDb(filterDateRange: FilterDateRange) {
+        viewModel.getRefills(FUEL_TYPE, filterDateRange).observe(this,
                 Observer { items -> showList(items!!) })
     }
 
     private fun showList(refills: List<RefillItem>) {
-        //TODO investigate: why the method is called many times on LpgFragmnet.Done button clicked. Maybe because of observable.
+        //TODO investigate: why the method is called many times on LpgFragment.Done button clicked. Maybe because of observable.
         val adapter = RefillListAdapter(
                 refills,
                 listener = object : RefillListAdapter.OnItemSelected<RefillItem> {

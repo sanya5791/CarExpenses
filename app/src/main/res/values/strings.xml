@@ -15,6 +15,8 @@
     <string name="all_city">City</string>
 
     <string name="list_title_refills">Refills</string>
+    <string name="refill_list_filter_title">Filter:</string>
+    <string name="refill_list_filter_cleared">Filter Cleared</string>
 
     <string name="refill_details_l_per_100km">L/100Km</string>
     <string name="refill_details_last_distance">Last Distance</string>

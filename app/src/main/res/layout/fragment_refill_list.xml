@@ -5,8 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:id="@+id/filter_view_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorDatesFilter"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view">
+
+        <TextView
+            android:id="@+id/filter_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_gravity="center_vertical"
+            android:text="@string/refill_list_filter_title" />
+
+        <TextView
+            android:id="@+id/filter_from_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_small"
+            tools:text="12.08.2018 - 12.09.18" />
+
+        <ImageView
+            android:id="@+id/filter_clear_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="right"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:layout_constraintStart_toStartOf="@id/filter_title_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_view"/>
+    </LinearLayout>
 
     <android.support.constraint.Barrier
         android:id="@+id/title_barrier"
@@ -25,11 +64,11 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/all_date"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@id/load_text_vew"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintHorizontal_weight="1.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
 
     <TextView
         android:id="@+id/load_text_vew"
@@ -40,10 +79,10 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/all_l"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@id/consumption_text_vew"
         app:layout_constraintHorizontal_weight="0.5"
-        app:layout_constraintStart_toEndOf="@+id/date_text_vew" />
+        app:layout_constraintStart_toEndOf="@+id/date_text_vew"
+        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
 
     <TextView
         android:id="@+id/consumption_text_vew"
@@ -54,10 +93,10 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/refill_details_l_per_100km"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@id/traffic_mode_text_vew"
         app:layout_constraintHorizontal_weight="1.5"
-        app:layout_constraintStart_toEndOf="@+id/load_text_vew" />
+        app:layout_constraintStart_toEndOf="@+id/load_text_vew"
+        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
 
     <TextView
         android:id="@+id/traffic_mode_text_vew"
@@ -68,10 +107,10 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/all_traffic"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@id/note_text_vew"
         app:layout_constraintHorizontal_weight="1.5"
-        app:layout_constraintStart_toEndOf="@+id/consumption_text_vew" />
+        app:layout_constraintStart_toEndOf="@+id/consumption_text_vew"
+        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
 
     <TextView
         android:id="@+id/note_text_vew"
@@ -83,20 +122,20 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/all_note"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/traffic_mode_text_vew" />
+        app:layout_constraintStart_toEndOf="@+id/traffic_mode_text_vew"
+        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_barrier"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_barrier"
         tools:listitem="@layout/item_refill" />
 
     <ProgressBar
