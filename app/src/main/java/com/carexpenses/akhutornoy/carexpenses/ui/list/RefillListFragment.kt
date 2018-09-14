@@ -1,5 +1,6 @@
 package com.carexpenses.akhutornoy.carexpenses.ui.list
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -63,8 +64,7 @@ class RefillListFragment : BaseDaggerFragment() {
     override fun init() {
         initToolbar()
         initListeners()
-        //todo consider situation on rotate screen the filter will be cleared
-        loadFromDb(FilterDateRange())
+        loadFromDb()
     }
 
     private fun initToolbar() {
@@ -130,8 +130,17 @@ class RefillListFragment : BaseDaggerFragment() {
         Toast.makeText(activity, getString(R.string.refill_list_filter_cleared), Toast.LENGTH_LONG).show()
     }
 
+    private fun loadFromDb() {
+        val refills = viewModel.getRefills(FUEL_TYPE)
+        observeRefillsList(refills)
+    }
+
     private fun loadFromDb(filterDateRange: FilterDateRange) {
-        viewModel.getRefills(FUEL_TYPE, filterDateRange).observe(this,
+        observeRefillsList(viewModel.getRefills(FUEL_TYPE, filterDateRange))
+    }
+
+    private fun observeRefillsList(liveData: LiveData<List<RefillItem>>) {
+        liveData.observe(this,
                 Observer { items -> showList(items!!) })
     }
 

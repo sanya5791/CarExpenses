@@ -2,7 +2,8 @@ package com.carexpenses.akhutornoy.carexpenses.ui.list
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
+import android.os.Bundle
+import com.carexpenses.akhutornoy.carexpenses.base.BaseSavableViewModel
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.domain.RefillDao
 import com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview.RefillItem
@@ -14,11 +15,23 @@ import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 
 class RefillListViewModel(
-        private val refillDao: RefillDao) : BaseViewModel() {
+        private val refillDao: RefillDao) : BaseSavableViewModel() {
 
     private lateinit var onLoadRefillsLiveData: MutableLiveData<List<RefillItem>>
 
     private var filterRange: FilterDateRange = FilterDateRange()
+
+    override fun saveInner(bundle: Bundle) {
+        bundle.putParcelable(KEY_FILTER_DATE_RANGE, filterRange)
+    }
+
+    override fun restoreInner(bundle: Bundle) {
+        filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE)
+    }
+
+    fun getRefills(fuelType: Refill.FuelType): LiveData<List<RefillItem>> {
+        return getRefills(fuelType, filterRange)
+    }
 
     fun getRefills(fuelType: Refill.FuelType, filterRange: FilterDateRange): LiveData<List<RefillItem>> {
 
@@ -70,5 +83,9 @@ class RefillListViewModel(
                     isNoteAvailable = dbItem.note != Refill.UNSET_STR
             )
         }
+    }
+
+    companion object {
+        const val KEY_FILTER_DATE_RANGE = "KEY_FILTER_DATE_RANGE"
     }
 }

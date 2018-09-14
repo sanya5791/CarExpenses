@@ -28,7 +28,7 @@ abstract class BaseSavableViewModel(bundleSuffix: String = "") : BaseViewModel()
         bundle.putBundle(bundleKey, innerBundle)
     }
 
-    private fun restore(bundle: Bundle) {
+    fun restore(bundle: Bundle) {
         val innerBundle = bundle.getBundle(bundleKey)
         restoreInner(innerBundle!!)
     }

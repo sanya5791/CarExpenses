@@ -11,17 +11,16 @@ import javax.inject.Inject
 
 abstract class BaseDaggerFragment : BaseFragment(), HasSupportFragmentInjector {
 
-    protected var savedInstanceState: Bundle? = null
-        private set
-
     @Inject
     protected lateinit var childFragmentInjector: DispatchingAndroidInjector<Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        this.savedInstanceState = savedInstanceState
-
         AndroidSupportInjection.inject(this)
 
+        savedInstanceState?.apply {
+            getAttachedViewModels().filter { it.value is BaseSavableViewModel }
+                    .forEach { (it.value as BaseSavableViewModel).restore(savedInstanceState) }
+        }
         super.onCreate(savedInstanceState)
     }
 
