@@ -36,7 +36,7 @@ abstract class RefillListFragment : BaseDaggerFragment() {
     private val fuelType: Refill.FuelType by lazy { Refill.FuelType.valueOf(arguments?.getInt(FUEL_TYPE_ARG)!!) }
 
     private lateinit var navigationCallback: Navigation
-    private lateinit var toolbar: IToolbar
+    protected lateinit var toolbar: IToolbar
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -70,7 +70,7 @@ abstract class RefillListFragment : BaseDaggerFragment() {
         loadFromDb()
     }
 
-    private fun initToolbar() {
+    protected open fun initToolbar() {
         setHasOptionsMenu(true)
         toolbar.setToolbar(toolbar_view, false)
         toolbar.setToolbarTitle(R.string.refill_list_refills_title)

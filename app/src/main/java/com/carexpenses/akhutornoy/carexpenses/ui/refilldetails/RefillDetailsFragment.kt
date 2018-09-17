@@ -89,6 +89,16 @@ class RefillDetailsFragment : BaseDaggerFragment() {
     private fun initToolbar() {
         setHasOptionsMenu(true)
         toolbar.setToolbar(toolbar_view, true)
+        if (isEditMode) {
+            toolbar.setToolbarTitle(R.string.refill_details_title)
+        } else {
+            toolbar.setToolbarTitle(R.string.refill_details_title_new_entry)
+        }
+
+        when (argFuelType) {
+            FuelType.LPG -> toolbar.setToolbarSubtitle(R.string.title_lpg)
+            FuelType.PETROL -> toolbar.setToolbarSubtitle(R.string.title_petrol)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

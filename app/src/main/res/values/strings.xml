@@ -20,6 +20,8 @@
     <string name="refill_list_summary_title">Summary:</string>
     <string name="refill_list_summary_text">%1$dL, %2$dUAH:</string>
 
+    <string name="refill_details_title">Refill Details</string>
+    <string name="refill_details_title_new_entry">New Entry</string>
     <string name="refill_details_l_per_100km">L/100Km</string>
     <string name="refill_details_last_distance">Last Distance</string>
     <string name="refill_details_current_mileage">*Current Mileage</string>
@@ -30,7 +32,7 @@
 
     <string name="title_lpg">Lpg</string>
     <string name="title_petrol">Petrol</string>
-    <string name="title_service">Service</string>
+    <string name="title_all">All</string>
     <string name="all_not_implemented">Not Implemented</string>
 
 </resources>

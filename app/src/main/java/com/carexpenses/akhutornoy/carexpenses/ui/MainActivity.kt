@@ -1,6 +1,7 @@
 package com.carexpenses.akhutornoy.carexpenses.ui
 
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v7.widget.Toolbar
 import com.carexpenses.akhutornoy.carexpenses.R
 import com.carexpenses.akhutornoy.carexpenses.base.BaseActivity
@@ -85,12 +86,12 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
         supportActionBar?.setDisplayHomeAsUpEnabled(showHomeAsUp)
     }
 
-    override fun setToolbarTitle(title: String) {
-        supportActionBar?.title = title
+    override fun setToolbarTitle(@StringRes title: Int) {
+        supportActionBar?.setTitle(title)
     }
 
-    override fun setToolbarTitle(title: Int) {
-        supportActionBar?.setTitle(title)
+    override fun setToolbarSubtitle(@StringRes subTitle: Int) {
+        supportActionBar?.setSubtitle(subTitle)
     }
 
     override fun navigateToCreateNewRefill(fuelType: Refill.FuelType) {
