@@ -12,10 +12,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.base.BaseDaggerFragment
-import com.akhutornoy.carexpenses.base.BaseFragment
-import com.akhutornoy.carexpenses.base.BaseViewModel
-import com.akhutornoy.carexpenses.base.IToolbar
+import com.akhutornoy.carexpenses.base.*
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.Refill.TrafficMode
 import com.akhutornoy.carexpenses.ui.list.FuelType
@@ -42,12 +39,6 @@ class RefillDetailsFragment : BaseDaggerFragment() {
             navigationCallback = context
         } else {
             IllegalArgumentException("Calling Activity='${context!!::class.java.simpleName}' should implement '${Navigation::class.java.simpleName}' interface")
-        }
-
-        if (context is IToolbar) {
-            toolbar = context
-        } else {
-            IllegalArgumentException("Calling Activity='${context::class.java.simpleName}' should implement '${IToolbar::class.java.simpleName}' interface")
         }
     }
 
@@ -79,7 +70,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
 
     private fun onConsumptionCalculated(consumption: RefillDetailsViewModel.Consumption?) {
         if (consumption?.isCalculated!!) {
-            val str = "%.2f".format(consumption.consumption)
+            val str = "%.1f".format(consumption.consumption)
             et_fuel_consumption.setText(str)
         } else {
             et_fuel_consumption.setText("")
@@ -87,6 +78,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
     }
 
     private fun initToolbar() {
+        toolbar = BaseToolbar(activity as BaseActivity)
         setHasOptionsMenu(true)
         toolbar.setToolbar(toolbar_view, true)
         if (isEditMode) {

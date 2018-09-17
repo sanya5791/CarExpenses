@@ -14,10 +14,7 @@ import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.base.BaseDaggerFragment
-import com.akhutornoy.carexpenses.base.BaseFragment
-import com.akhutornoy.carexpenses.base.BaseViewModel
-import com.akhutornoy.carexpenses.base.IToolbar
+import com.akhutornoy.carexpenses.base.*
 import com.akhutornoy.carexpenses.ui.list.model.RefillItem
 import com.akhutornoy.carexpenses.ui.list.model.RefillResult
 import com.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter
@@ -48,12 +45,6 @@ abstract class RefillListFragment : BaseDaggerFragment() {
         } else {
             IllegalArgumentException("Calling Activity='${context!!::class.java.simpleName}' should implement '${Navigation::class.java.simpleName}' interface")
         }
-
-        if (context is IToolbar) {
-            toolbar = context
-        } else {
-            IllegalArgumentException("Calling Activity='${context!!::class.java.simpleName}' should implement '${IToolbar::class.java.simpleName}' interface")
-        }
     }
 
     override fun fragmentLayoutId(): Int {
@@ -75,6 +66,7 @@ abstract class RefillListFragment : BaseDaggerFragment() {
     }
 
     protected open fun initToolbar() {
+        toolbar = BaseToolbar(activity as BaseActivity)
         setHasOptionsMenu(true)
         toolbar.setToolbar(toolbar_view, false)
         toolbar.setToolbarTitle(R.string.refill_list_refills_title)

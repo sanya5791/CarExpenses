@@ -1,17 +1,14 @@
 package com.akhutornoy.carexpenses.ui
 
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v7.widget.Toolbar
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.BaseActivity
 import com.akhutornoy.carexpenses.base.BaseFragment
-import com.akhutornoy.carexpenses.base.IToolbar
 import com.akhutornoy.carexpenses.ui.list.*
 import com.akhutornoy.carexpenses.ui.refilldetails.RefillDetailsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetailsFragment.Navigation, IToolbar {
+class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetailsFragment.Navigation {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -73,19 +70,6 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
         val fragmentTag = AllRefillListFragment::class.java.name
         val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)?: AllRefillListFragment.newInstance()
         showTopFragment(fragment as BaseFragment)
-    }
-
-    override fun setToolbar(toolbar: Toolbar, showHomeAsUp: Boolean) {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(showHomeAsUp)
-    }
-
-    override fun setToolbarTitle(@StringRes title: Int) {
-        supportActionBar?.setTitle(title)
-    }
-
-    override fun setToolbarSubtitle(@StringRes subTitle: Int) {
-        supportActionBar?.setSubtitle(subTitle)
     }
 
     override fun navigateToCreateNewRefill(fuelType: FuelType) {
