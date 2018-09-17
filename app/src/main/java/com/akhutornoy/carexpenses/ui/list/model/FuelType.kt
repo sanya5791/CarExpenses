@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.ui.list
+package com.akhutornoy.carexpenses.ui.list.model
 
 import com.akhutornoy.carexpenses.domain.Refill
 import java.lang.IllegalArgumentException
@@ -11,8 +11,8 @@ enum class FuelType {
     companion object {
         fun mapToDbFuelType(fuelType: FuelType): Refill.FuelType {
             return when (fuelType) {
-                FuelType.LPG -> Refill.FuelType.LPG
-                FuelType.PETROL -> Refill.FuelType.PETROL
+                LPG -> Refill.FuelType.LPG
+                PETROL -> Refill.FuelType.PETROL
                 else -> throw IllegalArgumentException("Enum ${fuelType.name} canNOT be mapped to '${Refill.FuelType::class.java.name}")
             }
         }

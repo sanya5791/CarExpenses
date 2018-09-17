@@ -4,7 +4,11 @@ import android.os.Bundle
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.BaseActivity
 import com.akhutornoy.carexpenses.base.BaseFragment
-import com.akhutornoy.carexpenses.ui.list.*
+import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment
+import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment
+import com.akhutornoy.carexpenses.ui.list.fragment.PetrolRefillListFragment
+import com.akhutornoy.carexpenses.ui.list.fragment.RefillListFragment
+import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.RefillDetailsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 

@@ -5,7 +5,11 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import com.akhutornoy.carexpenses.di.scopes.FragmentScope
 import com.akhutornoy.carexpenses.domain.RefillDao
-import com.akhutornoy.carexpenses.ui.list.*
+import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment
+import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment
+import com.akhutornoy.carexpenses.ui.list.fragment.PetrolRefillListFragment
+import com.akhutornoy.carexpenses.ui.list.viewmodel.AllRefillListViewModel
+import com.akhutornoy.carexpenses.ui.list.viewmodel.RefillListViewModel
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -17,7 +21,7 @@ class RefillListFragmentModule {
     @Named(NAMED_LPG)
     @FragmentScope
     fun provideLpgRefillListViewModel(fragment: LpgRefillListFragment,
-                                   factory: ViewModelFactory) : RefillListViewModel {
+                                      factory: ViewModelFactory) : RefillListViewModel {
         return ViewModelProviders.of(fragment, factory).get(RefillListViewModel::class.java)
     }
 

@@ -1,7 +1,9 @@
-package com.akhutornoy.carexpenses.ui.list
+package com.akhutornoy.carexpenses.ui.list.viewmodel
 
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
+import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
+import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import io.reactivex.Flowable
 
 class AllRefillListViewModel(

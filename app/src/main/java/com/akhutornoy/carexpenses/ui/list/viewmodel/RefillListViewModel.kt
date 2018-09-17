@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.ui.list
+package com.akhutornoy.carexpenses.ui.list.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -6,9 +6,7 @@ import android.os.Bundle
 import com.akhutornoy.carexpenses.base.BaseSavableViewModel
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
-import com.akhutornoy.carexpenses.ui.list.model.RefillItem
-import com.akhutornoy.carexpenses.ui.list.model.RefillResult
-import com.akhutornoy.carexpenses.ui.list.model.Summary
+import com.akhutornoy.carexpenses.ui.list.model.*
 import com.akhutornoy.carexpenses.utils.DATE_TIME_FORMAT
 import com.akhutornoy.carexpenses.utils.applyProgressBar
 import com.akhutornoy.carexpenses.utils.applySchedulers

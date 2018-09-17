@@ -15,7 +15,7 @@ import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.*
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.Refill.TrafficMode
-import com.akhutornoy.carexpenses.ui.list.FuelType
+import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*

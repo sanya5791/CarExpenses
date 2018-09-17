@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.ui.list
+package com.akhutornoy.carexpenses.ui.list.fragment
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
@@ -15,6 +15,9 @@ import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.*
+import com.akhutornoy.carexpenses.ui.list.viewmodel.RefillListViewModel
+import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
+import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.list.model.RefillItem
 import com.akhutornoy.carexpenses.ui.list.model.RefillResult
 import com.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter

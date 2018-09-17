@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.ui.list
+package com.akhutornoy.carexpenses.ui.list.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

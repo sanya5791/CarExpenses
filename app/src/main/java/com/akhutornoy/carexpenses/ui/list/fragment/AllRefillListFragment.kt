@@ -1,8 +1,11 @@
-package com.akhutornoy.carexpenses.ui.list
+package com.akhutornoy.carexpenses.ui.list.fragment
 
 import android.view.View
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.BaseFragment
+import com.akhutornoy.carexpenses.ui.list.viewmodel.AllRefillListViewModel
+import com.akhutornoy.carexpenses.ui.list.model.FuelType
+import com.akhutornoy.carexpenses.ui.list.viewmodel.RefillListViewModel
 import javax.inject.Inject
 
 class AllRefillListFragment: RefillListFragment() {
