@@ -23,7 +23,7 @@
 
     <string name="refill_details_title">Refill Details</string>
     <string name="refill_details_title_new_entry">New Entry</string>
-    <string name="refill_details_l_per_100km">L/100Km</string>
+    <string name="refill_details_l_per_100km">L/100</string>
     <string name="refill_details_last_distance">Last Distance</string>
     <string name="refill_details_current_mileage">*Current Mileage</string>
     <string name="refill_details_0_l_100km">0 l/100km</string>

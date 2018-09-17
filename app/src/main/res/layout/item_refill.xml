@@ -13,10 +13,10 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
-        app:layout_constraintHorizontal_weight="1.0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/filledTextView"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintHorizontal_weight="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="12.06" />
@@ -25,10 +25,10 @@
         android:id="@+id/filledTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
-        app:layout_constraintHorizontal_weight="0.5"
+        app:layout_constraintHorizontal_weight="0.3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/consumptionTextView"
         app:layout_constraintStart_toEndOf="@+id/dateTextView"
@@ -39,22 +39,22 @@
         android:id="@+id/consumptionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
-        app:layout_constraintHorizontal_weight="0.5"
+        app:layout_constraintHorizontal_weight="0.7"
         app:layout_constraintStart_toEndOf="@+id/filledTextView"
         app:layout_constraintEnd_toStartOf="@+id/trafficModeTextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="8 L/100km" />
+        tools:text="08,50" />
 
     <TextView
         android:id="@+id/trafficModeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         app:layout_constraintHorizontal_weight="0.5"
         app:layout_constraintStart_toEndOf="@+id/consumptionTextView"
@@ -67,31 +67,30 @@
         android:id="@+id/fuelTypeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         android:visibility="gone"
         tools:visibility="visible"
-        app:layout_constraintHorizontal_weight="1.0"
+        app:layout_constraintHorizontal_weight="0.5"
         app:layout_constraintStart_toEndOf="@+id/trafficModeTextView"
         app:layout_constraintEnd_toStartOf="@+id/noteIcon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="City" />
+        tools:text="Petrol" />
 
     <ImageView
         android:id="@+id/noteIcon"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         android:src="@android:drawable/ic_menu_view"
-        app:layout_constraintHorizontal_weight="0.5"
+        app:layout_constraintHorizontal_weight="0.4"
         app:layout_constraintStart_toEndOf="@+id/fuelTypeTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
 
 </android.support.constraint.ConstraintLayout>

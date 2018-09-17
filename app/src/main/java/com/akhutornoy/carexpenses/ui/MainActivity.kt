@@ -9,7 +9,6 @@ import com.akhutornoy.carexpenses.base.BaseFragment
 import com.akhutornoy.carexpenses.base.IToolbar
 import com.akhutornoy.carexpenses.ui.list.*
 import com.akhutornoy.carexpenses.ui.refilldetails.RefillDetailsFragment
-import com.akhutornoy.carexpenses.ui.stubscreen.StubFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetailsFragment.Navigation, IToolbar {
@@ -74,10 +73,6 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
         val fragmentTag = AllRefillListFragment::class.java.name
         val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)?: AllRefillListFragment.newInstance()
         showTopFragment(fragment as BaseFragment)
-    }
-
-    private fun showNotImplemented() {
-        showTopFragment(StubFragment.newInstance())
     }
 
     override fun setToolbar(toolbar: Toolbar, showHomeAsUp: Boolean) {
