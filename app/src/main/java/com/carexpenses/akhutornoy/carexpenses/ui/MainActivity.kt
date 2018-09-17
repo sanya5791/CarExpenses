@@ -6,6 +6,9 @@ import com.carexpenses.akhutornoy.carexpenses.R
 import com.carexpenses.akhutornoy.carexpenses.base.BaseActivity
 import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
+import com.carexpenses.akhutornoy.carexpenses.domain.Refill
+import com.carexpenses.akhutornoy.carexpenses.ui.list.LpgRefillListFragment
+import com.carexpenses.akhutornoy.carexpenses.ui.list.PetrolRefillListFragment
 import com.carexpenses.akhutornoy.carexpenses.ui.list.RefillListFragment
 import com.carexpenses.akhutornoy.carexpenses.ui.refilldetails.RefillDetailsFragment
 import com.carexpenses.akhutornoy.carexpenses.ui.stubscreen.StubFragment
@@ -58,13 +61,15 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
     }
 
     private fun onLpgClicked() {
-        val fragmentTag = RefillListFragment::class.java.name
-        val lpgFragment = supportFragmentManager.findFragmentByTag(fragmentTag)?: RefillListFragment.newInstance()
-        showTopFragment(lpgFragment as BaseFragment)
+        val fragmentTag = LpgRefillListFragment::class.java.name
+        val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)?: LpgRefillListFragment.newInstance()
+        showTopFragment(fragment as BaseFragment)
     }
 
     private fun onPetrolClicked() {
-        showNotImplemented()
+        val fragmentTag = PetrolRefillListFragment::class.java.name
+        val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)?: PetrolRefillListFragment.newInstance()
+        showTopFragment(fragment as BaseFragment)
     }
 
     private fun onServiceClicked() {
@@ -78,7 +83,6 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
     override fun setToolbar(toolbar: Toolbar, showHomeAsUp: Boolean) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(showHomeAsUp)
-//        toolbar.navigationIcon?.setColorFilter(ContextCompat.getColor(this, android.R.color.white), PorterDuff.Mode.SRC_ATOP)
     }
 
     override fun setToolbarTitle(title: String) {
@@ -89,12 +93,12 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
         supportActionBar?.setTitle(title)
     }
 
-    override fun navigateToCreateNewRefill() {
-        showFragment(RefillDetailsFragment.newInstance())
+    override fun navigateToCreateNewRefill(fuelType: Refill.FuelType) {
+        showFragment(RefillDetailsFragment.newInstance(fuelType))
     }
 
-    override fun navigateToEditRefill(refillId: Long) {
-        showFragment(RefillDetailsFragment.newInstance(refillId))
+    override fun navigateToEditRefill(fuelType: Refill.FuelType, refillId: Long) {
+        showFragment(RefillDetailsFragment.newInstance(fuelType, refillId))
     }
 
     override fun navigationFinishScreen() {

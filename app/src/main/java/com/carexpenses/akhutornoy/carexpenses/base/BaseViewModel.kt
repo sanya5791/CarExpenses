@@ -2,6 +2,7 @@ package com.carexpenses.akhutornoy.carexpenses.base
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.github.ajalt.timberkt.Timber
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -19,6 +20,7 @@ abstract class BaseViewModel : ViewModel() {
         autoUnsubscribe.clear()
     }
     protected fun showError(error: Throwable) {
-        showError.value = error.message
+        Timber.e(error)
+        error.message?.run { showError.value = error.message }
     }
 }

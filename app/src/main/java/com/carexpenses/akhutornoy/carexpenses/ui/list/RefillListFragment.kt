@@ -3,6 +3,7 @@ package com.carexpenses.akhutornoy.carexpenses.ui.list
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.content.Context
+import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
@@ -26,12 +27,13 @@ import kotlinx.android.synthetic.main.fragment_refill_list.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.joda.time.LocalDate
 import java.util.*
-import javax.inject.Inject
 
 
-class RefillListFragment : BaseDaggerFragment() {
-    @Inject
-    lateinit var viewModel : RefillListViewModel
+abstract class RefillListFragment : BaseDaggerFragment() {
+
+    abstract val viewModel: RefillListViewModel
+
+    private val fuelType: Refill.FuelType by lazy { Refill.FuelType.valueOf(arguments?.getInt(FUEL_TYPE_ARG)!!) }
 
     private lateinit var navigationCallback: Navigation
     private lateinit var toolbar: IToolbar
@@ -121,7 +123,7 @@ class RefillListFragment : BaseDaggerFragment() {
 
     //TODO maybe should be replaced with Navigation pack library
     private fun showAddNewItemScreen() {
-        navigationCallback.navigateToCreateNewRefill()
+        navigationCallback.navigateToCreateNewRefill(fuelType)
     }
 
     private fun onClearFilterClicked() {
@@ -132,12 +134,12 @@ class RefillListFragment : BaseDaggerFragment() {
     }
 
     private fun loadFromDb() {
-        val refills = viewModel.getRefills(FUEL_TYPE)
+        val refills = viewModel.getRefills(fuelType)
         observeRefillsList(refills)
     }
 
     private fun loadFromDb(filterDateRange: FilterDateRange) {
-        observeRefillsList(viewModel.getRefills(FUEL_TYPE, filterDateRange))
+        observeRefillsList(viewModel.getRefills(fuelType, filterDateRange))
     }
 
     private fun observeRefillsList(liveData: LiveData<RefillResult>) {
@@ -158,7 +160,7 @@ class RefillListFragment : BaseDaggerFragment() {
                 refills,
                 listener = object : RefillListAdapter.OnItemSelected<RefillItem> {
                     override fun onItemSelected(item: RefillItem) {
-                        navigationCallback.navigateToEditRefill(item.dbId)
+                        navigationCallback.navigateToEditRefill(fuelType, item.dbId)
                     }
                 }
         )
@@ -168,17 +170,21 @@ class RefillListFragment : BaseDaggerFragment() {
         }
     }
 
-    companion object {
-        private val FUEL_TYPE = Refill.FuelType.LPG
+    protected companion object {
+        const val FUEL_TYPE_ARG = "FUEL_TYPE_ARG"
 
-        fun newInstance(): BaseFragment {
-            return RefillListFragment()
+        fun newInstance(refillFragment: RefillListFragment, fuelType: Refill.FuelType): BaseFragment {
+            val args = Bundle()
+            args.putInt(FUEL_TYPE_ARG, fuelType.value)
+            refillFragment.arguments = args
+
+            return refillFragment
         }
     }
 
     interface Navigation {
-        fun navigateToCreateNewRefill()
-        fun navigateToEditRefill(refillId: Long)
+        fun navigateToCreateNewRefill(fuelType: Refill.FuelType)
+        fun navigateToEditRefill(fuelType: Refill.FuelType, refillId: Long)
     }
 
 }

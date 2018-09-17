@@ -5,18 +5,29 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import com.carexpenses.akhutornoy.carexpenses.di.scopes.FragmentScope
 import com.carexpenses.akhutornoy.carexpenses.domain.RefillDao
-import com.carexpenses.akhutornoy.carexpenses.ui.list.RefillListFragment
+import com.carexpenses.akhutornoy.carexpenses.ui.list.LpgRefillListFragment
+import com.carexpenses.akhutornoy.carexpenses.ui.list.PetrolRefillListFragment
 import com.carexpenses.akhutornoy.carexpenses.ui.list.RefillListViewModel
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 
 @Module
 class RefillListFragmentModule {
 
     @Provides
+    @Named(NAMED_LPG)
     @FragmentScope
-    fun provideRefillListViewModel(fragment: RefillListFragment,
+    fun provideLpgRefillListViewModel(fragment: LpgRefillListFragment,
                                    factory: ViewModelFactory) : RefillListViewModel {
+        return ViewModelProviders.of(fragment, factory).get(RefillListViewModel::class.java)
+    }
+
+    @Provides
+    @Named(NAMED_PETROL)
+    @FragmentScope
+    fun providePetrolRefillListViewModel(fragment: PetrolRefillListFragment,
+                                         factory: ViewModelFactory) : RefillListViewModel {
         return ViewModelProviders.of(fragment, factory).get(RefillListViewModel::class.java)
     }
 
@@ -32,5 +43,10 @@ class RefillListFragmentModule {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return RefillListViewModel(refillDao) as T
         }
+    }
+
+    companion object {
+        const val NAMED_LPG = "lpg"
+        const val NAMED_PETROL = "petrol"
     }
 }

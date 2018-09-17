@@ -17,6 +17,7 @@ import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
+import com.carexpenses.akhutornoy.carexpenses.domain.Refill.FuelType
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill.TrafficMode
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -30,8 +31,9 @@ class RefillDetailsFragment : BaseDaggerFragment() {
     private lateinit var navigationCallback: Navigation
     private lateinit var toolbar: IToolbar
 
-    private val isEditMode: Boolean by lazy { arguments?.getLong(ARG_REFILL_ID) != null }
-    private val argRefillId: Long? by lazy { arguments?.getLong(ARG_REFILL_ID) }
+    private val argFuelType: FuelType by lazy { FuelType.valueOf(arguments?.getInt(ARG_FUEL_TYPE)!!) }
+    private val argRefillId: Long? by lazy { getRefillIdFromArg() }
+    private val isEditMode: Boolean by lazy { arguments!!.containsKey(ARG_REFILL_ID) }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -58,6 +60,14 @@ class RefillDetailsFragment : BaseDaggerFragment() {
     }
 
     override fun getProgressBar(): View? = progress_bar
+
+    private fun getRefillIdFromArg(): Long? {
+        if (arguments == null || !arguments!!.containsKey(ARG_REFILL_ID)) {
+            return null
+        }
+
+        return arguments!!.getLong(ARG_REFILL_ID)
+    }
 
     override fun init() {
         initToolbar()
@@ -159,7 +169,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
                 moneyCount = et_money.getIntValue(),
                 currentMileage = et_current_mileage.getIntValue(),
                 lastDistance = et_last_distance.getIntValue(),
-                fuelType = Refill.FuelType.LPG.value,
+                fuelType = argFuelType.value,
                 trafficMode = getSelectedDistanceMode().value,
                 note = et_note.text.toString()
         )
@@ -223,21 +233,24 @@ class RefillDetailsFragment : BaseDaggerFragment() {
     }
 
     companion object {
+        private const val ARG_FUEL_TYPE = "ARG_FUEL_TYPE"
         private const val ARG_REFILL_ID = "ARG_REFILL_ID"
 
-        fun newInstance(): BaseFragment {
-            return RefillDetailsFragment()
+        fun newInstance(fuelType: FuelType): BaseFragment {
+            return newInstance(fuelType, null)
         }
 
-        fun newInstance(refillId: Long): BaseFragment {
+        fun newInstance(fuelType: FuelType, refillId: Long?): BaseFragment {
             val args = Bundle()
-            args.putLong(ARG_REFILL_ID, refillId)
-            return newInstance().apply { arguments = args }
+            args.putInt(ARG_FUEL_TYPE, fuelType.value)
+
+            refillId?.apply { args.putLong(ARG_REFILL_ID, this) }
+
+            return RefillDetailsFragment().apply { arguments = args }
         }
     }
 
     interface Navigation {
         fun navigationFinishScreen()
     }
-
 }

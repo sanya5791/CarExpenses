@@ -58,12 +58,12 @@ class RefillDetailsViewModel(
 
         onLoadByIdLiveData = MutableLiveData()
         autoUnsubscribe(
-                Single.fromCallable { refillDao.getByCreatedAt(id)?: throw ItemNotFoundException() }
+                Single.fromCallable { refillDao.getByCreatedAt(id)?: throw ItemNotFoundException("ItemId=$id") }
                         .applySchedulers()
                         .applyProgressBar(this)
                         .subscribe(
                                 { onLoadByIdLiveData.value = it },
-                                { showError.value = it.message })
+                                this::showError )
         )
 
         return onLoadByIdLiveData

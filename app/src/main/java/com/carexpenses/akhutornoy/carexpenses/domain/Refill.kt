@@ -38,7 +38,18 @@ data class Refill(
 
     enum class FuelType (val value: Int) {
         PETROL(0),
-        LPG(1),
+        LPG(1),;
+
+        companion object {
+            fun valueOf(value: Int): FuelType {
+                val filtered = FuelType.values().filter { it.value == value }
+                if (filtered.size != 1) {
+                    throw IllegalArgumentException("'$value' doesn't belong to '${FuelType::class.java.simpleName}' scope.")
+                }
+
+                return filtered.first()
+            }
+        }
     }
 
     enum class TrafficMode (val value: Int) {

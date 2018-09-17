@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.carexpenses.akhutornoy.carexpenses.R
+import com.github.ajalt.timberkt.Timber
 
 abstract class BaseFragment: Fragment() {
 
@@ -28,11 +29,15 @@ abstract class BaseFragment: Fragment() {
     }
 
     private fun handleErrors() {
-        getBaseViewModel()?.showError?.observe(this, Observer { handleErrorMessage(it!!) })
+        getBaseViewModel()?.showError?.observe(this, Observer { handleErrorMessage(it) })
     }
 
-    protected fun handleErrorMessage(errorMessage: String) {
-        Log.e("Error", errorMessage)
+    protected fun handleErrorMessage(errorMessage: String?) {
+        if (errorMessage != null) {
+            Timber.e { errorMessage }
+        } else {
+            Timber.e {"Error message is NULL"}
+        }
     }
 
     private fun handleProgressBar() {
