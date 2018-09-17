@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.carexpenses.akhutornoy.carexpenses.R
 import com.github.ajalt.timberkt.Timber
 
@@ -33,11 +34,9 @@ abstract class BaseFragment: Fragment() {
     }
 
     protected fun handleErrorMessage(errorMessage: String?) {
-        if (errorMessage != null) {
-            Timber.e { errorMessage }
-        } else {
-            Timber.e {"Error message is NULL"}
-        }
+        val msg = errorMessage ?: "Error message is NULL"
+        Timber.e { msg }
+        Toast.makeText(activity, msg, Toast.LENGTH_LONG).show()
     }
 
     private fun handleProgressBar() {

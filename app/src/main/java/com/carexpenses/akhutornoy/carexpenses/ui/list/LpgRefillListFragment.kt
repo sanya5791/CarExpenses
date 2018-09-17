@@ -15,14 +15,14 @@ class LpgRefillListFragment: RefillListFragment() {
     override val viewModel: RefillListViewModel
         get() = lpgViewModel
 
-    override protected fun initToolbar() {
+    override fun initToolbar() {
         super.initToolbar()
         toolbar.setToolbarSubtitle(R.string.title_lpg)
     }
 
     companion object {
         fun newInstance(): BaseFragment {
-            return newInstance(LpgRefillListFragment(), Refill.FuelType.LPG)
+            return newInstance(LpgRefillListFragment(), FuelType.LPG)
         }
     }
 }

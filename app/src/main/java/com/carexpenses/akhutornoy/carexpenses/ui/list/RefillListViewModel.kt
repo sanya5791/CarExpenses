@@ -16,7 +16,7 @@ import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 
-class RefillListViewModel(
+open class RefillListViewModel(
         private val refillDao: RefillDao) : BaseSavableViewModel() {
 
     private lateinit var onLoadRefillsLiveData: MutableLiveData<RefillResult>
@@ -31,11 +31,11 @@ class RefillListViewModel(
         filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE)
     }
 
-    fun getRefills(fuelType: Refill.FuelType): LiveData<RefillResult> {
+    fun getRefills(fuelType: FuelType): LiveData<RefillResult> {
         return getRefills(fuelType, filterRange)
     }
 
-    fun getRefills(fuelType: Refill.FuelType, filterRange: FilterDateRange): LiveData<RefillResult> {
+    fun getRefills(fuelType: FuelType, filterRange: FilterDateRange): LiveData<RefillResult> {
 
         val isFilterChanged = filterRange.from != this.filterRange.from
                                     || filterRange.to != this.filterRange.to
@@ -61,12 +61,13 @@ class RefillListViewModel(
         return onLoadRefillsLiveData
     }
 
-    private fun getRefillsFlowable(fuelType: Refill.FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {
+    protected  open fun getRefillsFlowable(fuelType: FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {
+        val dbFuelType = FuelType.mapToDbFuelType(fuelType)
         return if (filterRange.isEmpty()) {
-            refillDao.getByFuelType(fuelType.value)
+            refillDao.getByFuelType(dbFuelType.value)
         } else {
             refillDao.getByFuelType(
-                    fuelType.value,
+                    dbFuelType.value,
                     filterRange.from.toDate().time,
                     filterRange.to.plusDays(1).toDate().time)
         }
@@ -86,6 +87,7 @@ class RefillListViewModel(
                     date = date,
                     litersCount = dbItem.litersCount,
                     trafficMode = dbItem.trafficMode().name,
+                    fuelType = Refill.FuelType.valueOf(dbItem.fuelType).name,
                     isNoteAvailable = dbItem.note != Refill.UNSET_STR
             )
         }

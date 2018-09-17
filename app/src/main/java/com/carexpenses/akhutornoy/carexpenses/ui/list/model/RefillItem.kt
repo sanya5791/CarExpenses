@@ -6,5 +6,6 @@ data class RefillItem(
         val litersCount: Int,
         val consumption: Float,
         val trafficMode: String,
+        val fuelType: String,
         val isNoteAvailable: Boolean
         )

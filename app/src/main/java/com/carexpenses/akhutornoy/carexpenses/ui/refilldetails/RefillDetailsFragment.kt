@@ -17,8 +17,8 @@ import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill
-import com.carexpenses.akhutornoy.carexpenses.domain.Refill.FuelType
 import com.carexpenses.akhutornoy.carexpenses.domain.Refill.TrafficMode
+import com.carexpenses.akhutornoy.carexpenses.ui.list.FuelType
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
@@ -31,7 +31,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
     private lateinit var navigationCallback: Navigation
     private lateinit var toolbar: IToolbar
 
-    private val argFuelType: FuelType by lazy { FuelType.valueOf(arguments?.getInt(ARG_FUEL_TYPE)!!) }
+    private val argFuelType: FuelType by lazy { FuelType.valueOf(arguments?.getString(ARG_FUEL_TYPE)!!) }
     private val argRefillId: Long? by lazy { getRefillIdFromArg() }
     private val isEditMode: Boolean by lazy { arguments!!.containsKey(ARG_REFILL_ID) }
 
@@ -179,7 +179,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
                 moneyCount = et_money.getIntValue(),
                 currentMileage = et_current_mileage.getIntValue(),
                 lastDistance = et_last_distance.getIntValue(),
-                fuelType = argFuelType.value,
+                fuelType = FuelType.mapToDbFuelType(argFuelType).value,
                 trafficMode = getSelectedDistanceMode().value,
                 note = et_note.text.toString()
         )
@@ -214,6 +214,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
         et_money.setText(refill.moneyCount.toString())
         rg_distance_mode.check(getRadioButtonId(refill.trafficMode()))
         et_note.setText(refill.note)
+        use_note_check_box.isChecked = refill.note.isNotEmpty()
         tryCalcConsumption()
         et_last_distance.setText(
                 if(refill.lastDistance.isEmpty()) ""
@@ -252,7 +253,7 @@ class RefillDetailsFragment : BaseDaggerFragment() {
 
         fun newInstance(fuelType: FuelType, refillId: Long?): BaseFragment {
             val args = Bundle()
-            args.putInt(ARG_FUEL_TYPE, fuelType.value)
+            args.putString(ARG_FUEL_TYPE, fuelType.name)
 
             refillId?.apply { args.putLong(ARG_REFILL_ID, this) }
 

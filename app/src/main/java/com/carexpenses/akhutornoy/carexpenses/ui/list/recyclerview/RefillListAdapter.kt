@@ -8,7 +8,11 @@ import com.carexpenses.akhutornoy.carexpenses.R
 import com.carexpenses.akhutornoy.carexpenses.ui.list.model.RefillItem
 import kotlinx.android.synthetic.main.item_refill.view.*
 
-class RefillListAdapter(var items: List<RefillItem>, val listener: OnItemSelected<RefillItem>) : RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {
+class RefillListAdapter(
+        private val items: List<RefillItem>,
+        private val listener: OnItemSelected<RefillItem>) : RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {
+
+    var fuelTypeVisibility = View.VISIBLE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -20,12 +24,12 @@ class RefillListAdapter(var items: List<RefillItem>, val listener: OnItemSelecte
             = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
-            = holder.bind(items[position], listener)
+            = holder.bind(fuelTypeVisibility, items[position], listener)
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         lateinit var item: RefillItem
 
-        fun bind(item: RefillItem, listener: OnItemSelected<RefillItem>) {
+        fun bind(fuelTypeVisibility: Int, item: RefillItem, listener: OnItemSelected<RefillItem>) {
             this.item = item
 
             view.setOnClickListener { listener.onItemSelected(item) }
@@ -35,6 +39,8 @@ class RefillListAdapter(var items: List<RefillItem>, val listener: OnItemSelecte
             val consumption = "%.2f".format(item.consumption)
             view.consumptionTextView.text = consumption
             view.trafficModeTextView.text = item.trafficMode
+            view.fuelTypeTextView.visibility = fuelTypeVisibility
+            view.fuelTypeTextView.text = item.fuelType
             view.noteIcon.visibility =
                 if(item.isNoteAvailable) {
                     View.VISIBLE

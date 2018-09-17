@@ -18,7 +18,6 @@ import com.carexpenses.akhutornoy.carexpenses.base.BaseDaggerFragment
 import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.BaseViewModel
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
-import com.carexpenses.akhutornoy.carexpenses.domain.Refill
 import com.carexpenses.akhutornoy.carexpenses.ui.list.model.RefillItem
 import com.carexpenses.akhutornoy.carexpenses.ui.list.model.RefillResult
 import com.carexpenses.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter
@@ -33,10 +32,13 @@ abstract class RefillListFragment : BaseDaggerFragment() {
 
     abstract val viewModel: RefillListViewModel
 
-    private val fuelType: Refill.FuelType by lazy { Refill.FuelType.valueOf(arguments?.getInt(FUEL_TYPE_ARG)!!) }
+    private val fuelType: FuelType by lazy { FuelType.valueOf(arguments?.getString(FUEL_TYPE_ARG)!!) }
 
     private lateinit var navigationCallback: Navigation
     protected lateinit var toolbar: IToolbar
+
+    protected open val addFabVisibility = View.VISIBLE
+    protected open val fuelTypeVisibility = View.GONE
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -66,6 +68,8 @@ abstract class RefillListFragment : BaseDaggerFragment() {
 
     override fun init() {
         initToolbar()
+        add_fab.visibility = addFabVisibility
+        fuel_type_text_vew.visibility = fuelTypeVisibility
         initListeners()
         loadFromDb()
     }
@@ -156,14 +160,16 @@ abstract class RefillListFragment : BaseDaggerFragment() {
     }
 
     private fun showList(refills: List<RefillItem>) {
-        val adapter = RefillListAdapter(
-                refills,
-                listener = object : RefillListAdapter.OnItemSelected<RefillItem> {
-                    override fun onItemSelected(item: RefillItem) {
-                        navigationCallback.navigateToEditRefill(fuelType, item.dbId)
-                    }
+        val listener = object : RefillListAdapter.OnItemSelected<RefillItem> {
+            override fun onItemSelected(item: RefillItem) {
+                if (fuelType != FuelType.ALL) {
+                    navigationCallback.navigateToEditRefill(fuelType, item.dbId)
                 }
-        )
+            }
+        }
+
+        val adapter = RefillListAdapter(refills, listener)
+        adapter.fuelTypeVisibility = fuelTypeVisibility
         recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
             this.adapter = adapter
@@ -173,18 +179,16 @@ abstract class RefillListFragment : BaseDaggerFragment() {
     protected companion object {
         const val FUEL_TYPE_ARG = "FUEL_TYPE_ARG"
 
-        fun newInstance(refillFragment: RefillListFragment, fuelType: Refill.FuelType): BaseFragment {
+        fun newInstance(refillFragment: RefillListFragment, fuelType: FuelType): BaseFragment {
             val args = Bundle()
-            args.putInt(FUEL_TYPE_ARG, fuelType.value)
+            args.putString(FUEL_TYPE_ARG, fuelType.name)
             refillFragment.arguments = args
-
             return refillFragment
         }
     }
 
     interface Navigation {
-        fun navigateToCreateNewRefill(fuelType: Refill.FuelType)
-        fun navigateToEditRefill(fuelType: Refill.FuelType, refillId: Long)
+        fun navigateToCreateNewRefill(fuelType: FuelType)
+        fun navigateToEditRefill(fuelType: FuelType, refillId: Long)
     }
-
 }

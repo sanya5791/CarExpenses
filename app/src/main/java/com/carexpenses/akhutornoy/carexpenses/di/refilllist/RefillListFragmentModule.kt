@@ -5,9 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import com.carexpenses.akhutornoy.carexpenses.di.scopes.FragmentScope
 import com.carexpenses.akhutornoy.carexpenses.domain.RefillDao
-import com.carexpenses.akhutornoy.carexpenses.ui.list.LpgRefillListFragment
-import com.carexpenses.akhutornoy.carexpenses.ui.list.PetrolRefillListFragment
-import com.carexpenses.akhutornoy.carexpenses.ui.list.RefillListViewModel
+import com.carexpenses.akhutornoy.carexpenses.ui.list.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -33,6 +31,13 @@ class RefillListFragmentModule {
 
     @Provides
     @FragmentScope
+    fun provideAllRefillListViewModel(fragment: AllRefillListFragment,
+                                      factory: ViewModelFactory) : AllRefillListViewModel {
+        return ViewModelProviders.of(fragment, factory).get(AllRefillListViewModel::class.java)
+    }
+
+    @Provides
+    @FragmentScope
     fun provideLpgViewModelFactory(refillDao: RefillDao): ViewModelFactory {
         return ViewModelFactory(refillDao)
     }
@@ -41,7 +46,10 @@ class RefillListFragmentModule {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return RefillListViewModel(refillDao) as T
+            return (when (modelClass) {
+                AllRefillListViewModel::class.java -> AllRefillListViewModel(refillDao)
+                else -> RefillListViewModel(refillDao)
+            }) as T
         }
     }
 

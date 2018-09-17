@@ -7,10 +7,7 @@ import com.carexpenses.akhutornoy.carexpenses.R
 import com.carexpenses.akhutornoy.carexpenses.base.BaseActivity
 import com.carexpenses.akhutornoy.carexpenses.base.BaseFragment
 import com.carexpenses.akhutornoy.carexpenses.base.IToolbar
-import com.carexpenses.akhutornoy.carexpenses.domain.Refill
-import com.carexpenses.akhutornoy.carexpenses.ui.list.LpgRefillListFragment
-import com.carexpenses.akhutornoy.carexpenses.ui.list.PetrolRefillListFragment
-import com.carexpenses.akhutornoy.carexpenses.ui.list.RefillListFragment
+import com.carexpenses.akhutornoy.carexpenses.ui.list.*
 import com.carexpenses.akhutornoy.carexpenses.ui.refilldetails.RefillDetailsFragment
 import com.carexpenses.akhutornoy.carexpenses.ui.stubscreen.StubFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -53,7 +50,7 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
                     true
                 }
                 R.id.navigation_service -> {
-                    onServiceClicked()
+                    onAllClicked()
                     true
                 }
                 else -> false
@@ -73,8 +70,10 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
         showTopFragment(fragment as BaseFragment)
     }
 
-    private fun onServiceClicked() {
-        showNotImplemented()
+    private fun onAllClicked() {
+        val fragmentTag = AllRefillListFragment::class.java.name
+        val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)?: AllRefillListFragment.newInstance()
+        showTopFragment(fragment as BaseFragment)
     }
 
     private fun showNotImplemented() {
@@ -94,11 +93,11 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
         supportActionBar?.setSubtitle(subTitle)
     }
 
-    override fun navigateToCreateNewRefill(fuelType: Refill.FuelType) {
+    override fun navigateToCreateNewRefill(fuelType: FuelType) {
         showFragment(RefillDetailsFragment.newInstance(fuelType))
     }
 
-    override fun navigateToEditRefill(fuelType: Refill.FuelType, refillId: Long) {
+    override fun navigateToEditRefill(fuelType: FuelType, refillId: Long) {
         showFragment(RefillDetailsFragment.newInstance(fuelType, refillId))
     }
 
