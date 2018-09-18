@@ -1,12 +1,10 @@
-package com.akhutornoy.carexpenses.ui.refilldetails
+package com.akhutornoy.carexpenses.ui.refilldetails.fragment
 
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
@@ -16,21 +14,19 @@ import com.akhutornoy.carexpenses.base.*
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.Refill.TrafficMode
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
+import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
-import javax.inject.Inject
 
-class RefillDetailsFragment : BaseDaggerFragment() {
-    @Inject
-    lateinit var viewModel : RefillDetailsViewModel
+abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
 
-    private lateinit var navigationCallback: Navigation
-    private lateinit var toolbar: IToolbar
+    protected abstract val createRefillDetailsViewModel: CreateRefillDetailsViewModel
+
+    protected lateinit var navigationCallback: Navigation
+    protected lateinit var toolbar: IToolbar
 
     private val argFuelType: FuelType by lazy { FuelType.valueOf(arguments?.getString(ARG_FUEL_TYPE)!!) }
-    private val argRefillId: Long? by lazy { getRefillIdFromArg() }
-    private val isEditMode: Boolean by lazy { arguments!!.containsKey(ARG_REFILL_ID) }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -47,28 +43,19 @@ class RefillDetailsFragment : BaseDaggerFragment() {
     }
 
     override fun getBaseViewModel(): BaseViewModel? {
-        return viewModel
+        return createRefillDetailsViewModel
     }
 
     override fun getProgressBar(): View? = progress_bar
 
-    private fun getRefillIdFromArg(): Long? {
-        if (arguments == null || !arguments!!.containsKey(ARG_REFILL_ID)) {
-            return null
-        }
-
-        return arguments!!.getLong(ARG_REFILL_ID)
-    }
-
     override fun init() {
         initToolbar()
         initListeners()
-        argRefillId?.let { loadFromDb(it) }
-        viewModel.onConsumptionCalculated.observe(this,
-                Observer(this@RefillDetailsFragment::onConsumptionCalculated))
+        createRefillDetailsViewModel.onConsumptionCalculated.observe(this,
+                Observer(this@BaseRefillDetailsFragment::onConsumptionCalculated))
     }
 
-    private fun onConsumptionCalculated(consumption: RefillDetailsViewModel.Consumption?) {
+    private fun onConsumptionCalculated(consumption: CreateRefillDetailsViewModel.Consumption?) {
         if (consumption?.isCalculated!!) {
             val str = "%.1f".format(consumption.consumption)
             et_fuel_consumption.setText(str)
@@ -77,15 +64,10 @@ class RefillDetailsFragment : BaseDaggerFragment() {
         }
     }
 
-    private fun initToolbar() {
+    protected  open fun initToolbar() {
         toolbar = BaseToolbar(activity as BaseActivity)
         setHasOptionsMenu(true)
         toolbar.setToolbar(toolbar_view, true)
-        if (isEditMode) {
-            toolbar.setToolbarTitle(R.string.refill_details_title)
-        } else {
-            toolbar.setToolbarTitle(R.string.refill_details_title_new_entry)
-        }
 
         when (argFuelType) {
             FuelType.LPG -> toolbar.setToolbarSubtitle(R.string.title_lpg)
@@ -93,34 +75,14 @@ class RefillDetailsFragment : BaseDaggerFragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (isEditMode) {
-            activity?.menuInflater?.inflate(R.menu.menu_refill_details, menu)
-        }
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
-            R.id.action_delete -> onDeleteClicked()
             android.R.id.home -> onBackClicked()
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun onDeleteClicked(): Boolean {
-        if (argRefillId == null) {
-            return false
-        }
-        viewModel.delete(argRefillId!!).observe(this, Observer { isRemoved ->
-            when (isRemoved) {
-                true -> navigationCallback.navigationFinishScreen()
-            }
-        })
-        return true
-    }
-
-    private fun onBackClicked(): Boolean {
+    protected fun onBackClicked(): Boolean {
         navigationCallback.navigationFinishScreen()
         return true
     }
@@ -143,13 +105,13 @@ class RefillDetailsFragment : BaseDaggerFragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
-    private fun tryCalcConsumption() {
-        viewModel.onConsumptionRelatedDataChanged(getRefillItem())
+    protected fun tryCalcConsumption() {
+        createRefillDetailsViewModel.onConsumptionRelatedDataChanged(getRefillItem())
     }
 
     private fun onButtonDoneClicked() {
         val refill = getRefillItem()
-        viewModel.insert(refill).observe(this, Observer {isInserted ->
+        createRefillDetailsViewModel.insert(refill).observe(this, Observer { isInserted ->
             when (isInserted) {
                 true -> onInsertedSuccess()
             }
@@ -159,14 +121,10 @@ class RefillDetailsFragment : BaseDaggerFragment() {
 
     private fun getRefillItem(): Refill {
         val timeNow = Date().time
-        val createdAt: Long = argRefillId ?: timeNow
-        val editedAt: Long =
-                if (isEditMode) timeNow
-                else createdAt
 
         return Refill(
-                createdAt = createdAt,
-                editedAt = editedAt,
+                createdAt = timeNow,
+                editedAt = timeNow,
                 litersCount = et_liters.getIntValue(),
                 moneyCount = et_money.getIntValue(),
                 currentMileage = et_current_mileage.getIntValue(),
@@ -193,34 +151,6 @@ class RefillDetailsFragment : BaseDaggerFragment() {
                 else -> throw IllegalArgumentException("Not a case")
             }
 
-    private fun loadFromDb(refillId: Long) {
-        viewModel.getById(refillId)
-                .observe(this, Observer { showRefill(it!!) })
-    }
-
-    private fun Int.isEmpty() = this == Refill.UNSET_INT
-
-    private fun showRefill(refill: Refill) {
-        et_liters.setText(refill.litersCount.toString())
-        et_current_mileage.setText(refill.currentMileage.toString())
-        et_money.setText(refill.moneyCount.toString())
-        rg_distance_mode.check(getRadioButtonId(refill.trafficMode()))
-        et_note.setText(refill.note)
-        use_note_check_box.isChecked = refill.note.isNotEmpty()
-        tryCalcConsumption()
-        et_last_distance.setText(
-                if(refill.lastDistance.isEmpty()) ""
-                else refill.lastDistance.toString()
-        )
-    }
-
-    private fun getRadioButtonId(trafficMode: TrafficMode) =
-        when (trafficMode) {
-            TrafficMode.CITY -> R.id.rb_city_mode
-            TrafficMode.HIGHWAY -> R.id.rb_highway_mode
-            TrafficMode.MIXED -> R.id.rb_mixed_mode
-        }
-
     override fun onStart() {
         super.onStart()
         et_last_distance.addTextChangedListener(textWatcher)
@@ -237,19 +167,11 @@ class RefillDetailsFragment : BaseDaggerFragment() {
 
     companion object {
         private const val ARG_FUEL_TYPE = "ARG_FUEL_TYPE"
-        private const val ARG_REFILL_ID = "ARG_REFILL_ID"
 
-        fun newInstance(fuelType: FuelType): BaseFragment {
-            return newInstance(fuelType, null)
-        }
-
-        fun newInstance(fuelType: FuelType, refillId: Long?): BaseFragment {
+        fun getArguments(fuelType: FuelType): Bundle {
             val args = Bundle()
             args.putString(ARG_FUEL_TYPE, fuelType.name)
-
-            refillId?.apply { args.putLong(ARG_REFILL_ID, this) }
-
-            return RefillDetailsFragment().apply { arguments = args }
+            return args
         }
     }
 

@@ -9,10 +9,12 @@ import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.PetrolRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.RefillListFragment
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
-import com.akhutornoy.carexpenses.ui.refilldetails.RefillDetailsFragment
+import com.akhutornoy.carexpenses.ui.refilldetails.fragment.BaseRefillDetailsFragment
+import com.akhutornoy.carexpenses.ui.refilldetails.fragment.CreateRefillDetailsFragment
+import com.akhutornoy.carexpenses.ui.refilldetails.fragment.EditRefillDetailsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetailsFragment.Navigation {
+class MainActivity : BaseActivity(), RefillListFragment.Navigation, BaseRefillDetailsFragment.Navigation {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -77,15 +79,14 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, RefillDetail
     }
 
     override fun navigateToCreateNewRefill(fuelType: FuelType) {
-        showFragment(RefillDetailsFragment.newInstance(fuelType))
+        showFragment(CreateRefillDetailsFragment.newInstance(fuelType))
     }
 
     override fun navigateToEditRefill(fuelType: FuelType, refillId: Long) {
-        showFragment(RefillDetailsFragment.newInstance(fuelType, refillId))
+        showFragment(EditRefillDetailsFragment.newInstance(fuelType, refillId))
     }
 
     override fun navigationFinishScreen() {
         onBackPressed()
     }
-
 }

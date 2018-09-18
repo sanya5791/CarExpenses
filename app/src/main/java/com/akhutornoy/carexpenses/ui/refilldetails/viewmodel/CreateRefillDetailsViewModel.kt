@@ -1,24 +1,20 @@
-package com.akhutornoy.carexpenses.ui.refilldetails
+package com.akhutornoy.carexpenses.ui.refilldetails.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.persistence.room.EmptyResultSetException
 import com.akhutornoy.carexpenses.base.BaseViewModel
-import com.akhutornoy.carexpenses.base.exceptions.ItemNotFoundException
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
 import com.akhutornoy.carexpenses.utils.applyProgressBar
 import com.akhutornoy.carexpenses.utils.applySchedulers
-import com.github.ajalt.timberkt.Timber
 import io.reactivex.Completable
 import io.reactivex.Single
 
-class RefillDetailsViewModel(
+open class CreateRefillDetailsViewModel(
         private val refillDao: RefillDao) : BaseViewModel() {
 
-    private lateinit var onLoadByIdLiveData: MutableLiveData<Refill>
     private val onInsertedLiveData = MutableLiveData<Boolean>()
-    private val onRefillDeletedLiveData = MutableLiveData<Boolean>()
     val onConsumptionCalculated = MutableLiveData<Consumption>()
 
     private fun Int.isEmpty() = this == Refill.UNSET_INT
@@ -50,43 +46,6 @@ class RefillDetailsViewModel(
     }
 
     private fun isFirstDbRecordError(error: Throwable) = error is EmptyResultSetException
-
-    fun getById(id: Long): LiveData<Refill> {
-        if (::onLoadByIdLiveData.isInitialized) {
-            return onLoadByIdLiveData
-        }
-
-        onLoadByIdLiveData = MutableLiveData()
-        autoUnsubscribe(
-                Single.fromCallable { refillDao.getByCreatedAt(id)?: throw ItemNotFoundException("ItemId=$id") }
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .subscribe(
-                                { onLoadByIdLiveData.value = it },
-                                this::showError )
-        )
-
-        return onLoadByIdLiveData
-    }
-
-    fun delete(dbId: Long): LiveData<Boolean> {
-        autoUnsubscribe(
-                Single.fromCallable { getRefillFromDb(dbId) }
-                        .doOnSuccess { refill -> refillDao.delete(refill) }
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .subscribe(
-                                { onRefillDeletedLiveData.value = true },
-                                { Timber.e(it) }
-                        )
-
-        )
-        return onRefillDeletedLiveData
-    }
-
-    private fun getRefillFromDb(dbId: Long) =
-            refillDao.getByCreatedAt(dbId)?: throw ItemNotFoundException(
-                    "Can't find '${Refill::class.java.simpleName}' for id='$dbId'")
 
     fun onConsumptionRelatedDataChanged(refill: Refill) {
         autoUnsubscribe(
@@ -123,8 +82,10 @@ class RefillDetailsViewModel(
 
     private fun calcRemotely(refill: Refill): Single<Consumption> {
         return refillDao.getPrevious(refill.createdAt)
-                .map { lastRefill ->  Consumption(true,
-                        calcConsumption(refill.currentMileage - lastRefill.currentMileage, refill.litersCount)) }
+                .map { lastRefill ->
+                    Consumption(true,
+                            calcConsumption(refill.currentMileage - lastRefill.currentMileage, refill.litersCount))
+                }
     }
 
     private fun calcLocally(refill: Refill): Single<Consumption> {
