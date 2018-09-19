@@ -12,6 +12,10 @@ buildscript {
     ext.rxandroid_version = '2.0.2'
     ext.recyclerview_version = '27.1.1'
     ext.timber_version = '1.5.1'
+    ext.joda_time_version = '2.10'
+    ext.stetho_version = '1.5.0'
+    ext.leakcanary_android_version = '1.6.1'
+    ext.calendar_view = '1.4.0'
 
     repositories {
         google()

@@ -25,7 +25,7 @@ open class RefillListViewModel(
     }
 
     override fun restoreInner(bundle: Bundle) {
-        filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE)
+        filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE)?: FilterDateRange()
     }
 
     fun getRefills(fuelType: FuelType) {

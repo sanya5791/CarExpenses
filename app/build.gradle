@@ -49,10 +49,18 @@ dependencies {
     implementation "com.github.ajalt:timberkt:$timber_version"
 
     //JodaTime
-    implementation 'joda-time:joda-time:2.10'
+    implementation "joda-time:joda-time:$joda_time_version"
 
     //CalendarView
-    implementation 'com.applandeo:material-calendar-view:1.4.0'
+    implementation "com.applandeo:material-calendar-view:$calendar_view"
+
+    //Stetho - DB viewer
+    implementation "com.facebook.stetho:stetho:$stetho_version"
+
+    //LeakCanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_android_version"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_android_version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanary_android_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
