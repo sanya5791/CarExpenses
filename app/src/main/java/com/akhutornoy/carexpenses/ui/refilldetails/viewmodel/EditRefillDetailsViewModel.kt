@@ -14,7 +14,7 @@ class EditRefillDetailsViewModel(
 ) : CreateRefillDetailsViewModel(refillDao) {
 
     private lateinit var onLoadByIdLiveData: MutableLiveData<Refill>
-    private val onRefillDeletedLiveData = MutableLiveData<Boolean>()
+    val onRefillDeletedLiveData = MutableLiveData<Boolean>()
 
     fun getById(id: Long): LiveData<Refill> {
         if (::onLoadByIdLiveData.isInitialized) {
@@ -34,7 +34,7 @@ class EditRefillDetailsViewModel(
         return onLoadByIdLiveData
     }
 
-    fun delete(dbId: Long): LiveData<Boolean> {
+    fun delete(dbId: Long) {
         autoUnsubscribe(
                 Single.fromCallable { getRefillFromDb(dbId) }
                         .doOnSuccess { refill -> refillDao.delete(refill) }
@@ -46,7 +46,6 @@ class EditRefillDetailsViewModel(
                         )
 
         )
-        return onRefillDeletedLiveData
     }
 
     private fun getRefillFromDb(dbId: Long) =

@@ -4,6 +4,7 @@ import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.BaseFragment
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
+import java.util.*
 import javax.inject.Inject
 
 class CreateRefillDetailsFragment : BaseRefillDetailsFragment() {
@@ -18,6 +19,10 @@ class CreateRefillDetailsFragment : BaseRefillDetailsFragment() {
         super.initToolbar()
         toolbar.setToolbarTitle(R.string.refill_details_title_new_entry)
     }
+
+    override fun getRefillItemCreatedAt() = Date().time
+
+    override fun getRefillItemEditedAt() = Date().time
 
     companion object {
         fun newInstance(fuelType: FuelType): BaseFragment {

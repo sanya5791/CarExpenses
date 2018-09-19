@@ -1,6 +1,5 @@
 package com.akhutornoy.carexpenses.ui.list.fragment
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
@@ -65,7 +64,9 @@ abstract class RefillListFragment : BaseDaggerFragment() {
         add_fab.visibility = addFabVisibility
         fuel_type_text_vew.visibility = fuelTypeVisibility
         initListeners()
-        loadFromDb()
+        viewModel.onLoadRefillsLiveData.observe(this,
+                Observer { refillResult -> showResult(refillResult!!) })
+        loadRefills()
     }
 
     protected open fun initToolbar() {
@@ -103,7 +104,7 @@ abstract class RefillListFragment : BaseDaggerFragment() {
             val filterDateRange = FilterDateRange(dateFrom, dateTo)
             showFilterView(filterDateRange)
 
-            loadFromDb(filterDateRange)
+            loadRefills(filterDateRange)
         }
     }
 
@@ -128,22 +129,16 @@ abstract class RefillListFragment : BaseDaggerFragment() {
     private fun onClearFilterClicked() {
         filter_from_text_view.text = ""
         filter_view_group.visibility = View.GONE
-        loadFromDb(FilterDateRange())
+        loadRefills(FilterDateRange())
         Toast.makeText(activity, getString(R.string.refill_list_filter_cleared), Toast.LENGTH_LONG).show()
     }
 
-    private fun loadFromDb() {
-        val refills = viewModel.getRefills(fuelType)
-        observeRefillsList(refills)
+    private fun loadRefills() {
+        viewModel.getRefills(fuelType)
     }
 
-    private fun loadFromDb(filterDateRange: FilterDateRange) {
-        observeRefillsList(viewModel.getRefills(fuelType, filterDateRange))
-    }
-
-    private fun observeRefillsList(liveData: LiveData<RefillResult>) {
-        liveData.observe(this,
-                Observer { items -> showResult(items!!) })
+    private fun loadRefills(filterDateRange: FilterDateRange) {
+        viewModel.getRefills(fuelType, filterDateRange)
     }
 
     private fun showResult(result: RefillResult) {

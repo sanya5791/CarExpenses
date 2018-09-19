@@ -1,6 +1,5 @@
 package com.akhutornoy.carexpenses.ui.refilldetails.viewmodel
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.persistence.room.EmptyResultSetException
 import com.akhutornoy.carexpenses.base.BaseViewModel
@@ -14,13 +13,12 @@ import io.reactivex.Single
 open class CreateRefillDetailsViewModel(
         private val refillDao: RefillDao) : BaseViewModel() {
 
-    private val onInsertedLiveData = MutableLiveData<Boolean>()
+    val onInsertedLiveData = MutableLiveData<Boolean>()
     val onConsumptionCalculated = MutableLiveData<Consumption>()
 
     private fun Int.isEmpty() = this == Refill.UNSET_INT
 
-    fun insert(refill: Refill): LiveData<Boolean> {
-
+    fun insert(refill: Refill) {
         autoUnsubscribe(
                 calcConsumption(refill)
                         .onErrorResumeNext {
@@ -39,10 +37,8 @@ open class CreateRefillDetailsViewModel(
                         .applyProgressBar(this)
                         .subscribe(
                                 { onInsertedLiveData.value = true },
-                                { showError.value = it.message })
+                                this::showError)
         )
-
-        return onInsertedLiveData
     }
 
     private fun isFirstDbRecordError(error: Throwable) = error is EmptyResultSetException

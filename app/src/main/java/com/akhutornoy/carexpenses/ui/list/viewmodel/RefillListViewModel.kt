@@ -1,6 +1,5 @@
 package com.akhutornoy.carexpenses.ui.list.viewmodel
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.os.Bundle
 import com.akhutornoy.carexpenses.base.BaseSavableViewModel
@@ -17,7 +16,7 @@ import org.joda.time.DateTime
 open class RefillListViewModel(
         private val refillDao: RefillDao) : BaseSavableViewModel() {
 
-    private lateinit var onLoadRefillsLiveData: MutableLiveData<RefillResult>
+    var onLoadRefillsLiveData = MutableLiveData<RefillResult>()
 
     private var filterRange: FilterDateRange = FilterDateRange()
 
@@ -29,21 +28,21 @@ open class RefillListViewModel(
         filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE)
     }
 
-    fun getRefills(fuelType: FuelType): LiveData<RefillResult> {
+    fun getRefills(fuelType: FuelType) {
         return getRefills(fuelType, filterRange)
     }
 
-    fun getRefills(fuelType: FuelType, filterRange: FilterDateRange): LiveData<RefillResult> {
+    fun getRefills(fuelType: FuelType, filterRange: FilterDateRange) {
 
         val isFilterChanged = filterRange.from != this.filterRange.from
                                     || filterRange.to != this.filterRange.to
         this.filterRange = filterRange
-        if (::onLoadRefillsLiveData.isInitialized
-                && !isFilterChanged) {
-            return onLoadRefillsLiveData
+
+        if (onLoadRefillsLiveData.value != null
+            && !isFilterChanged) {
+            return
         }
 
-        onLoadRefillsLiveData = MutableLiveData()
         autoUnsubscribe(
                 getRefillsFlowable(fuelType, filterRange)
                         .map { refills ->  mapToRefillItems(refills)}
@@ -51,12 +50,11 @@ open class RefillListViewModel(
                         .applySchedulers()
                         .applyProgressBar(this)
                         .subscribe(
-                                { refills -> onLoadRefillsLiveData.value = refills},
+                                { refills ->
+                                    onLoadRefillsLiveData.value = refills },
                                 this::showError
                         )
         )
-
-        return onLoadRefillsLiveData
     }
 
     protected  open fun getRefillsFlowable(fuelType: FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {

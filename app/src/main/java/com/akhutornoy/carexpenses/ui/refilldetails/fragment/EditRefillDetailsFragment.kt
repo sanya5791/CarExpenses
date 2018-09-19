@@ -12,6 +12,7 @@ import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetails
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.EditRefillDetailsViewModel
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import java.lang.IllegalArgumentException
+import java.util.*
 import javax.inject.Inject
 
 class EditRefillDetailsFragment : BaseRefillDetailsFragment() {
@@ -34,12 +35,21 @@ class EditRefillDetailsFragment : BaseRefillDetailsFragment() {
     override fun init() {
         super.init()
         loadFromDb(argRefillId)
+        viewModel.onRefillDeletedLiveData.observe(this, Observer { isRemoved ->
+            when (isRemoved) {
+                true -> navigationCallback.navigationFinishScreen()
+            }
+        })
     }
 
     override fun initToolbar() {
         super.initToolbar()
         toolbar.setToolbarTitle(R.string.refill_details_title)
     }
+
+    override fun getRefillItemCreatedAt() = argRefillId
+
+    override fun getRefillItemEditedAt() = Date().time
 
     private fun loadFromDb(refillId: Long) {
         viewModel.getById(refillId)
@@ -75,19 +85,16 @@ class EditRefillDetailsFragment : BaseRefillDetailsFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+        when (item?.itemId) {
             R.id.action_delete -> onDeleteClicked()
-            else -> super.onOptionsItemSelected(item)
+            else -> return super.onOptionsItemSelected(item)
         }
+
+        return true
     }
 
-    private fun onDeleteClicked(): Boolean {
-        viewModel.delete(argRefillId!!).observe(this, Observer { isRemoved ->
-            when (isRemoved) {
-                true -> navigationCallback.navigationFinishScreen()
-            }
-        })
-        return true
+    private fun onDeleteClicked() {
+        viewModel.delete(argRefillId)
     }
 
     companion object {

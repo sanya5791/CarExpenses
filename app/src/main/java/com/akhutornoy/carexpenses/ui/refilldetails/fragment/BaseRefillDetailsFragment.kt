@@ -53,6 +53,12 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
         initListeners()
         createRefillDetailsViewModel.onConsumptionCalculated.observe(this,
                 Observer(this@BaseRefillDetailsFragment::onConsumptionCalculated))
+        createRefillDetailsViewModel.onInsertedLiveData.observe(this, Observer { isInserted ->
+            when (isInserted) {
+                true -> onInsertedSuccess()
+            }
+//            isInserted?.takeIf { it }.apply { onInsertedSuccess() } alternate option of solution with 'when'
+        })
     }
 
     private fun onConsumptionCalculated(consumption: CreateRefillDetailsViewModel.Consumption?) {
@@ -62,6 +68,11 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
         } else {
             et_fuel_consumption.setText("")
         }
+    }
+
+    private fun onInsertedSuccess() {
+        navigationCallback.navigationFinishScreen()
+        Toast.makeText(requireActivity().applicationContext, "Saved", Toast.LENGTH_SHORT).show()
     }
 
     protected  open fun initToolbar() {
@@ -88,7 +99,7 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
     }
 
     private fun initListeners() {
-        bt_done.setOnClickListener { onButtonDoneClicked() }
+        bt_done.setOnClickListener { createRefillDetailsViewModel.insert(getRefillItem()) }
         use_note_check_box.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) til_note.visibility = View.VISIBLE
             else til_note.visibility = View.GONE
@@ -109,22 +120,10 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
         createRefillDetailsViewModel.onConsumptionRelatedDataChanged(getRefillItem())
     }
 
-    private fun onButtonDoneClicked() {
-        val refill = getRefillItem()
-        createRefillDetailsViewModel.insert(refill).observe(this, Observer { isInserted ->
-            when (isInserted) {
-                true -> onInsertedSuccess()
-            }
-//            isInserted?.takeIf { it }.apply { onInsertedSuccess() } alternate option of solution with 'when'
-        })
-    }
-
     private fun getRefillItem(): Refill {
-        val timeNow = Date().time
-
         return Refill(
-                createdAt = timeNow,
-                editedAt = timeNow,
+                createdAt = getRefillItemCreatedAt(),
+                editedAt = getRefillItemEditedAt(),
                 litersCount = et_liters.getIntValue(),
                 moneyCount = et_money.getIntValue(),
                 currentMileage = et_current_mileage.getIntValue(),
@@ -135,10 +134,9 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
         )
     }
 
-    private fun onInsertedSuccess() {
-        navigationCallback.navigationFinishScreen()
-        Toast.makeText(requireActivity().applicationContext, "Saved", Toast.LENGTH_SHORT).show()
-    }
+    abstract fun getRefillItemCreatedAt(): Long
+
+    abstract fun getRefillItemEditedAt(): Long
 
     private fun EditText.getIntValue() =
             this.text.toString().toIntOrNull() ?: Refill.UNSET_INT
