@@ -32,14 +32,18 @@ class EditRefillDetailsFragment : BaseRefillDetailsFragment() {
         return arguments!!.getLong(ARG_REFILL_ID)
     }
 
-    override fun init() {
-        super.init()
-        loadFromDb(argRefillId)
+    override fun initViewModelObservers() {
+        super.initViewModelObservers()
         viewModel.onRefillDeletedLiveData.observe(this, Observer { isRemoved ->
             when (isRemoved) {
                 true -> navigationCallback.navigationFinishScreen()
             }
         })
+    }
+
+    override fun initView() {
+        super.initView()
+        loadFromDb(argRefillId)
     }
 
     override fun initToolbar() {

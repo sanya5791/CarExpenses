@@ -15,7 +15,7 @@ class AllRefillListFragment: RefillListFragment() {
     override val viewModel: RefillListViewModel
         get() = allViewModel
 
-    override protected fun initToolbar() {
+    override fun initToolbar() {
         super.initToolbar()
         toolbar.setToolbarSubtitle(R.string.title_all)
     }

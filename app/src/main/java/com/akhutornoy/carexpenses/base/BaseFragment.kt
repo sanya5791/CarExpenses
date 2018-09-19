@@ -15,7 +15,17 @@ import com.github.ajalt.timberkt.Timber
 
 abstract class BaseFragment: Fragment() {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        //place here to avoid double LiveData subscription on reattach the same Fragment instance
+        //todo consider move the call to initView() with support library v.28.0.0 after it will be released
+        initViewModelObservers()
+    }
+
+    abstract fun initViewModelObservers()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        initViewModelObservers()
         return inflater.inflate(fragmentLayoutId(), container, false)
     }
 
@@ -24,7 +34,7 @@ abstract class BaseFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
+        initView()
         handleErrors()
         handleProgressBar()
     }
@@ -50,14 +60,14 @@ abstract class BaseFragment: Fragment() {
         })
     }
 
-    protected abstract fun init()
+    protected abstract fun initView()
 
     protected abstract fun getBaseViewModel(): BaseViewModel?
 
     protected abstract fun getProgressBar(): View?
 
     protected fun onError(error: Throwable) {
-        Log.e("TAG is NOT set yet", error.message, error)
+        Timber.e(error)
         error.message?.let { showInfoMessage(it) }
     }
 

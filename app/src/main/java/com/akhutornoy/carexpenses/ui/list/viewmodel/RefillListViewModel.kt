@@ -45,13 +45,13 @@ open class RefillListViewModel(
 
         autoUnsubscribe(
                 getRefillsFlowable(fuelType, filterRange)
-                        .map { refills ->  mapToRefillItems(refills)}
+                        .map { refills ->  mapToRefillResult(refills)}
                         .subscribeOn(Schedulers.io())
                         .applySchedulers()
                         .applyProgressBar(this)
                         .subscribe(
-                                { refills ->
-                                    onLoadRefillsLiveData.value = refills },
+                                { refillResult ->
+                                    onLoadRefillsLiveData.value = refillResult },
                                 this::showError
                         )
         )
@@ -69,7 +69,7 @@ open class RefillListViewModel(
         }
     }
 
-    private fun mapToRefillItems(items: List<Refill>): RefillResult {
+    private fun mapToRefillResult(items: List<Refill>): RefillResult {
         var liters = 0
         var money = 0
 
@@ -87,7 +87,7 @@ open class RefillListViewModel(
                     isNoteAvailable = dbItem.note != Refill.UNSET_STR
             )
         }
-        return RefillResult(refills, Summary(liters, money))
+        return RefillResult(refills, Summary(liters, money), filterRange)
     }
 
     companion object {

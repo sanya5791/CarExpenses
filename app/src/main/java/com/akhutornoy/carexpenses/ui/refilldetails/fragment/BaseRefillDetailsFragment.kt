@@ -48,9 +48,7 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
 
     override fun getProgressBar(): View? = progress_bar
 
-    override fun init() {
-        initToolbar()
-        initListeners()
+    override fun initViewModelObservers() {
         createRefillDetailsViewModel.onConsumptionCalculated.observe(this,
                 Observer(this@BaseRefillDetailsFragment::onConsumptionCalculated))
         createRefillDetailsViewModel.onInsertedLiveData.observe(this, Observer { isInserted ->
@@ -59,6 +57,11 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
             }
 //            isInserted?.takeIf { it }.apply { onInsertedSuccess() } alternate option of solution with 'when'
         })
+    }
+
+    override fun initView() {
+        initToolbar()
+        initListeners()
     }
 
     private fun onConsumptionCalculated(consumption: CreateRefillDetailsViewModel.Consumption?) {

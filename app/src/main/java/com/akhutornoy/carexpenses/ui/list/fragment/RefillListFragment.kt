@@ -59,13 +59,17 @@ abstract class RefillListFragment : BaseDaggerFragment() {
 
     override fun getProgressBar(): View? = progress_bar
 
-    override fun init() {
+    override fun initViewModelObservers() {
+        viewModel.onLoadRefillsLiveData.observe(this,
+                Observer { refillResult -> showResult(refillResult!!) })
+    }
+
+    override fun initView() {
         initToolbar()
         add_fab.visibility = addFabVisibility
         fuel_type_text_vew.visibility = fuelTypeVisibility
         initListeners()
-        viewModel.onLoadRefillsLiveData.observe(this,
-                Observer { refillResult -> showResult(refillResult!!) })
+
         loadRefills()
     }
 
@@ -116,6 +120,11 @@ abstract class RefillListFragment : BaseDaggerFragment() {
         filter_from_text_view.text = range
     }
 
+    private fun hideFilterView() {
+        filter_from_text_view.text = ""
+        filter_view_group.visibility = View.GONE
+    }
+
     private fun initListeners() {
         add_fab.setOnClickListener { showAddNewItemScreen() }
         filter_clear_image_view.setOnClickListener { onClearFilterClicked() }
@@ -127,8 +136,7 @@ abstract class RefillListFragment : BaseDaggerFragment() {
     }
 
     private fun onClearFilterClicked() {
-        filter_from_text_view.text = ""
-        filter_view_group.visibility = View.GONE
+        hideFilterView()
         loadRefills(FilterDateRange())
         Toast.makeText(activity, getString(R.string.refill_list_filter_cleared), Toast.LENGTH_LONG).show()
     }
@@ -142,11 +150,9 @@ abstract class RefillListFragment : BaseDaggerFragment() {
     }
 
     private fun showResult(result: RefillResult) {
-        //TODO investigate: why the method is called many times on LpgFragment.Done button clicked. Maybe because of observable.
         showList(result.refills)
-        val summaryText = getString(R.string.refill_list_summary_text,
-                result.summary.liters, result.summary.money)
-        summary_results_text_view.text = summaryText
+        handleFilterView(result)
+        showSummary(result)
     }
 
     private fun showList(refills: List<RefillItem>) {
@@ -164,6 +170,20 @@ abstract class RefillListFragment : BaseDaggerFragment() {
             layoutManager = LinearLayoutManager(activity)
             this.adapter = adapter
         }
+    }
+
+    private fun handleFilterView(result: RefillResult) {
+        if (result.filterRange.isEmpty()) {
+            hideFilterView()
+        } else {
+            showFilterView(result.filterRange)
+        }
+    }
+
+    private fun showSummary(result: RefillResult) {
+        val summaryText = getString(R.string.refill_list_summary_text,
+                result.summary.liters, result.summary.money)
+        summary_results_text_view.text = summaryText
     }
 
     protected companion object {
