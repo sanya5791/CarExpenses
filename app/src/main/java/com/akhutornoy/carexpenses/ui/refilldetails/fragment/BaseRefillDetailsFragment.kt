@@ -17,7 +17,6 @@ import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
-import java.util.*
 
 abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
 
@@ -62,6 +61,8 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
     override fun initView() {
         initToolbar()
         initListeners()
+        initViewsVisibility()
+        markMandatoryFields()
     }
 
     private fun onConsumptionCalculated(consumption: CreateRefillDetailsViewModel.Consumption?) {
@@ -109,22 +110,36 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
         }
     }
 
-    private val textWatcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                tryCalcConsumption()
-            }
+    private fun initViewsVisibility() {
+        if(argFuelType == FuelType.PETROL)
+            til_last_distance.visibility = View.INVISIBLE
+    }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+    private fun markMandatoryFields() {
+        when (argFuelType) {
+            FuelType.LPG -> markLpgMandatoryFields()
+            FuelType.PETROL -> markPetrolMandatoryFields()
+            else -> throw java.lang.IllegalArgumentException("'${argFuelType.name}' NOT supposed to be used here")
+        }
+    }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    private fun markLpgMandatoryFields() {
+        et_current_mileage.hint = getString(R.string.refill_details_current_mileage)
+        val textLastDistance = getString(R.string.all_asterisk) + getString(R.string.refill_details_last_distance)
+        et_last_distance.hint = textLastDistance
+    }
+
+    private fun markPetrolMandatoryFields() {
+        val textCurrentMillage = getString(R.string.all_asterisk) + getString(R.string.refill_details_current_mileage)
+        et_current_mileage.hint = textCurrentMillage
+        et_last_distance.hint = getString(R.string.refill_details_last_distance)
     }
 
     protected fun tryCalcConsumption() {
         createRefillDetailsViewModel.onConsumptionRelatedDataChanged(getRefillItem())
     }
 
-    private fun getRefillItem(): Refill {
-        return Refill(
+    private fun getRefillItem()=  Refill(
                 createdAt = getRefillItemCreatedAt(),
                 editedAt = getRefillItemEditedAt(),
                 litersCount = et_liters.getIntValue(),
@@ -135,7 +150,6 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
                 trafficMode = getSelectedDistanceMode().value,
                 note = et_note.text.toString()
         )
-    }
 
     abstract fun getRefillItemCreatedAt(): Long
 
@@ -164,6 +178,16 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
         et_last_distance.removeTextChangedListener(textWatcher)
         et_liters.removeTextChangedListener(textWatcher)
         et_current_mileage.removeTextChangedListener(textWatcher)
+    }
+
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            tryCalcConsumption()
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
     companion object {

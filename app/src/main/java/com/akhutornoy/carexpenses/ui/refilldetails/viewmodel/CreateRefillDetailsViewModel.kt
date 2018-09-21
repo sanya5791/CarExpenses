@@ -5,6 +5,7 @@ import android.arch.persistence.room.EmptyResultSetException
 import com.akhutornoy.carexpenses.base.BaseViewModel
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
+import com.akhutornoy.carexpenses.utils.FuelConsumption
 import com.akhutornoy.carexpenses.utils.applyProgressBar
 import com.akhutornoy.carexpenses.utils.applySchedulers
 import io.reactivex.Completable
@@ -62,11 +63,22 @@ open class CreateRefillDetailsViewModel(
     }
 
     private fun calcConsumption(refill: Refill): Single<Consumption> {
-        val canCalcLocally = !refill.litersCount.isEmpty() && !refill.lastDistance.isEmpty()
-        if (canCalcLocally) {
-            return calcLocally(refill)
+        return when (refill.fuelType()) {
+            Refill.FuelType.LPG -> calcLpgConsumption(refill)
+            Refill.FuelType.PETROL -> calcPetrolConsumption(refill)
         }
+    }
 
+    private fun calcLpgConsumption(refill: Refill): Single<Consumption> {
+        val canCalcLocally = !refill.litersCount.isEmpty() && !refill.lastDistance.isEmpty()
+        return if (canCalcLocally) {
+            calcLocally(refill)
+        } else {
+            Single.fromCallable { Consumption(false) }
+        }
+    }
+
+    private fun calcPetrolConsumption(refill: Refill): Single<Consumption> {
         val canCalcRemotely = !refill.litersCount.isEmpty() && !refill.currentMileage.isEmpty()
                 && (refill.currentMileage / 1000) >= 1
 
@@ -80,23 +92,15 @@ open class CreateRefillDetailsViewModel(
         return refillDao.getPrevious(refill.createdAt)
                 .map { lastRefill ->
                     Consumption(true,
-                            calcConsumption(refill.currentMileage - lastRefill.currentMileage, refill.litersCount))
+                            FuelConsumption.calcAvgConsumption(refill.currentMileage - lastRefill.currentMileage, refill.litersCount))
                 }
     }
 
     private fun calcLocally(refill: Refill): Single<Consumption> {
         return Single.fromCallable{
-            val consumption = calcConsumption(refill.lastDistance, refill.litersCount)
+            val consumption = FuelConsumption.calcAvgConsumption(refill.lastDistance, refill.litersCount)
             Consumption(true, consumption)
         }
-    }
-
-    private fun calcConsumption(distance: Int, liters: Int): Float {
-        if(distance == 0) return 0f
-
-        val consumption = (liters.toFloat() / distance.toFloat()) * 100
-        return if(consumption >= 0) consumption
-        else 0f
     }
 
     data class Consumption(val isCalculated: Boolean, val consumption: Float = 0f)

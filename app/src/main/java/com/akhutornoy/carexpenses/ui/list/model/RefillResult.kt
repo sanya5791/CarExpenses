@@ -1,3 +1,3 @@
 package com.akhutornoy.carexpenses.ui.list.model
 
-data class RefillResult(val refills: List<RefillItem>, val summary: Summary, val filterRange: FilterDateRange)
+open class RefillResult<T> (val refills: List<RefillItem>, val summary: T, val filterRange: FilterDateRange)

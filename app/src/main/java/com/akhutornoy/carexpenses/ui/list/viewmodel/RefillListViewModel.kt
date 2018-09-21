@@ -1,77 +1,24 @@
 package com.akhutornoy.carexpenses.ui.list.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.os.Bundle
-import com.akhutornoy.carexpenses.base.BaseSavableViewModel
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
-import com.akhutornoy.carexpenses.ui.list.model.*
+import com.akhutornoy.carexpenses.ui.list.model.RefillItem
+import com.akhutornoy.carexpenses.ui.list.model.RefillResult
+import com.akhutornoy.carexpenses.ui.list.model.Summary
+import com.akhutornoy.carexpenses.ui.list.viewmodel.distancecalculator.DistanceCalculator
 import com.akhutornoy.carexpenses.utils.DATE_TIME_FORMAT
-import com.akhutornoy.carexpenses.utils.applyProgressBar
-import com.akhutornoy.carexpenses.utils.applySchedulers
-import io.reactivex.Flowable
-import io.reactivex.schedulers.Schedulers
+import com.akhutornoy.carexpenses.utils.FuelConsumption
 import org.joda.time.DateTime
 
-open class RefillListViewModel(
-        private val refillDao: RefillDao) : BaseSavableViewModel() {
+class RefillListViewModel(
+        refillDao: RefillDao,
+        private val distanceCalculator: DistanceCalculator
+) : BaseRefillListViewModel<Summary>(refillDao) {
 
-    var onLoadRefillsLiveData = MutableLiveData<RefillResult>()
-
-    private var filterRange: FilterDateRange = FilterDateRange()
-
-    override fun saveInner(bundle: Bundle) {
-        bundle.putParcelable(KEY_FILTER_DATE_RANGE, filterRange)
-    }
-
-    override fun restoreInner(bundle: Bundle) {
-        filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE)?: FilterDateRange()
-    }
-
-    fun getRefills(fuelType: FuelType) {
-        return getRefills(fuelType, filterRange)
-    }
-
-    fun getRefills(fuelType: FuelType, filterRange: FilterDateRange) {
-
-        val isFilterChanged = filterRange.from != this.filterRange.from
-                                    || filterRange.to != this.filterRange.to
-        this.filterRange = filterRange
-
-        if (onLoadRefillsLiveData.value != null
-            && !isFilterChanged) {
-            return
-        }
-
-        autoUnsubscribe(
-                getRefillsFlowable(fuelType, filterRange)
-                        .map { refills ->  mapToRefillResult(refills)}
-                        .subscribeOn(Schedulers.io())
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .subscribe(
-                                { refillResult ->
-                                    onLoadRefillsLiveData.value = refillResult },
-                                this::showError
-                        )
-        )
-    }
-
-    protected  open fun getRefillsFlowable(fuelType: FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {
-        val dbFuelType = FuelType.mapToDbFuelType(fuelType)
-        return if (filterRange.isEmpty()) {
-            refillDao.getByFuelType(dbFuelType.value)
-        } else {
-            refillDao.getByFuelType(
-                    dbFuelType.value,
-                    filterRange.from.toDate().time,
-                    filterRange.to.plusDays(1).toDate().time)
-        }
-    }
-
-    private fun mapToRefillResult(items: List<Refill>): RefillResult {
+    override fun mapToRefillResult(items: List<Refill>): RefillResult<Summary> {
         var liters = 0
         var money = 0
+        var distance = distanceCalculator.getDistance(items)
 
         val refills = items.map { dbItem ->
             val date = DateTime(dbItem.createdAt).toString(DATE_TIME_FORMAT)
@@ -87,10 +34,9 @@ open class RefillListViewModel(
                     isNoteAvailable = dbItem.note != Refill.UNSET_STR
             )
         }
-        return RefillResult(refills, Summary(liters, money), filterRange)
-    }
-
-    companion object {
-        const val KEY_FILTER_DATE_RANGE = "KEY_FILTER_DATE_RANGE"
+        return RefillResult(
+                refills,
+                Summary(liters, money, FuelConsumption.calcAvgConsumption(distance, liters).toInt(), distance),
+                filterRange)
     }
 }

@@ -199,7 +199,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_small"
-            android:layout_gravity="center_vertical"
             android:textStyle="bold"
             android:text="@string/refill_list_summary_title" />
 
@@ -209,7 +208,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/padding_small"
             android:paddingEnd="@dimen/padding_small"
-            tools:text="25L, 1000UAH"/>
+            tools:text="25L, 1000UAH\nsecond line"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

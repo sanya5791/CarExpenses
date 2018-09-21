@@ -7,14 +7,14 @@ import com.akhutornoy.carexpenses.base.BaseFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.PetrolRefillListFragment
-import com.akhutornoy.carexpenses.ui.list.fragment.RefillListFragment
+import com.akhutornoy.carexpenses.ui.list.fragment.BaseRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.fragment.BaseRefillDetailsFragment
 import com.akhutornoy.carexpenses.ui.refilldetails.fragment.CreateRefillDetailsFragment
 import com.akhutornoy.carexpenses.ui.refilldetails.fragment.EditRefillDetailsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity(), RefillListFragment.Navigation, BaseRefillDetailsFragment.Navigation {
+class MainActivity : BaseActivity(), BaseRefillListFragment.Navigation, BaseRefillDetailsFragment.Navigation {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,7 +35,7 @@ class MainActivity : BaseActivity(), RefillListFragment.Navigation, BaseRefillDe
     private fun isTopFragmentShown(): Boolean {
         val shownFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         return when (shownFragment) {
-            is RefillListFragment -> true
+            is BaseRefillListFragment<*> -> true
             else -> false
         }
     }

@@ -65,7 +65,7 @@
                 android:id="@+id/et_current_mileage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/refill_details_current_mileage"
+                tools:hint="@string/refill_details_current_mileage"
                 android:imeOptions="actionNext"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
@@ -78,14 +78,13 @@
             android:layout_marginStart="@dimen/margin_medium"
             app:layout_constraintTop_toBottomOf="@+id/rg_distance_mode"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/til_current_mileage"
-            >
+            app:layout_constraintStart_toEndOf="@id/til_current_mileage">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/et_last_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/refill_details_last_distance"
+                tools:hint="@string/refill_details_last_distance"
                 android:imeOptions="actionNext"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>

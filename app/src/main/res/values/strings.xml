@@ -14,18 +14,20 @@
     <string name="all_consumption">Consumption</string>
     <string name="all_l_100_km">L/100km</string>
     <string name="all_city">City</string>
+    <string name="all_asterisk">*</string>
 
     <string name="refill_list_refills_title">Refills</string>
     <string name="refill_list_filter_title">Filter:</string>
     <string name="refill_list_filter_cleared">Filter Cleared</string>
     <string name="refill_list_summary_title">Summary:</string>
-    <string name="refill_list_summary_text">%1$dL, %2$dUAH:</string>
+    <string name="refill_list_summary_text">Avg: %1$dl/100, dist: %2$dkm, %3$dl, %4$dUAH</string>
+    <string name="refill_list_all_summary_text">AvgLPG: %1$dl/100, AvgPetrol: %2$dl/100\nDist: %3$dkm, Money: %4$dUAH</string>
 
     <string name="refill_details_title">Refill Details</string>
     <string name="refill_details_title_new_entry">New Entry</string>
     <string name="refill_details_l_per_100km">L/100</string>
     <string name="refill_details_last_distance">Last Distance</string>
-    <string name="refill_details_current_mileage">*Current Mileage</string>
+    <string name="refill_details_current_mileage">Current Mileage</string>
     <string name="refill_details_0_l_100km">0 l/100km</string>
     <string name="refill_details_add_note">Add Note</string>
     <string name="refill_details_liters">*Liters</string>

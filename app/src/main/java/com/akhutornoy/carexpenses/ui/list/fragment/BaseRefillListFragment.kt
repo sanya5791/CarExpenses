@@ -14,11 +14,8 @@ import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.*
-import com.akhutornoy.carexpenses.ui.list.viewmodel.RefillListViewModel
-import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
-import com.akhutornoy.carexpenses.ui.list.model.FuelType
-import com.akhutornoy.carexpenses.ui.list.model.RefillItem
-import com.akhutornoy.carexpenses.ui.list.model.RefillResult
+import com.akhutornoy.carexpenses.ui.list.model.*
+import com.akhutornoy.carexpenses.ui.list.viewmodel.BaseRefillListViewModel
 import com.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter
 import com.akhutornoy.carexpenses.utils.DATE_FORMAT
 import kotlinx.android.synthetic.main.fragment_refill_list.*
@@ -27,9 +24,9 @@ import org.joda.time.LocalDate
 import java.util.*
 
 
-abstract class RefillListFragment : BaseDaggerFragment() {
+abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
 
-    abstract val viewModel: RefillListViewModel
+    abstract val viewModel: BaseRefillListViewModel<T>
 
     private val fuelType: FuelType by lazy { FuelType.valueOf(arguments?.getString(FUEL_TYPE_ARG)!!) }
 
@@ -149,10 +146,10 @@ abstract class RefillListFragment : BaseDaggerFragment() {
         viewModel.getRefills(fuelType, filterDateRange)
     }
 
-    private fun showResult(result: RefillResult) {
+    private fun showResult(result: RefillResult<T>) {
         showList(result.refills)
-        handleFilterView(result)
-        showSummary(result)
+        handleFilterView(result.filterRange)
+        showSummary(result.summary)
     }
 
     private fun showList(refills: List<RefillItem>) {
@@ -172,28 +169,28 @@ abstract class RefillListFragment : BaseDaggerFragment() {
         }
     }
 
-    private fun handleFilterView(result: RefillResult) {
-        if (result.filterRange.isEmpty()) {
+    private fun handleFilterView(filterRange: FilterDateRange) {
+        if (filterRange.isEmpty()) {
             hideFilterView()
         } else {
-            showFilterView(result.filterRange)
+            showFilterView(filterRange)
         }
     }
 
-    private fun showSummary(result: RefillResult) {
-        val summaryText = getString(R.string.refill_list_summary_text,
-                result.summary.liters, result.summary.money)
-        summary_results_text_view.text = summaryText
+    private fun showSummary(summary: T) {
+        summary_results_text_view.text = getSummaryString(summary)
     }
+
+    protected abstract fun getSummaryString(summary: T): String
 
     protected companion object {
         const val FUEL_TYPE_ARG = "FUEL_TYPE_ARG"
 
-        fun newInstance(refillFragment: RefillListFragment, fuelType: FuelType): BaseFragment {
+        fun <T> newInstance(baseRefillFragment: BaseRefillListFragment<T>, fuelType: FuelType): BaseFragment {
             val args = Bundle()
             args.putString(FUEL_TYPE_ARG, fuelType.name)
-            refillFragment.arguments = args
-            return refillFragment
+            baseRefillFragment.arguments = args
+            return baseRefillFragment
         }
     }
 

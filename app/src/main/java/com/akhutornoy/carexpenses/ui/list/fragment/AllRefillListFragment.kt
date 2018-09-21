@@ -3,16 +3,17 @@ package com.akhutornoy.carexpenses.ui.list.fragment
 import android.view.View
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.BaseFragment
+import com.akhutornoy.carexpenses.ui.list.model.AllSummary
 import com.akhutornoy.carexpenses.ui.list.viewmodel.AllRefillListViewModel
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
-import com.akhutornoy.carexpenses.ui.list.viewmodel.RefillListViewModel
+import com.akhutornoy.carexpenses.ui.list.viewmodel.BaseRefillListViewModel
 import javax.inject.Inject
 
-class AllRefillListFragment: RefillListFragment() {
+class AllRefillListFragment: BaseRefillListFragment<AllSummary>() {
     @Inject
     lateinit var allViewModel : AllRefillListViewModel
 
-    override val viewModel: RefillListViewModel
+    override val viewModel: BaseRefillListViewModel<AllSummary>
         get() = allViewModel
 
     override fun initToolbar() {
@@ -25,6 +26,12 @@ class AllRefillListFragment: RefillListFragment() {
 
     override val fuelTypeVisibility: Int
         get() = View.VISIBLE
+
+    override fun getSummaryString(summary: AllSummary): String {
+        return getString(R.string.refill_list_all_summary_text,
+                summary.avgLpg, summary.avgPetrol,
+                summary.distance, summary.money)
+    }
 
     companion object {
         fun newInstance(): BaseFragment {

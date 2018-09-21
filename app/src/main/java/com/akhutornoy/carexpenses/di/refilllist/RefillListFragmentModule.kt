@@ -8,8 +8,11 @@ import com.akhutornoy.carexpenses.domain.RefillDao
 import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.PetrolRefillListFragment
+import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.list.viewmodel.AllRefillListViewModel
 import com.akhutornoy.carexpenses.ui.list.viewmodel.RefillListViewModel
+import com.akhutornoy.carexpenses.ui.list.viewmodel.distancecalculator.DistanceCalculator
+import com.akhutornoy.carexpenses.ui.list.viewmodel.distancecalculator.DistanceCalculatorFactory
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -22,6 +25,7 @@ class RefillListFragmentModule {
     @FragmentScope
     fun provideLpgRefillListViewModel(fragment: LpgRefillListFragment,
                                       factory: ViewModelFactory) : RefillListViewModel {
+        factory.distanceCalculator = DistanceCalculatorFactory.create(FuelType.LPG)
         return ViewModelProviders.of(fragment, factory).get(RefillListViewModel::class.java)
     }
 
@@ -30,6 +34,7 @@ class RefillListFragmentModule {
     @FragmentScope
     fun providePetrolRefillListViewModel(fragment: PetrolRefillListFragment,
                                          factory: ViewModelFactory) : RefillListViewModel {
+        factory.distanceCalculator = DistanceCalculatorFactory.create(FuelType.PETROL)
         return ViewModelProviders.of(fragment, factory).get(RefillListViewModel::class.java)
     }
 
@@ -37,6 +42,7 @@ class RefillListFragmentModule {
     @FragmentScope
     fun provideAllRefillListViewModel(fragment: AllRefillListFragment,
                                       factory: ViewModelFactory) : AllRefillListViewModel {
+        factory.distanceCalculator = DistanceCalculatorFactory.create(FuelType.ALL)
         return ViewModelProviders.of(fragment, factory).get(AllRefillListViewModel::class.java)
     }
 
@@ -46,13 +52,17 @@ class RefillListFragmentModule {
         return ViewModelFactory(refillDao)
     }
 
-    class ViewModelFactory(private val refillDao: RefillDao) : ViewModelProvider.Factory {
+    class ViewModelFactory(
+            private val refillDao: RefillDao
+    ) : ViewModelProvider.Factory {
+
+        lateinit var distanceCalculator: DistanceCalculator
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return (when (modelClass) {
-                AllRefillListViewModel::class.java -> AllRefillListViewModel(refillDao)
-                else -> RefillListViewModel(refillDao)
+                AllRefillListViewModel::class.java -> AllRefillListViewModel(refillDao, distanceCalculator)
+                else -> RefillListViewModel(refillDao, distanceCalculator)
             }) as T
         }
     }
