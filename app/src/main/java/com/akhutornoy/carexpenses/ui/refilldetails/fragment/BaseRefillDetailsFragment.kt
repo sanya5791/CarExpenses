@@ -75,8 +75,8 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
     }
 
     private fun onInsertedSuccess() {
+        Toast.makeText(activity, "Saved", Toast.LENGTH_SHORT).show()
         navigationCallback.navigationFinishScreen()
-        Toast.makeText(requireActivity().applicationContext, "Saved", Toast.LENGTH_SHORT).show()
     }
 
     protected  open fun initToolbar() {

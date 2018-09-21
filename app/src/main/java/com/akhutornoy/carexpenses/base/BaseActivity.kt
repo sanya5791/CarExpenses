@@ -7,7 +7,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0) {
-            return supportFragmentManager.popBackStack()
+            supportFragmentManager.popBackStackImmediate()
+            return
         }
         super.onBackPressed()
     }
@@ -30,8 +31,9 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun showTopFragment(fragment: BaseFragment) {
         val fm = supportFragmentManager
         fm.fragments.forEach {
-            if (it == fragment) return@forEach
-            fm.beginTransaction().remove(it).commit()
+            if (it != null && it != fragment) {
+                fm.beginTransaction().remove(it).commitNow()
+            }
         }
 
         showFragment(fragment, false)

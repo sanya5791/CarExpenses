@@ -5,9 +5,9 @@ import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.BaseActivity
 import com.akhutornoy.carexpenses.base.BaseFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment
+import com.akhutornoy.carexpenses.ui.list.fragment.BaseRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.PetrolRefillListFragment
-import com.akhutornoy.carexpenses.ui.list.fragment.BaseRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.fragment.BaseRefillDetailsFragment
 import com.akhutornoy.carexpenses.ui.refilldetails.fragment.CreateRefillDetailsFragment
