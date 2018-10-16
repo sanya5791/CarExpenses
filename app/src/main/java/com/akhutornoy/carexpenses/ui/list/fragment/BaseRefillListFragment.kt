@@ -9,15 +9,18 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.akhutornoy.carexpenses.R
+import com.akhutornoy.carexpenses.base.*
+import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
+import com.akhutornoy.carexpenses.ui.list.model.FuelType
+import com.akhutornoy.carexpenses.ui.list.model.RefillItem
+import com.akhutornoy.carexpenses.ui.list.model.RefillResult
+import com.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter
+import com.akhutornoy.carexpenses.ui.list.viewmodel.BaseRefillListViewModel
+import com.akhutornoy.carexpenses.utils.DATE_FORMAT
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
-import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.base.*
-import com.akhutornoy.carexpenses.ui.list.model.*
-import com.akhutornoy.carexpenses.ui.list.viewmodel.BaseRefillListViewModel
-import com.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter
-import com.akhutornoy.carexpenses.utils.DATE_FORMAT
 import kotlinx.android.synthetic.main.fragment_refill_list.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.joda.time.LocalDate
@@ -56,6 +59,10 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
 
     override fun getProgressBar(): View? = progress_bar
 
+    override fun loadData() {
+        loadRefills()
+    }
+
     override fun initViewModelObservers() {
         viewModel.onLoadRefillsLiveData.observe(this,
                 Observer { refillResult -> showResult(refillResult!!) })
@@ -66,8 +73,6 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
         add_fab.visibility = addFabVisibility
         fuel_type_text_vew.visibility = fuelTypeVisibility
         initListeners()
-
-        loadRefills()
     }
 
     protected open fun initToolbar() {

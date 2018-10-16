@@ -25,7 +25,6 @@ abstract class BaseFragment: Fragment() {
     abstract fun initViewModelObservers()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        initViewModelObservers()
         return inflater.inflate(fragmentLayoutId(), container, false)
     }
 
@@ -60,11 +59,18 @@ abstract class BaseFragment: Fragment() {
         })
     }
 
+    override fun onStart() {
+        super.onStart()
+        loadData()
+    }
+
     protected abstract fun initView()
 
     protected abstract fun getBaseViewModel(): BaseViewModel?
 
     protected abstract fun getProgressBar(): View?
+
+    abstract fun loadData()
 
     protected fun onError(error: Throwable) {
         Timber.e(error)

@@ -1,5 +1,6 @@
 package com.akhutornoy.carexpenses.ui.list.viewmodel
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.os.Bundle
 import com.akhutornoy.carexpenses.base.BaseSavableViewModel
@@ -18,7 +19,9 @@ abstract class BaseRefillListViewModel<T> (
 
 ) : BaseSavableViewModel() {
 
-    var onLoadRefillsLiveData = MutableLiveData<RefillResult<T>>()
+    private var _onLoadRefillsLiveData = MutableLiveData<RefillResult<T>>()
+    val onLoadRefillsLiveData: LiveData<RefillResult<T>>
+        get() = _onLoadRefillsLiveData
 
     protected var filterRange: FilterDateRange = FilterDateRange()
 
@@ -31,17 +34,12 @@ abstract class BaseRefillListViewModel<T> (
     }
 
     fun getRefills(fuelType: FuelType) {
-        return getRefills(fuelType, filterRange)
+        getRefills(fuelType, filterRange)
     }
 
     fun getRefills(fuelType: FuelType, filterRange: FilterDateRange) {
-
-        val isFilterChanged = filterRange.from != this.filterRange.from
-                                    || filterRange.to != this.filterRange.to
-        this.filterRange = filterRange
-
-        if (onLoadRefillsLiveData.value != null
-            && !isFilterChanged) {
+        if (canUseRefillsLiveDta(filterRange)) {
+            _onLoadRefillsLiveData.value = onLoadRefillsLiveData.value
             return
         }
 
@@ -53,10 +51,19 @@ abstract class BaseRefillListViewModel<T> (
                         .applyProgressBar(this)
                         .subscribe(
                                 { refillResult ->
-                                    onLoadRefillsLiveData.value = refillResult },
+                                    _onLoadRefillsLiveData.value = refillResult },
                                 this::showError
                         )
         )
+    }
+
+    private fun canUseRefillsLiveDta(newFilterRange: FilterDateRange): Boolean {
+        val isFilterChanged = newFilterRange.from != this.filterRange.from
+                || newFilterRange.to != this.filterRange.to
+        this.filterRange = newFilterRange
+        val refills = onLoadRefillsLiveData.value
+
+        return refills != null && !isFilterChanged
     }
 
     protected  open fun getRefillsFlowable(fuelType: FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {

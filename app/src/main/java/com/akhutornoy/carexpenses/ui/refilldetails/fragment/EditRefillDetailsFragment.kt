@@ -41,8 +41,7 @@ class EditRefillDetailsFragment : BaseRefillDetailsFragment() {
         })
     }
 
-    override fun initView() {
-        super.initView()
+    override fun loadData() {
         loadFromDb(argRefillId)
     }
 

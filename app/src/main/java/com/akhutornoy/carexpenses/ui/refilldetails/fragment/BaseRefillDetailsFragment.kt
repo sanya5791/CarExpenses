@@ -65,6 +65,8 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
         markMandatoryFields()
     }
 
+    override fun loadData() {}
+
     private fun onConsumptionCalculated(consumption: CreateRefillDetailsViewModel.Consumption?) {
         if (consumption?.isCalculated!!) {
             val str = "%.1f".format(consumption.consumption)
