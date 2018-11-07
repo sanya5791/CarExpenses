@@ -51,7 +51,7 @@ class MainActivity : BaseActivity(), BaseRefillListFragment.Navigation, BaseRefi
                     onPetrolClicked()
                     true
                 }
-                R.id.navigation_service -> {
+                R.id.navigation_all -> {
                     onAllClicked()
                     true
                 }
