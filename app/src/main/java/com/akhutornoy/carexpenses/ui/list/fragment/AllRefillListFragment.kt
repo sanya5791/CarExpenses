@@ -7,7 +7,6 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Environment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.view.Menu
@@ -90,8 +89,9 @@ class AllRefillListFragment: BaseRefillListFragment<AllSummary>() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        menu?.findItem(R.id.action_backup_create)?.isVisible = true
-        menu?.findItem(R.id.action_backup_restore)?.isVisible = true
+//        menu?.findItem(R.id.action_backup_create)?.isVisible = true
+//        menu?.findItem(R.id.action_backup_restore)?.isVisible = true
+        menu?.findItem(R.id.action_more)?.isVisible = true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
