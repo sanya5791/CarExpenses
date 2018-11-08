@@ -89,8 +89,6 @@ class AllRefillListFragment: BaseRefillListFragment<AllSummary>() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-//        menu?.findItem(R.id.action_backup_create)?.isVisible = true
-//        menu?.findItem(R.id.action_backup_restore)?.isVisible = true
         menu?.findItem(R.id.action_more)?.isVisible = true
     }
 

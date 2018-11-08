@@ -40,7 +40,7 @@ class AllRefillListViewModel(
         var lpgLiters = 0
         var petrolLiters = 0
         var money = 0
-        var distance = distanceCalculator.getDistance(items)
+        val distance = distanceCalculator.getDistance(items)
 
         val refills = items.map { dbItem ->
             val date = DateTime(dbItem.createdAt).toString(DATE_TIME_FORMAT)
@@ -99,15 +99,15 @@ class AllRefillListViewModel(
     private fun createDbZipBackup() {
         val sourceDbFolder =
                 backupFilesProvider.getDbSourceFolder()
-                        ?: throw DefinePathException("Can't Create Backup since External Storage is NOT Available")
+                        ?: throw BackupFilesException("Can't Create Backup since External Storage is NOT Available")
 
         val backupDir =
                 backupFilesProvider.getBackupFolder()
-                        ?: throw DefinePathException("Can't Create Backup since External Storage is NOT Available")
+                        ?: throw BackupFilesException("Can't Create Backup since External Storage is NOT Available")
 
         val zipFile =
                 backupFilesProvider.createBackupZipFileAndSaveOldBackupZip(backupDir)
-                        ?: throw DefinePathException("Can't Create Backup since destinations ZIP file is NOT created")
+                        ?: throw BackupFilesException("Can't Create Backup since destinations ZIP file is NOT created")
 
         zipper.zipAll(sourceDbFolder, zipFile)
     }
@@ -115,11 +115,11 @@ class AllRefillListViewModel(
     private fun restoreDbZipBackup() {
         val destinationDbFolder =
                 backupFilesProvider.getDbSourceFolder()
-                        ?: throw DefinePathException("Can't Create Backup since External Storage is NOT Available")
+                        ?: throw BackupFilesException("Can't Create Backup since External Storage is NOT Available")
 
         val zippedBackupFile =
                 backupFilesProvider.getBackupDbZipFile()
-                        ?: throw DefinePathException("DB backup NOT found")
+                        ?: throw BackupFilesException("DB backup NOT found")
 
         tempDb.createTempDb(destinationDbFolder)
 
@@ -132,5 +132,5 @@ class AllRefillListViewModel(
         tempDb.deleteTempDb()
     }
 
-    class DefinePathException(errorMessage: String) : RuntimeException(errorMessage)
+    class BackupFilesException(errorMessage: String) : RuntimeException(errorMessage)
 }

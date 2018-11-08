@@ -33,7 +33,8 @@ open class CreateRefillDetailsViewModel(
                                 refill.consumption = consumption.consumption
                             }
                             refill
-                        }.flatMapCompletable { t: Refill ->  Completable.fromAction { refillDao.insert(t) } }
+                        }
+                        .flatMapCompletable { t: Refill ->  Completable.fromAction { refillDao.insert(t) } }
                         .applySchedulers()
                         .applyProgressBar(this)
                         .subscribe(

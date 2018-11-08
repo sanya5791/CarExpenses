@@ -8,7 +8,7 @@ class TempDbHandler(private val backupFilesProvider: BackupFilesProvider) {
 
     fun createTempDb(destinationDbFolder: File) {
         val tempFolder = backupFilesProvider.getTempDbFolder()
-                ?: throw AllRefillListViewModel.DefinePathException("Can't restore DB backup since 'temp' folder is NOT created")
+                ?: throw AllRefillListViewModel.BackupFilesException("Can't restore DB backup since 'temp' folder is NOT created")
 
         destinationDbFolder.listFiles().forEach { it.renameTo(File(tempFolder, it.name)) }
     }
@@ -17,7 +17,7 @@ class TempDbHandler(private val backupFilesProvider: BackupFilesProvider) {
         Timber.e { "restoreTempDb(): restoring from 'temp' data" }
         val tempFolder =
                 backupFilesProvider.getTempDbFolder()
-                        ?: throw AllRefillListViewModel.DefinePathException("Can't restore DB backup since 'temp' folder is NOT created")
+                        ?: throw AllRefillListViewModel.BackupFilesException("Can't restore DB backup since 'temp' folder is NOT created")
 
         tempFolder.listFiles().forEach { it.renameTo(File(destinationDbFolder, it.name)) }
         Timber.e { "restoreTempDb(): 'temp' data is restored!!!" }
@@ -25,7 +25,7 @@ class TempDbHandler(private val backupFilesProvider: BackupFilesProvider) {
 
     fun deleteTempDb() {
         val tempFolder = backupFilesProvider.getTempDbFolder()
-                ?: throw AllRefillListViewModel.DefinePathException("Can't restore DB backup since 'temp' folder is NOT created")
+                ?: throw AllRefillListViewModel.BackupFilesException("Can't restore DB backup since 'temp' folder is NOT created")
         tempFolder.deleteRecursively()
     }
 }
