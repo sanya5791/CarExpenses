@@ -1,13 +1,13 @@
-package com.akhutornoy.carexpenses.domain.db_backup_restore
+package com.akhutornoy.carexpenses.ui.list.dbbackup
 
 import com.akhutornoy.carexpenses.ui.list.viewmodel.AllRefillListViewModel
 import com.github.ajalt.timberkt.Timber
 import java.io.File
 
-class TempDbHandler(private val backupFilesProvider: BackupFilesProvider) {
+class TempDbHandler(private val backupSourceHelper: BackupSourceHelper) {
 
     fun createTempDb(destinationDbFolder: File) {
-        val tempFolder = backupFilesProvider.getTempDbFolder()
+        val tempFolder = backupSourceHelper.getDbTempFolder()
                 ?: throw AllRefillListViewModel.BackupFilesException("Can't restore DB backup since 'temp' folder is NOT created")
 
         destinationDbFolder.listFiles().forEach { it.renameTo(File(tempFolder, it.name)) }
@@ -16,7 +16,7 @@ class TempDbHandler(private val backupFilesProvider: BackupFilesProvider) {
     fun restoreTempDb(destinationDbFolder: File) {
         Timber.e { "restoreTempDb(): restoring from 'temp' data" }
         val tempFolder =
-                backupFilesProvider.getTempDbFolder()
+                backupSourceHelper.getDbTempFolder()
                         ?: throw AllRefillListViewModel.BackupFilesException("Can't restore DB backup since 'temp' folder is NOT created")
 
         tempFolder.listFiles().forEach { it.renameTo(File(destinationDbFolder, it.name)) }
@@ -24,7 +24,7 @@ class TempDbHandler(private val backupFilesProvider: BackupFilesProvider) {
     }
 
     fun deleteTempDb() {
-        val tempFolder = backupFilesProvider.getTempDbFolder()
+        val tempFolder = backupSourceHelper.getDbTempFolder()
                 ?: throw AllRefillListViewModel.BackupFilesException("Can't restore DB backup since 'temp' folder is NOT created")
         tempFolder.deleteRecursively()
     }

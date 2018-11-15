@@ -1,12 +1,19 @@
-package com.akhutornoy.carexpenses.domain.db_backup_restore
+package com.akhutornoy.carexpenses.ui.list.dbbackup
 
 import com.github.ajalt.timberkt.Timber
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 class Zipper {
+
+    fun zipAll(sourceFolder: File, outputStream: OutputStream) {
+        Timber.d { "zipAll():" }
+        ZipOutputStream(BufferedOutputStream(outputStream))
+                .use { zipFiles(it, sourceFolder, "") }
+    }
 
     fun zipAll(sourceFolder: File, zipFile: File) {
         Timber.d { "zipAll(): sourceDir=${sourceFolder.absolutePath}, zipFile=${zipFile.absolutePath}" }
@@ -61,6 +68,17 @@ class Zipper {
                     zipOut.close()
                 }
             }
+        }
+    }
+
+    fun unzipAll(destinationFolder: File, inputStream: InputStream) {
+        val zis = ZipInputStream(inputStream)
+        while (true) {
+            val nextEntry = zis.nextEntry ?: break
+            Timber.d { "unzipAll(): file=${nextEntry.name}" }
+            File(destinationFolder, nextEntry.name)
+                    .outputStream()
+                    .use { output -> zis.copyTo(output); output.close() }
         }
     }
 

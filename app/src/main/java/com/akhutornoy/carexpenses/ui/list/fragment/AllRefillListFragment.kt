@@ -1,13 +1,10 @@
 package com.akhutornoy.carexpenses.ui.list.fragment
 
-import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,25 +12,24 @@ import android.view.MenuItem
 import android.view.View
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.BaseFragment
+import com.akhutornoy.carexpenses.ui.list.dbbackup.BACKUP_READ_REQUEST_CODE
+import com.akhutornoy.carexpenses.ui.list.dbbackup.BACKUP_WRITE_REQUEST_CODE
+import com.akhutornoy.carexpenses.ui.list.dbbackup.BackupDestinationHelper
 import com.akhutornoy.carexpenses.ui.MainActivity
 import com.akhutornoy.carexpenses.ui.list.model.AllSummary
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.list.viewmodel.AllRefillListViewModel
 import com.akhutornoy.carexpenses.ui.list.viewmodel.BaseRefillListViewModel
-import com.akhutornoy.tastekeystore.utils.ui.showSnack
 import javax.inject.Inject
 
 class AllRefillListFragment: BaseRefillListFragment<AllSummary>() {
     @Inject
     lateinit var allViewModel : AllRefillListViewModel
 
-    @Inject
-    lateinit var permissionHelper: WriteExternalStoragePermissionHelper
-
-    private var backupOperation = BackupOperation.FINISHED
-
     override val viewModel: BaseRefillListViewModel<AllSummary>
         get() = allViewModel
+
+    private val backupDestinationHelper by lazy { BackupDestinationHelper() }
 
     override fun initToolbar() {
         super.initToolbar()
@@ -49,19 +45,7 @@ class AllRefillListFragment: BaseRefillListFragment<AllSummary>() {
     override fun initViewModelObservers() {
         super.initViewModelObservers()
         allViewModel.onBackupRestoreFinished.observe(this,
-                Observer { finishedBackupOperation ->  onFinishedBackupOperation(finishedBackupOperation)})
-    }
-
-    private fun onFinishedBackupOperation(finishedBackupOperation: BackupOperation?) {
-        backupOperation = when(finishedBackupOperation){
-            BackupOperation.BACKUP -> BackupOperation.FINISHED
-            BackupOperation.RESTORE -> {
-                showRestartAppDialog()
-
-                BackupOperation.FINISHED
-            }
-            else -> throw IllegalArgumentException("Not supported operation '$finishedBackupOperation' in this method")
-        }
+                Observer { showRestartAppDialog()})
     }
 
     private fun showRestartAppDialog() {
@@ -94,67 +78,39 @@ class AllRefillListFragment: BaseRefillListFragment<AllSummary>() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
-            R.id.action_backup_create -> onBackupCreateClicked()
-            R.id.action_backup_restore -> onBackupRestoreClicked()
+            R.id.action_backup_create ->  performCreateBackupDestinationFolderSearch()
+            R.id.action_backup_restore -> performRestoreBackupZipFileSearch()
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun onBackupCreateClicked(): Boolean {
-        backupOperation = BackupOperation.BACKUP
-        if (isWriteExternalStoragePermissionGranted()) {
-            permissionHelper.askPermission(this)
-        } else {
-            createDbBackup()
-        }
-
+    private fun performCreateBackupDestinationFolderSearch(): Boolean {
+        backupDestinationHelper.startCreateBackupFileOperation(this)
         return true
     }
 
-    private fun onBackupRestoreClicked(): Boolean {
-        backupOperation = BackupOperation.RESTORE
-        if (isWriteExternalStoragePermissionGranted()) {
-            permissionHelper.askPermission(this)
-        } else {
-            restoreDbBackup()
-        }
-
+    private fun performRestoreBackupZipFileSearch(): Boolean {
+        backupDestinationHelper.startRestoreBackupZipFile(this)
         return true
     }
 
-    private fun isWriteExternalStoragePermissionGranted() =
-            (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED)
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if(permissionHelper.canHandleRequestCode(requestCode)) {
-            if(permissionHelper.isGranted(grantResults)) {
-                onWriteExternalStoragePermissionGranted()
-            } else {
-                showSnack(view!!, "Can't create backup withot WRITE_EXTERNAL_STORAGE_PERMISSION")
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            BACKUP_WRITE_REQUEST_CODE -> createDbBackup(resultCode, data)
+            BACKUP_READ_REQUEST_CODE -> restoreDbBackup(resultCode, data)
+            else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
-    private fun onWriteExternalStoragePermissionGranted() {
-        when (backupOperation) {
-            BackupOperation.BACKUP -> createDbBackup()
-            BackupOperation.RESTORE -> restoreDbBackup()
-            else -> throw IllegalArgumentException("Not supported backupOperation '$backupOperation' in this method")
-        }
+    private fun createDbBackup(resultCode: Int, data: Intent?) {
+        backupDestinationHelper.getCreateBackupFileOutputStream(activity!!, resultCode, data)?.
+                run { allViewModel.createDbBackup(this) }
     }
 
-    private fun createDbBackup() {
-        allViewModel.createDbBackup()
+    private fun restoreDbBackup(resultCode: Int, data: Intent?) {
+        backupDestinationHelper.getRestoreBackupInputStream(activity!!, resultCode, data)?.
+            run { allViewModel.restoreDbBackup(this) }
     }
-
-    private fun restoreDbBackup() {
-        allViewModel.restoreDbBackup()
-    }
-
-    enum class BackupOperation {BACKUP, RESTORE, FINISHED}
 
     companion object {
         fun newInstance(): BaseFragment {

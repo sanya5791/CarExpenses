@@ -3,27 +3,28 @@ package com.akhutornoy.carexpenses.ui.list.viewmodel
 import android.arch.lifecycle.LiveData
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
-import com.akhutornoy.carexpenses.domain.db_backup_restore.BackupFilesProvider
-import com.akhutornoy.carexpenses.domain.db_backup_restore.TempDbHandler
-import com.akhutornoy.carexpenses.domain.db_backup_restore.Zipper
-import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment.BackupOperation
+import com.akhutornoy.carexpenses.ui.list.dbbackup.BackupSourceHelper
+import com.akhutornoy.carexpenses.ui.list.dbbackup.TempDbHandler
+import com.akhutornoy.carexpenses.ui.list.dbbackup.Zipper
 import com.akhutornoy.carexpenses.ui.list.model.*
 import com.akhutornoy.carexpenses.ui.list.viewmodel.distancecalculator.DistanceCalculator
 import com.akhutornoy.carexpenses.utils.*
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.joda.time.DateTime
+import java.io.InputStream
+import java.io.OutputStream
 
 class AllRefillListViewModel(
         private val refillDao: RefillDao,
         private val distanceCalculator: DistanceCalculator,
-        private val backupFilesProvider: BackupFilesProvider,
+        private val backupSourceHelper: BackupSourceHelper,
         private val zipper: Zipper,
         private val tempDb: TempDbHandler
 ) : BaseRefillListViewModel<AllSummary>(refillDao) {
 
-    private val _onBackupRestoreFinished = SingleLiveEvent<BackupOperation>()
-    val onBackupRestoreFinished: LiveData<BackupOperation>
+    private val _onBackupRestoreFinished = SingleLiveEvent<Boolean>()
+    val onBackupRestoreFinished: LiveData<Boolean>
         get() = _onBackupRestoreFinished
 
     override fun getRefillsFlowable(fuelType: FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {
@@ -70,12 +71,11 @@ class AllRefillListViewModel(
                 filterRange)
     }
 
-    fun createDbBackup() {
+    fun createDbBackup(outputStream: OutputStream) {
         autoUnsubscribe(
-                Completable.fromAction { createDbZipBackup() }
+                Completable.fromAction { createDbZipBackup(outputStream) }
                         .applySchedulers()
                         .applyProgressBar(this)
-                        .doFinally { _onBackupRestoreFinished.value = BackupOperation.BACKUP }
                         .subscribe(
                                 { },
                                 this::showError
@@ -83,12 +83,12 @@ class AllRefillListViewModel(
         )
     }
 
-    fun restoreDbBackup() {
+    fun restoreDbBackup(inputStream: InputStream) {
         autoUnsubscribe(
-                Completable.fromAction { restoreDbZipBackup() }
+                Completable.fromAction { restoreDbZipBackupAndCloseStream(inputStream) }
                         .applySchedulers()
                         .applyProgressBar(this)
-                        .doFinally { _onBackupRestoreFinished.value = BackupOperation.RESTORE }
+                        .doFinally { _onBackupRestoreFinished.value = true }
                         .subscribe(
                                 { },
                                 this::showError
@@ -96,35 +96,23 @@ class AllRefillListViewModel(
         )
     }
 
-    private fun createDbZipBackup() {
+    private fun createDbZipBackup(outputStream: OutputStream) {
         val sourceDbFolder =
-                backupFilesProvider.getDbSourceFolder()
+                backupSourceHelper.getDbSourceFolder()
                         ?: throw BackupFilesException("Can't Create Backup since External Storage is NOT Available")
-
-        val backupDir =
-                backupFilesProvider.getBackupFolder()
-                        ?: throw BackupFilesException("Can't Create Backup since External Storage is NOT Available")
-
-        val zipFile =
-                backupFilesProvider.createBackupZipFileAndSaveOldBackupZip(backupDir)
-                        ?: throw BackupFilesException("Can't Create Backup since destinations ZIP file is NOT created")
-
-        zipper.zipAll(sourceDbFolder, zipFile)
+        zipper.zipAll(sourceDbFolder, outputStream)
     }
 
-    private fun restoreDbZipBackup() {
+    private fun restoreDbZipBackupAndCloseStream(inputStream: InputStream) {
         val destinationDbFolder =
-                backupFilesProvider.getDbSourceFolder()
+                backupSourceHelper.getDbSourceFolder()
                         ?: throw BackupFilesException("Can't Create Backup since External Storage is NOT Available")
-
-        val zippedBackupFile =
-                backupFilesProvider.getBackupDbZipFile()
-                        ?: throw BackupFilesException("DB backup NOT found")
 
         tempDb.createTempDb(destinationDbFolder)
 
         try {
-            zipper.unzipAll(destinationDbFolder, zippedBackupFile)
+            zipper.unzipAll(destinationDbFolder, inputStream)
+            inputStream.close()
         } catch (e: Exception) {
             tempDb.restoreTempDb(destinationDbFolder)
             showError.value = "Db restore Error."
