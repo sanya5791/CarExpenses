@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true">
@@ -50,7 +50,7 @@
 
         </RadioGroup>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_current_mileage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -61,16 +61,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/til_last_distance">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_current_mileage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:hint="@string/refill_details_current_mileage"
                 android:imeOptions="actionNext"
                 android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_last_distance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -80,16 +80,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/til_current_mileage">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_last_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:hint="@string/refill_details_last_distance"
                 android:imeOptions="actionNext"
                 android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_liters"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -99,16 +99,16 @@
             app:layout_constraintEnd_toStartOf="@id/til_money"
             app:layout_constraintTop_toBottomOf="@id/til_last_distance">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_liters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 android:hint="@string/refill_details_liters" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_money"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -119,16 +119,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/til_current_mileage">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_money"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 android:hint="@string/refill_details_money" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/use_note_check_box"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
             app:layout_constraintEnd_toStartOf="@id/til_fuel_consumption"
             app:layout_constraintBottom_toBottomOf="@id/til_fuel_consumption"/>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_fuel_consumption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
             app:layout_constraintStart_toEndOf="@id/use_note_check_box"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_fuel_consumption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -161,9 +161,9 @@
                 tools:text="@string/refill_details_0_l_100km"
                 android:hint="@string/refill_details_0_l_100km" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_note"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -176,7 +176,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                 android:gravity="top"
                 android:lines="6"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/bt_done"
@@ -213,5 +213,5 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -1,8 +1,8 @@
 package com.akhutornoy.carexpenses.utils
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelStore
-import android.arch.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import java.lang.reflect.Field
 import java.util.*
 

@@ -1,6 +1,6 @@
 package com.akhutornoy.carexpenses.ui.refilldetails.fragment
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable

@@ -3,7 +3,7 @@ package com.akhutornoy.carexpenses.ui.list.dbbackup
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
@@ -24,7 +24,7 @@ class BackupDestinationHelper {
      *
      * tip: override FragmentActivity#onActivityResult and pass result into {@link #getCreateBackupFileOutputStream}
      */
-    fun startCreateBackupFileOperation(fragment: Fragment) {
+    fun startCreateBackupFileOperation(fragment: androidx.fragment.app.Fragment) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
 
@@ -43,7 +43,7 @@ class BackupDestinationHelper {
      *
      * tip: override FragmentActivity#onActivityResult and pass result into {@link #getRestoreBackupInputStream}
      */
-    fun startRestoreBackupZipFile(fragment: Fragment) {
+    fun startRestoreBackupZipFile(fragment: androidx.fragment.app.Fragment) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = ZIP_MIME_TYPE

@@ -1,8 +1,8 @@
 package com.akhutornoy.carexpenses.di.refilldetails
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.akhutornoy.carexpenses.di.scopes.FragmentScope
 import com.akhutornoy.carexpenses.domain.RefillDao
 import com.akhutornoy.carexpenses.ui.refilldetails.fragment.CreateRefillDetailsFragment

@@ -1,7 +1,7 @@
 package com.akhutornoy.carexpenses.base
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.akhutornoy.carexpenses.utils.getAttachedViewModels
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -12,7 +12,7 @@ import javax.inject.Inject
 abstract class BaseDaggerFragment : BaseFragment(), HasSupportFragmentInjector {
 
     @Inject
-    protected lateinit var childFragmentInjector: DispatchingAndroidInjector<Fragment>
+    protected lateinit var childFragmentInjector: DispatchingAndroidInjector<androidx.fragment.app.Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -31,7 +31,7 @@ abstract class BaseDaggerFragment : BaseFragment(), HasSupportFragmentInjector {
         super.onSaveInstanceState(outState)
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+    override fun supportFragmentInjector(): AndroidInjector<androidx.fragment.app.Fragment> {
         return childFragmentInjector
     }
 }

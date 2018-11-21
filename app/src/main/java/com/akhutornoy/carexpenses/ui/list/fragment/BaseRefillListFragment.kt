@@ -1,9 +1,9 @@
 package com.akhutornoy.carexpenses.ui.list.fragment
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -169,7 +169,7 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
         val adapter = RefillListAdapter(refills, listener)
         adapter.fuelTypeVisibility = fuelTypeVisibility
         recycler_view.apply {
-            layoutManager = LinearLayoutManager(activity)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
             this.adapter = adapter
         }
     }

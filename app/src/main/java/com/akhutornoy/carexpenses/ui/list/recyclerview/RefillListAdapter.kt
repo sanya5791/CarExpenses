@@ -1,6 +1,6 @@
 package com.akhutornoy.carexpenses.ui.list.recyclerview
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.item_refill.view.*
 
 class RefillListAdapter(
         private val items: List<RefillItem>,
-        private val listener: OnItemSelected<RefillItem>) : RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {
+        private val listener: OnItemSelected<RefillItem>) : androidx.recyclerview.widget.RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {
 
     var fuelTypeVisibility = View.VISIBLE
 
@@ -26,7 +26,7 @@ class RefillListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
             = holder.bind(fuelTypeVisibility, items[position], listener)
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         lateinit var item: RefillItem
 
         fun bind(fuelTypeVisibility: Int, item: RefillItem, listener: OnItemSelected<RefillItem>) {

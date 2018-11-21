@@ -1,7 +1,7 @@
 package com.akhutornoy.carexpenses.base
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.github.ajalt.timberkt.Timber
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

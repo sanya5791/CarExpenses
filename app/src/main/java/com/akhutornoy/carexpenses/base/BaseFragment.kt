@@ -1,10 +1,10 @@
 package com.akhutornoy.carexpenses.base
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
+import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +13,7 @@ import android.widget.Toast
 import com.akhutornoy.carexpenses.R
 import com.github.ajalt.timberkt.Timber
 
-abstract class BaseFragment: Fragment() {
+abstract class BaseFragment: androidx.fragment.app.Fragment() {
 
     abstract fun initViewModelObservers()
 

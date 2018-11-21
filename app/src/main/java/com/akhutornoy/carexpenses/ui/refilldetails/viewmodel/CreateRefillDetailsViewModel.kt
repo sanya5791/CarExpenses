@@ -1,7 +1,7 @@
 package com.akhutornoy.carexpenses.ui.refilldetails.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.persistence.room.EmptyResultSetException
+import androidx.lifecycle.MutableLiveData
+import androidx.room.EmptyResultSetException
 import com.akhutornoy.carexpenses.base.BaseViewModel
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao

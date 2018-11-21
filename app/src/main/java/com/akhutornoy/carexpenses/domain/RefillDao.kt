@@ -1,6 +1,6 @@
 package com.akhutornoy.carexpenses.domain
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Single
 

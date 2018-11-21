@@ -2,10 +2,10 @@ package com.akhutornoy.carexpenses.ui.list.fragment
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
