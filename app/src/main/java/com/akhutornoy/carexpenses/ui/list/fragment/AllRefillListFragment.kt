@@ -12,10 +12,10 @@ import android.view.MenuItem
 import android.view.View
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.BaseFragment
+import com.akhutornoy.carexpenses.ui.MainActivity
 import com.akhutornoy.carexpenses.ui.list.dbbackup.BACKUP_READ_REQUEST_CODE
 import com.akhutornoy.carexpenses.ui.list.dbbackup.BACKUP_WRITE_REQUEST_CODE
 import com.akhutornoy.carexpenses.ui.list.dbbackup.BackupDestinationHelper
-import com.akhutornoy.carexpenses.ui.MainActivity
 import com.akhutornoy.carexpenses.ui.list.model.AllSummary
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.list.viewmodel.AllRefillListViewModel
@@ -50,18 +50,18 @@ class AllRefillListFragment: BaseRefillListFragment<AllSummary>() {
 
     private fun showRestartAppDialog() {
         AlertDialog.Builder(activity!!)
-                .setMessage("Restored data will appear after Application restart")
+                .setMessage(getString(R.string.message_restore_db_data_will_be_available_after_restart))
                 .setPositiveButton(R.string.all_ok) { _, _ ->  restartApp()}
                 .show()
     }
 
     private fun restartApp() {
-        val mStartActivity = Intent(activity, MainActivity::class.java)
-        val mPendingIntentId = 123456
-        val mPendingIntent = PendingIntent.getActivity(activity, mPendingIntentId, mStartActivity,
+        val startActivity = Intent(activity, MainActivity::class.java)
+        val pendingIntentId = 123456
+        val pendingIntent = PendingIntent.getActivity(activity, pendingIntentId, startActivity,
                 PendingIntent.FLAG_CANCEL_CURRENT)
         val mgr = activity!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
         System.exit(0)
     }
 

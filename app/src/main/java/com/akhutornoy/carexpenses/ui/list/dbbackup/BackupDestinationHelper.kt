@@ -34,7 +34,6 @@ class BackupDestinationHelper {
     }
 
     private fun getBackupFileName(): String {
-
         val sdf = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
         return BACKUP_FILE_NAME_START + sdf.format(Date())
     }

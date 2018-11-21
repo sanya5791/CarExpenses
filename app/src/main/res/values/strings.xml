@@ -41,5 +41,6 @@
     <string name="all_not_implemented">Not Implemented</string>
     <string name="cancel">Cancel</string>
     <string name="grand">Grand</string>
+    <string name="message_restore_db_data_will_be_available_after_restart">Restored data will appear after Application restart</string>
 
 </resources>
