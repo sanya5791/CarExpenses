@@ -15,13 +15,6 @@ import com.github.ajalt.timberkt.Timber
 
 abstract class BaseFragment: Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //place here to avoid double LiveData subscription on reattach the same Fragment instance
-        //todo consider move the call to initView() with support library v.28.0.0 after it will be released
-        initViewModelObservers()
-    }
-
     abstract fun initViewModelObservers()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -31,11 +24,13 @@ abstract class BaseFragment: Fragment() {
     @LayoutRes
     protected abstract fun fragmentLayoutId(): Int
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         initView()
         handleErrors()
         handleProgressBar()
+
+        initViewModelObservers()
     }
 
     private fun handleErrors() {
@@ -45,7 +40,7 @@ abstract class BaseFragment: Fragment() {
     protected fun handleErrorMessage(errorMessage: String?) {
         val msg = errorMessage ?: "Error message is NULL"
         Timber.e { msg }
-        Toast.makeText(activity, msg, Toast.LENGTH_LONG).show()
+        Toast.makeText(activity!!, msg, Toast.LENGTH_LONG).show()
     }
 
     private fun handleProgressBar() {
