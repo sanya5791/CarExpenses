@@ -15,6 +15,7 @@ import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.Refill.TrafficMode
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
+import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -126,9 +127,11 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
     }
 
     private fun markLpgMandatoryFields() {
-        et_current_mileage.hint = getString(R.string.refill_details_current_mileage)
+        til_current_mileage.hint = getString(R.string.refill_details_current_mileage)
         val textLastDistance = getString(R.string.all_asterisk) + getString(R.string.refill_details_last_distance)
-        et_last_distance.hint = textLastDistance
+        til_last_distance.hint = textLastDistance
+
+        til_last_distance.isHintEnabled = true
     }
 
     private fun markPetrolMandatoryFields() {

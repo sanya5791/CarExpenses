@@ -2,7 +2,21 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorDatesFilter">#ab3f51b5</color>
+    <color name="colorAccent">#c2185b</color>
 
+    <color name="colorPrimaryVariant">#3F51B5</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#c2185b</color>
+    <color name="colorSecondaryVariant">#c2185b</color>
+    <color name="colorOnSecondary">#000000</color>
+
+    <color name="colorDatesFilter">#ab3f51b5</color>
+<!--
+colorPrimary 	The color displayed most frequently across your app’s screens and components. 	#6200EE
+colorPrimaryVariant 	A tonal variation of the primary color. 	#3700B3
+colorOnPrimary 	A color that passes accessibility guidelines for text/iconography when drawn on top of the primary color. 	#FFFFFF
+colorSecondary 	The secondary branding color for the app, usually an accented complement to the primary branding color. 	#03DAC6
+colorSecondaryVariant 	A tonal variation of the secondary color. 	#018786
+colorOnSecondary 	A color that passes accessibility guidelines for text/iconography when drawn on top of the secondary color. 	#000000
+-->
 </resources>

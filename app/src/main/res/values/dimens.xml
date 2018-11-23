@@ -5,6 +5,7 @@
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_20">20dp</dimen>
     <dimen name="margin_big">24dp</dimen>
+    <dimen name="margin_huge">48dp</dimen>
 
     <dimen name="padding_smallest">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>

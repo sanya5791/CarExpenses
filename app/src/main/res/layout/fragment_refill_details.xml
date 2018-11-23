@@ -27,6 +27,7 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar_view">
 
             <RadioButton
+                style="@style/RadioButton"
                 android:id="@+id/rb_city_mode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -35,6 +36,7 @@
                 android:text="@string/all_city"/>
 
             <RadioButton
+                style="@style/RadioButton"
                 android:id="@+id/rb_highway_mode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -42,6 +44,7 @@
                 android:text="@string/all_highway"/>
 
             <RadioButton
+                style="@style/RadioButton"
                 android:id="@+id/rb_mixed_mode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -76,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintTop_toBottomOf="@+id/rg_distance_mode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/til_current_mileage">
@@ -190,13 +194,12 @@
             android:id="@+id/bt_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/all_done"
-            android:textColor="@color/colorAccent"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginBottom="@dimen/margin_medium"
-            app:layout_constraintTop_toBottomOf="@id/til_note"
+            android:text="@string/all_done"
+            app:layout_goneMarginTop="@dimen/margin_huge"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/til_note" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
