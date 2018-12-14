@@ -1,14 +1,22 @@
 package com.akhutornoy.carexpenses.ui.list.fragment
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.annotation.AnimRes
+import androidx.annotation.DimenRes
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.*
 import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
@@ -21,7 +29,10 @@ import com.akhutornoy.carexpenses.utils.DATE_FORMAT
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.bottom_sheet_summary.*
 import kotlinx.android.synthetic.main.fragment_refill_list.*
+import kotlinx.android.synthetic.main.summary.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.joda.time.LocalDate
 import java.util.*
@@ -36,12 +47,14 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
     private lateinit var navigationCallback: Navigation
     protected lateinit var toolbar: IToolbar
 
-    protected open val addFabVisibility = View.VISIBLE
-    protected open val fuelTypeVisibility = View.GONE
+    protected open val addFabVisibility = VISIBLE
+    protected open val fuelTypeVisibility = GONE
+
+    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(view!!.findViewById(R.id.summary_extended_bottom_sheet)!!) }
+    protected open val isSummaryHeightExtended: Boolean = true
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-
         if (context is Navigation) {
             navigationCallback = context
         } else {
@@ -68,11 +81,17 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
                 Observer { refillResult -> showResult(refillResult!!) })
     }
 
+    @SuppressLint("RestrictedApi")
     override fun initView() {
         initToolbar()
+        initBottomSheet()
+
         add_fab.visibility = addFabVisibility
+        add_fab.setOnClickListener { showAddNewItemScreen() }
+
         fuel_type_text_vew.visibility = fuelTypeVisibility
-        initListeners()
+
+        filter_clear_image_view.setOnClickListener { onClearFilterClicked() }
     }
 
     protected open fun initToolbar() {
@@ -115,7 +134,7 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
     }
 
     private fun showFilterView(filterDateRange: FilterDateRange) {
-        filter_view_group.visibility = View.VISIBLE
+        filter_view_group.visibility = VISIBLE
         val sFrom = filterDateRange.from.toString(DATE_FORMAT)
         val sTo = filterDateRange.to.toString(DATE_FORMAT)
         val range = "$sFrom - $sTo"
@@ -124,15 +143,64 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
 
     private fun hideFilterView() {
         filter_from_text_view.text = ""
-        filter_view_group.visibility = View.GONE
+        filter_view_group.visibility = GONE
     }
 
-    private fun initListeners() {
-        add_fab.setOnClickListener { showAddNewItemScreen() }
-        filter_clear_image_view.setOnClickListener { onClearFilterClicked() }
+    private fun initBottomSheet() {
+        setBottomSheetHeight()
+
+        val visibility = if (isSummaryHeightExtended) VISIBLE else GONE
+        extend_button_image_view.visibility = visibility
+        extend_button_image_view.setOnClickListener { onSwitchButtonSheetState() }
     }
 
-    //TODO maybe should be replaced with Navigation pack library
+    private fun setBottomSheetHeight() {
+        @DimenRes val height = if (isSummaryHeightExtended) R.dimen.summary_full_height_bottom_sheet
+        else R.dimen.summary_peek_height_bottom_sheet
+
+        val params = summary_extended_bottom_sheet.layoutParams
+        params.height = resources.getDimension(height).toInt()
+        summary_extended_bottom_sheet.layoutParams = params
+    }
+
+    private fun onSwitchButtonSheetState() {
+        animateBottomSheetSwitcher()
+        switchBottomSheetState()
+    }
+
+    private fun animateBottomSheetSwitcher() {
+        @AnimRes val animRes = when (bottomSheetBehavior.state) {
+            BottomSheetBehavior.STATE_EXPANDED -> R.anim.rotate_back
+            BottomSheetBehavior.STATE_COLLAPSED -> R.anim.rotate_forward
+            else -> R.anim.rotate_forward
+        }
+        AnimationUtils.loadAnimation(activity, animRes)
+                .also { animation -> extend_button_image_view.startAnimation(animation) }
+    }
+
+    private fun switchBottomSheetState() {
+        val newState = when (bottomSheetBehavior.state) {
+            BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_COLLAPSED
+            BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
+            else -> BottomSheetBehavior.STATE_COLLAPSED
+        }
+        bottomSheetBehavior.state = newState
+    }
+
+    protected fun setSummaryMessage(message: String) {
+        summary_message_text_view.text = message
+    }
+
+    protected fun setSummaryExtendedMessage(message: String) {
+        summary_extended_message_text_view.text = message
+    }
+
+    private fun dpsToPixels(activity: Activity, dps: Int): Int {
+        val r = activity.resources
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dps.toFloat(), r.displayMetrics).toInt()
+    }
+
     private fun showAddNewItemScreen() {
         navigationCallback.navigateToCreateNewRefill(fuelType)
     }
@@ -169,7 +237,7 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
         val adapter = RefillListAdapter(refills, listener)
         adapter.fuelTypeVisibility = fuelTypeVisibility
         recycler_view.apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+            layoutManager = LinearLayoutManager(activity)
             this.adapter = adapter
         }
     }
@@ -183,10 +251,13 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
     }
 
     private fun showSummary(summary: T) {
-        summary_results_text_view.text = getSummaryString(summary)
+        setSummaryMessage(getSummaryMessage(summary))
+        setSummaryExtendedMessage(getSummaryExtendedMessage(summary))
     }
 
-    protected abstract fun getSummaryString(summary: T): String
+    protected abstract fun getSummaryMessage(summary: T): String
+
+    protected fun getSummaryExtendedMessage(summary: T) = ""
 
     protected companion object {
         const val FUEL_TYPE_ARG = "FUEL_TYPE_ARG"

@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.item_refill.view.*
 
 class RefillListAdapter(
         private val items: List<RefillItem>,
-        private val listener: OnItemSelected<RefillItem>) : androidx.recyclerview.widget.RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {
+        private val listener: OnItemSelected<RefillItem>) : RecyclerView.Adapter<RefillListAdapter.ViewHolder>() {
 
     var fuelTypeVisibility = View.VISIBLE
 

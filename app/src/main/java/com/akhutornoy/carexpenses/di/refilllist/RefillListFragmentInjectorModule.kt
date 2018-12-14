@@ -16,7 +16,7 @@ abstract class RefillListFragmentInjectorModule {
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [RefillListFragmentModule::class])
-    abstract fun fragmentPetroll(): PetrolRefillListFragment
+    abstract fun fragmentPetrol(): PetrolRefillListFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [RefillListFragmentModule::class])

@@ -65,7 +65,7 @@ class AllRefillListFragment: BaseRefillListFragment<AllSummary>() {
         System.exit(0)
     }
 
-    override fun getSummaryString(summary: AllSummary): String {
+    override fun getSummaryMessage(summary: AllSummary): String {
         return getString(R.string.refill_list_all_summary_text,
                 summary.avgLpg, summary.avgPetrol,
                 summary.distance, summary.money)

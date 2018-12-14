@@ -18,12 +18,14 @@ class LpgRefillListFragment: BaseRefillListFragment<Summary>() {
     override val viewModel: BaseRefillListViewModel<Summary>
         get() = lpgViewModel
 
+    override val isSummaryHeightExtended = false
+
     override fun initToolbar() {
         super.initToolbar()
         toolbar.setToolbarSubtitle(R.string.title_lpg)
     }
 
-    override fun getSummaryString(summary: Summary): String {
+    override fun getSummaryMessage(summary: Summary): String {
         return getString(R.string.refill_list_summary_text,
                 summary.avgConsumption,
                 summary.distance,

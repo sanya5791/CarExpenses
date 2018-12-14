@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/summary_view_group"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:background="@android:color/white"
+    android:paddingTop="@dimen/padding_smallest"
+    android:paddingBottom="@dimen/padding_smallest"
+    android:visibility="visible">
+
+    <TextView
+        android:id="@+id/summary_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:text="@string/refill_list_summary_title"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/summary_message_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        tools:text="25L, 1000UAH\nsecond line" />
+</LinearLayout>

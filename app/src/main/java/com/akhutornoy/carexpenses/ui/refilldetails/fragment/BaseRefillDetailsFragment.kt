@@ -1,6 +1,5 @@
 package com.akhutornoy.carexpenses.ui.refilldetails.fragment
 
-import androidx.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -9,13 +8,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.*
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.Refill.TrafficMode
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
-import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.fragment_refill_details.*
 import kotlinx.android.synthetic.main.toolbar.*
 

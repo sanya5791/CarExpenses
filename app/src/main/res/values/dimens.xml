@@ -13,4 +13,7 @@
     <dimen name="padding_big">24dp</dimen>
     <dimen name="elevation_toolbar">4dp</dimen>
 
+    <dimen name="summary_peek_height_bottom_sheet">50dp</dimen>
+    <dimen name="summary_full_height_bottom_sheet">120dp</dimen>
+
 </resources>

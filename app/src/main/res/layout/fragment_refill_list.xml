@@ -1,175 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.akhutornoy.carexpenses.ui.list.fragment.BaseRefillListFragment">
 
-    <include layout="@layout/toolbar" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/filter_view_group"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorDatesFilter"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_view">
+        <include layout="@layout/toolbar" />
 
-        <TextView
-            android:id="@+id/filter_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small"
-            android:layout_gravity="center_vertical"
-            android:text="@string/refill_list_filter_title"
-            android:textColor="@android:color/white"/>
-
-        <TextView
-            android:id="@+id/filter_from_text_view"
+        <LinearLayout
+            android:id="@+id/filter_view_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/margin_small"
-            tools:text="12.08.2018 - 12.09.18"
-            android:textColor="@android:color/white"/>
+            android:orientation="horizontal"
+            android:background="@color/colorDatesFilter"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_view">
 
-        <ImageView
-            android:id="@+id/filter_clear_image_view"
+            <TextView
+                android:id="@+id/filter_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_gravity="center_vertical"
+                android:text="@string/refill_list_filter_title"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/filter_from_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/margin_small"
+                tools:text="12.08.2018 - 12.09.18"
+                android:textColor="@android:color/white"/>
+
+            <ImageView
+                android:id="@+id/filter_clear_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="right"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:layout_constraintStart_toStartOf="@id/filter_title_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_view"/>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/title_barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:foregroundGravity="right"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:layout_constraintStart_toStartOf="@id/filter_title_text_view"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="traffic_mode_text_vew,date_text_vew,consumption_text_vew,note_text_vew,load_text_vew" />
+
+        <TextView
+            android:id="@+id/date_text_vew"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/all_date"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintHorizontal_weight="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/load_text_vew"
+            app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
+
+        <TextView
+            android:id="@+id/load_text_vew"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/all_l"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_weight="0.3"
+            app:layout_constraintStart_toEndOf="@+id/date_text_vew"
+            app:layout_constraintEnd_toStartOf="@id/consumption_text_vew"
+            app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
+
+        <TextView
+            android:id="@+id/consumption_text_vew"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/refill_details_l_per_100km"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_weight="0.7"
+            app:layout_constraintStart_toEndOf="@+id/load_text_vew"
+            app:layout_constraintEnd_toStartOf="@id/traffic_mode_text_vew"
+            app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
+
+        <TextView
+            android:id="@+id/traffic_mode_text_vew"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/all_traffic"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_weight="0.5"
+            app:layout_constraintStart_toEndOf="@+id/consumption_text_vew"
+            app:layout_constraintEnd_toStartOf="@id/fuel_type_text_vew"
+            app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
+
+        <TextView
+            android:id="@+id/fuel_type_text_vew"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/all_fuel"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintHorizontal_weight="0.5"
+            app:layout_constraintStart_toEndOf="@+id/traffic_mode_text_vew"
+            app:layout_constraintEnd_toStartOf="@id/note_text_vew"
+            app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
+
+        <TextView
+            android:id="@+id/note_text_vew"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/all_note"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            app:layout_constraintHorizontal_weight="0.4"
+            app:layout_constraintStart_toEndOf="@+id/fuel_type_text_vew"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_view"/>
-    </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/title_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="traffic_mode_text_vew,date_text_vew,consumption_text_vew,note_text_vew,load_text_vew" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scrollbars="vertical"
+            android:layout_marginBottom="50dp"
+            app:layout_constraintTop_toBottomOf="@+id/title_barrier"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:listitem="@layout/item_refill" />
 
-    <TextView
-        android:id="@+id/date_text_vew"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/all_date"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintHorizontal_weight="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/load_text_vew"
-        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
-
-    <TextView
-        android:id="@+id/load_text_vew"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/all_l"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_weight="0.3"
-        app:layout_constraintStart_toEndOf="@+id/date_text_vew"
-        app:layout_constraintEnd_toStartOf="@id/consumption_text_vew"
-        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
-
-    <TextView
-        android:id="@+id/consumption_text_vew"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/refill_details_l_per_100km"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_weight="0.7"
-        app:layout_constraintStart_toEndOf="@+id/load_text_vew"
-        app:layout_constraintEnd_toStartOf="@id/traffic_mode_text_vew"
-        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
-
-    <TextView
-        android:id="@+id/traffic_mode_text_vew"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/all_traffic"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_weight="0.5"
-        app:layout_constraintStart_toEndOf="@+id/consumption_text_vew"
-        app:layout_constraintEnd_toStartOf="@id/fuel_type_text_vew"
-        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
-
-    <TextView
-        android:id="@+id/fuel_type_text_vew"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/all_fuel"
-        android:textStyle="bold"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintHorizontal_weight="0.5"
-        app:layout_constraintStart_toEndOf="@+id/traffic_mode_text_vew"
-        app:layout_constraintEnd_toStartOf="@id/note_text_vew"
-        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
-
-    <TextView
-        android:id="@+id/note_text_vew"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/all_note"
-        android:textStyle="bold"
-        android:gravity="center_horizontal"
-        app:layout_constraintHorizontal_weight="0.4"
-        app:layout_constraintStart_toEndOf="@+id/fuel_type_text_vew"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_view_group" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/title_barrier"
-        app:layout_constraintBottom_toTopOf="@+id/summary_view_group"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_refill" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_fab"
@@ -180,37 +175,23 @@
         app:srcCompat="@drawable/ic_add"
         app:tint="@android:color/white"
         app:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_anchor="@id/summary_extended_bottom_sheet"
+        app:layout_anchorGravity="top|end"
+         />
 
-    <LinearLayout
-        android:id="@+id/summary_view_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/padding_smallest"
-        android:paddingBottom="@dimen/padding_smallest"
-        android:visibility="visible"
+    <include
+        android:id="@+id/summary_extended_bottom_sheet"
+        layout="@layout/bottom_sheet_summary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recycler_view"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
-            android:id="@+id/summary_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small"
-            android:textStyle="bold"
-            android:text="@string/refill_list_summary_title" />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/summary_results_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_small"
-            android:paddingEnd="@dimen/padding_small"
-            tools:text="25L, 1000UAH\nsecond line"/>
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
