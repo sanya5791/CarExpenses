@@ -2,21 +2,20 @@ package com.akhutornoy.carexpenses.ui.list.fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import androidx.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.AnimRes
 import androidx.annotation.DimenRes
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.base.*
 import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
@@ -50,7 +49,7 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
     protected open val addFabVisibility = VISIBLE
     protected open val fuelTypeVisibility = GONE
 
-    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(view!!.findViewById(R.id.summary_extended_bottom_sheet)!!) }
+    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(view!!.findViewById(R.id.summary_bottom_sheet)!!) }
     protected open val isSummaryHeightExtended: Boolean = true
 
     override fun onAttach(context: Context?) {
@@ -148,34 +147,20 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
 
     private fun initBottomSheet() {
         setBottomSheetHeight()
+        bottomSheetBehavior.setBottomSheetCallback(ImageViewRotater(extend_button_image_view))
 
         val visibility = if (isSummaryHeightExtended) VISIBLE else GONE
         extend_button_image_view.visibility = visibility
-        extend_button_image_view.setOnClickListener { onSwitchButtonSheetState() }
+        extend_button_image_view.setOnClickListener { switchBottomSheetState() }
     }
 
     private fun setBottomSheetHeight() {
         @DimenRes val height = if (isSummaryHeightExtended) R.dimen.summary_full_height_bottom_sheet
         else R.dimen.summary_peek_height_bottom_sheet
 
-        val params = summary_extended_bottom_sheet.layoutParams
+        val params = summary_bottom_sheet.layoutParams
         params.height = resources.getDimension(height).toInt()
-        summary_extended_bottom_sheet.layoutParams = params
-    }
-
-    private fun onSwitchButtonSheetState() {
-        animateBottomSheetSwitcher()
-        switchBottomSheetState()
-    }
-
-    private fun animateBottomSheetSwitcher() {
-        @AnimRes val animRes = when (bottomSheetBehavior.state) {
-            BottomSheetBehavior.STATE_EXPANDED -> R.anim.rotate_back
-            BottomSheetBehavior.STATE_COLLAPSED -> R.anim.rotate_forward
-            else -> R.anim.rotate_forward
-        }
-        AnimationUtils.loadAnimation(activity, animRes)
-                .also { animation -> extend_button_image_view.startAnimation(animation) }
+        summary_bottom_sheet.layoutParams = params
     }
 
     private fun switchBottomSheetState() {
@@ -268,6 +253,18 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
             baseRefillFragment.arguments = args
             return baseRefillFragment
         }
+    }
+
+    private class ImageViewRotater(val imageView: ImageView) : BottomSheetBehavior.BottomSheetCallback() {
+        companion object {
+            const val MAX_ROTATION = 180f
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            imageView.rotation = slideOffset * MAX_ROTATION * 3
+        }
+
+        override fun onStateChanged(bottomSheet: View, newState: Int) {}
     }
 
     interface Navigation {

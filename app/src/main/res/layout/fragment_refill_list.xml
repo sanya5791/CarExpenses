@@ -175,12 +175,12 @@
         app:srcCompat="@drawable/ic_add"
         app:tint="@android:color/white"
         app:backgroundTint="@color/colorAccent"
-        app:layout_anchor="@id/summary_extended_bottom_sheet"
+        app:layout_anchor="@id/summary_bottom_sheet"
         app:layout_anchorGravity="top|end"
          />
 
     <include
-        android:id="@+id/summary_extended_bottom_sheet"
+        android:id="@+id/summary_bottom_sheet"
         layout="@layout/bottom_sheet_summary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
