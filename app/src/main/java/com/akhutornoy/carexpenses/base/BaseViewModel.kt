@@ -17,7 +17,7 @@ abstract class BaseViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        autoUnsubscribe.clear()
+        autoUnsubscribe.dispose()
     }
     protected fun showError(error: Throwable) {
         Timber.e(error)

@@ -172,16 +172,16 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
 
     override fun onStart() {
         super.onStart()
-        et_last_distance.addTextChangedListener(textWatcher)
-        et_liters.addTextChangedListener(textWatcher)
-        et_current_mileage.addTextChangedListener(textWatcher)
+//        et_last_distance.addTextChangedListener(textWatcher)
+//        et_liters.addTextChangedListener(textWatcher)
+//        et_current_mileage.addTextChangedListener(textWatcher)
     }
 
     override fun onStop() {
         super.onStop()
-        et_last_distance.removeTextChangedListener(textWatcher)
-        et_liters.removeTextChangedListener(textWatcher)
-        et_current_mileage.removeTextChangedListener(textWatcher)
+//        et_last_distance.removeTextChangedListener(textWatcher)
+//        et_liters.removeTextChangedListener(textWatcher)
+//        et_current_mileage.removeTextChangedListener(textWatcher)
     }
 
     private val textWatcher = object : TextWatcher {

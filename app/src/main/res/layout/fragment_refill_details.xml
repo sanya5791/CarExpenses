@@ -89,6 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:hint="@string/refill_details_last_distance"
+                android:importantForAutofill="noExcludeDescendants"
                 android:imeOptions="actionNext"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -99,6 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginStart="@dimen/margin_medium"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/til_money"
             app:layout_constraintTop_toBottomOf="@id/til_last_distance">
@@ -109,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
+                android:importantForAutofill="noExcludeDescendants"
                 android:hint="@string/refill_details_liters" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -121,7 +124,7 @@
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toEndOf="@id/til_liters"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_current_mileage">
+            app:layout_constraintTop_toBottomOf="@id/til_last_distance">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_money"
@@ -129,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
+                android:importantForAutofill="noExcludeDescendants"
                 android:hint="@string/refill_details_money" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -162,6 +166,7 @@
                 android:layout_height="wrap_content"
                 android:editable="false"
                 android:focusable="false"
+                android:importantForAutofill="noExcludeDescendants"
                 tools:text="@string/refill_details_0_l_100km"
                 android:hint="@string/refill_details_0_l_100km" />
 
