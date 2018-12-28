@@ -191,6 +191,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/all_note"
                 android:gravity="top"
+                android:importantForAutofill="noExcludeDescendants"
                 android:lines="6"/>
 
         </com.google.android.material.textfield.TextInputLayout>
