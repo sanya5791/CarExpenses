@@ -10,9 +10,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.base.*
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.Refill.TrafficMode
+import com.akhutornoy.carexpenses.ui.base.*
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
 import kotlinx.android.synthetic.main.fragment_refill_details.*

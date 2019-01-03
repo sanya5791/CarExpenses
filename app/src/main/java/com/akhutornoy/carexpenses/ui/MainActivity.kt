@@ -2,8 +2,8 @@ package com.akhutornoy.carexpenses.ui
 
 import android.os.Bundle
 import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.base.BaseActivity
-import com.akhutornoy.carexpenses.base.BaseFragment
+import com.akhutornoy.carexpenses.ui.base.BaseActivity
+import com.akhutornoy.carexpenses.ui.base.BaseFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.BaseRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment

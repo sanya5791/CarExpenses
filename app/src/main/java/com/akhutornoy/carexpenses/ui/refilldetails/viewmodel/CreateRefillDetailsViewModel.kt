@@ -2,7 +2,7 @@ package com.akhutornoy.carexpenses.ui.refilldetails.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.room.EmptyResultSetException
-import com.akhutornoy.carexpenses.base.BaseViewModel
+import com.akhutornoy.carexpenses.ui.base.BaseViewModel
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
 import com.akhutornoy.carexpenses.utils.FuelConsumption

@@ -1,11 +1,9 @@
-package com.akhutornoy.carexpenses.base
+package com.akhutornoy.carexpenses.ui.base
 
 import androidx.lifecycle.Observer
 import android.os.Bundle
 import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

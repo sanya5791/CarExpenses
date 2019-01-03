@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.base
+package com.akhutornoy.carexpenses.ui.base
 
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar

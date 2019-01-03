@@ -1,7 +1,7 @@
 package com.akhutornoy.carexpenses.ui.refilldetails.fragment
 
 import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.base.BaseFragment
+import com.akhutornoy.carexpenses.ui.base.BaseFragment
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
 import java.util.*

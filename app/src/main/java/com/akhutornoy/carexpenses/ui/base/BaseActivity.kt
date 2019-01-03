@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.base
+package com.akhutornoy.carexpenses.ui.base
 
 import androidx.appcompat.app.AppCompatActivity
 import com.akhutornoy.carexpenses.R

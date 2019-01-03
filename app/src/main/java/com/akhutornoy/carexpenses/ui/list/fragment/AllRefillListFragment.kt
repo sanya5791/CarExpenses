@@ -11,7 +11,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.base.BaseFragment
+import com.akhutornoy.carexpenses.ui.base.BaseFragment
 import com.akhutornoy.carexpenses.ui.MainActivity
 import com.akhutornoy.carexpenses.ui.list.dbbackup.BACKUP_READ_REQUEST_CODE
 import com.akhutornoy.carexpenses.ui.list.dbbackup.BACKUP_WRITE_REQUEST_CODE

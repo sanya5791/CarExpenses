@@ -1,6 +1,6 @@
 package com.akhutornoy.carexpenses.utils
 
-import com.akhutornoy.carexpenses.base.BaseViewModel
+import com.akhutornoy.carexpenses.ui.base.BaseViewModel
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable

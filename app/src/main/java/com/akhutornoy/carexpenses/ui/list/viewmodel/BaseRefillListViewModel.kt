@@ -3,7 +3,7 @@ package com.akhutornoy.carexpenses.ui.list.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import android.os.Bundle
-import com.akhutornoy.carexpenses.base.BaseSavableViewModel
+import com.akhutornoy.carexpenses.ui.base.BaseSavableViewModel
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
 import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange

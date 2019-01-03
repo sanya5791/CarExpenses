@@ -1,7 +1,6 @@
-package com.akhutornoy.carexpenses.base
+package com.akhutornoy.carexpenses.ui.base
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import com.akhutornoy.carexpenses.utils.getAttachedViewModels
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

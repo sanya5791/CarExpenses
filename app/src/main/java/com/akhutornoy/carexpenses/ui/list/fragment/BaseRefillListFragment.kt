@@ -17,7 +17,7 @@ import androidx.annotation.DimenRes
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.base.*
+import com.akhutornoy.carexpenses.ui.base.*
 import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.list.model.RefillItem
