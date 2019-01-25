@@ -8,9 +8,9 @@ import com.akhutornoy.carexpenses.ui.list.dbbackup.TempDbHandler
 import com.akhutornoy.carexpenses.ui.list.dbbackup.Zipper
 import com.akhutornoy.carexpenses.ui.list.model.*
 import com.akhutornoy.carexpenses.ui.list.viewmodel.distancecalculator.DistanceCalculator
-import com.akhutornoy.carexpenses.utils.*
-import io.reactivex.Completable
-import io.reactivex.Flowable
+import com.akhutornoy.carexpenses.utils.DATE_TIME_FORMAT
+import com.akhutornoy.carexpenses.utils.FuelConsumption
+import com.akhutornoy.carexpenses.utils.SingleLiveEvent
 import org.joda.time.DateTime
 import java.io.InputStream
 import java.io.OutputStream
@@ -27,7 +27,7 @@ class AllRefillListViewModel(
     val onBackupRestoreFinished: LiveData<Boolean>
         get() = _onBackupRestoreFinished
 
-    override fun getRefillsFlowable(fuelType: FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {
+    override fun getRefillsFromDb(fuelType: FuelType, filterRange: FilterDateRange): LiveData<List<Refill>> {
         return if (filterRange.isEmpty()) {
             refillDao.getAll()
         } else {
@@ -72,28 +72,16 @@ class AllRefillListViewModel(
     }
 
     fun createDbBackup(outputStream: OutputStream) {
-        autoUnsubscribe(
-                Completable.fromAction { createDbZipBackup(outputStream) }
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .subscribe(
-                                { },
-                                this::showError
-                        )
-        )
+        launchBackgroundJob {
+            createDbZipBackup(outputStream)
+        }
     }
 
     fun restoreDbBackup(inputStream: InputStream) {
-        autoUnsubscribe(
-                Completable.fromAction { restoreDbZipBackupAndCloseStream(inputStream) }
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .doFinally { _onBackupRestoreFinished.value = true }
-                        .subscribe(
-                                { },
-                                this::showError
-                        )
-        )
+        launchBackgroundJob {
+            restoreDbZipBackupAndCloseStream(inputStream)
+            _onBackupRestoreFinished.postValue(true)
+        }
     }
 
     private fun createDbZipBackup(outputStream: OutputStream) {

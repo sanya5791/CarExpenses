@@ -197,11 +197,11 @@ abstract class BaseRefillListFragment<T> : BaseDaggerFragment() {
     }
 
     private fun loadRefills() {
-        viewModel.getRefills(fuelType)
+        viewModel.loadRefills(fuelType)
     }
 
     private fun loadRefills(filterDateRange: FilterDateRange) {
-        viewModel.getRefills(fuelType, filterDateRange)
+        viewModel.loadRefills(fuelType, filterDateRange)
     }
 
     private fun showResult(result: RefillResult<T>) {

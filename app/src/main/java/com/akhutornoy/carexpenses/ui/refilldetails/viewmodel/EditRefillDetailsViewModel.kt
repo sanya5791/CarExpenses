@@ -2,12 +2,9 @@ package com.akhutornoy.carexpenses.ui.refilldetails.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.akhutornoy.carexpenses.exceptions.ItemNotFoundException
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
-import com.akhutornoy.carexpenses.utils.applyProgressBar
-import com.akhutornoy.carexpenses.utils.applySchedulers
-import io.reactivex.Single
+import com.akhutornoy.carexpenses.exceptions.ItemNotFoundException
 
 class EditRefillDetailsViewModel(
         private val refillDao: RefillDao
@@ -22,30 +19,21 @@ class EditRefillDetailsViewModel(
         }
 
         onLoadByIdLiveData = MutableLiveData()
-        autoUnsubscribe(
-                Single.fromCallable { refillDao.getByCreatedAt(id)?: throw ItemNotFoundException("ItemId=$id") }
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .subscribe(
-                                { onLoadByIdLiveData.value = it },
-                                this::showError )
-        )
+        launchBackgroundJob {
+            val refill = refillDao.getByCreatedAt(id) ?: throw ItemNotFoundException("ItemId=$id")
+            onLoadByIdLiveData.postValue(refill)
+        }
 
         return onLoadByIdLiveData
     }
 
     fun delete(dbId: Long) {
-        autoUnsubscribe(
-                Single.fromCallable { getRefillFromDb(dbId) }
-                        .doOnSuccess { refill -> refillDao.delete(refill) }
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .subscribe(
-                                { onRefillDeletedLiveData.value = true },
-                                this::showError
-                        )
+        launchBackgroundJob {
+            val refill = getRefillFromDb(dbId)
+            refillDao.delete(refill)
 
-        )
+            onRefillDeletedLiveData.postValue(true)
+        }
     }
 
     private fun getRefillFromDb(dbId: Long) =

@@ -3,22 +3,43 @@ package com.akhutornoy.carexpenses.ui.base
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.ajalt.timberkt.Timber
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.*
 
 abstract class BaseViewModel : ViewModel() {
-    private val autoUnsubscribe: CompositeDisposable = CompositeDisposable()
+    private val viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
     val showProgressLiveData = MutableLiveData<Boolean>()
     val showError = MutableLiveData<String>()
 
-    protected fun autoUnsubscribe(disposable: Disposable) {
-        autoUnsubscribe.add(disposable)
-    }
-
     override fun onCleared() {
         super.onCleared()
-        autoUnsubscribe.dispose()
+        viewModelJob.cancel()
     }
+
+    protected fun launchBackgroundJob(backgroundJob: () -> Unit) = launchBackgroundJobWithErrorHandling(backgroundJob)
+
+    protected fun launchBackgroundJob(backgroundJob: () -> Unit,
+                                      errorHandler: (Throwable) -> Unit = this::showError)
+            = launchBackgroundJobWithErrorHandling(backgroundJob, errorHandler)
+
+    private fun launchBackgroundJobWithErrorHandling(
+            backgroundJob: () -> Unit,
+            errorHandler: (Throwable) -> Unit = this::showError): Job {
+
+        return uiScope.launch {
+            showProgressLiveData.value = true
+            try {
+                withContext(Dispatchers.IO) {
+                    backgroundJob()
+                }
+            } catch (error: Throwable) {
+                errorHandler(error)
+            }
+            showProgressLiveData.value = false
+        }
+    }
+
     protected fun showError(error: Throwable) {
         Timber.e(error)
         error.message?.run { showError.value = error.message }

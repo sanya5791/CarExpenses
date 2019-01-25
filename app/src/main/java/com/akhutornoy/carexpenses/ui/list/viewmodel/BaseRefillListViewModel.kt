@@ -1,63 +1,49 @@
 package com.akhutornoy.carexpenses.ui.list.viewmodel
 
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import android.os.Bundle
-import com.akhutornoy.carexpenses.ui.base.BaseSavableViewModel
+import androidx.lifecycle.Transformations
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
+import com.akhutornoy.carexpenses.ui.base.BaseSavableViewModel
 import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.list.model.RefillResult
-import com.akhutornoy.carexpenses.utils.applyProgressBar
-import com.akhutornoy.carexpenses.utils.applySchedulers
-import io.reactivex.Flowable
-import io.reactivex.schedulers.Schedulers
+import com.github.ajalt.timberkt.Timber
 
-abstract class BaseRefillListViewModel<T> (
+abstract class BaseRefillListViewModel<T>(
         private val refillDao: RefillDao
 
 ) : BaseSavableViewModel() {
 
-    private var _onLoadRefillsLiveData = MutableLiveData<RefillResult<T>>()
-    val onLoadRefillsLiveData: LiveData<RefillResult<T>>
-        get() = _onLoadRefillsLiveData
-
     protected var filterRange: FilterDateRange = FilterDateRange()
+
+    private val refillArguments = MutableLiveData<RefillArguments>()
+
+    val onLoadRefillsLiveData: LiveData<RefillResult<T>> =
+            Transformations.switchMap(refillArguments, ::getRefillsResult)
 
     override fun saveInner(bundle: Bundle) {
         bundle.putParcelable(KEY_FILTER_DATE_RANGE, filterRange)
     }
 
     override fun restoreInner(bundle: Bundle) {
-        filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE)?: FilterDateRange()
+        filterRange = bundle.getParcelable(KEY_FILTER_DATE_RANGE) ?: FilterDateRange()
     }
 
-    fun getRefills(fuelType: FuelType) {
-        getRefills(fuelType, filterRange)
+    fun loadRefills(fuelType: FuelType) {
+        loadRefills(fuelType, filterRange)
     }
 
-    fun getRefills(fuelType: FuelType, filterRange: FilterDateRange) {
-        if (canUseRefillsLiveDta(filterRange)) {
-            _onLoadRefillsLiveData.value = onLoadRefillsLiveData.value
+    fun loadRefills(fuelType: FuelType, filterRange: FilterDateRange) {
+        if (canUseCachedData(filterRange)) {
             return
         }
-
-        autoUnsubscribe(
-                getRefillsFlowable(fuelType, filterRange)
-                        .map { refills ->  mapToRefillResult(refills)}
-                        .subscribeOn(Schedulers.io())
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .subscribe(
-                                { refillResult ->
-                                    _onLoadRefillsLiveData.value = refillResult },
-                                this::showError
-                        )
-        )
+        startRefillLoading(fuelType, filterRange)
     }
 
-    private fun canUseRefillsLiveDta(newFilterRange: FilterDateRange): Boolean {
+    private fun canUseCachedData(newFilterRange: FilterDateRange): Boolean {
         val isFilterChanged = newFilterRange.from != this.filterRange.from
                 || newFilterRange.to != this.filterRange.to
         this.filterRange = newFilterRange
@@ -66,7 +52,16 @@ abstract class BaseRefillListViewModel<T> (
         return refills != null && !isFilterChanged
     }
 
-    protected  open fun getRefillsFlowable(fuelType: FuelType, filterRange: FilterDateRange): Flowable<List<Refill>> {
+    private fun startRefillLoading(fuelType: FuelType, filterRange: FilterDateRange) {
+        refillArguments.value = RefillArguments(fuelType, filterRange)
+    }
+
+    private fun getRefillsResult(arguments: RefillArguments): LiveData<RefillResult<T>> {
+        val refills = getRefillsFromDb(arguments.fuelType, arguments.filterRange)
+        return Transformations.map(refills, this::mapToRefillResult)
+    }
+
+    protected open fun getRefillsFromDb(fuelType: FuelType, filterRange: FilterDateRange): LiveData<List<Refill>> {
         val dbFuelType = FuelType.mapToDbFuelType(fuelType)
         return if (filterRange.isEmpty()) {
             refillDao.getByFuelType(dbFuelType.value)
@@ -79,6 +74,8 @@ abstract class BaseRefillListViewModel<T> (
     }
 
     protected abstract fun mapToRefillResult(items: List<Refill>): RefillResult<T>
+
+    private data class RefillArguments(val fuelType: FuelType, val filterRange: FilterDateRange)
 
     companion object {
         const val KEY_FILTER_DATE_RANGE = "KEY_FILTER_DATE_RANGE"

@@ -2,14 +2,10 @@ package com.akhutornoy.carexpenses.ui.refilldetails.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.room.EmptyResultSetException
-import com.akhutornoy.carexpenses.ui.base.BaseViewModel
 import com.akhutornoy.carexpenses.domain.Refill
 import com.akhutornoy.carexpenses.domain.RefillDao
+import com.akhutornoy.carexpenses.ui.base.BaseViewModel
 import com.akhutornoy.carexpenses.utils.FuelConsumption
-import com.akhutornoy.carexpenses.utils.applyProgressBar
-import com.akhutornoy.carexpenses.utils.applySchedulers
-import io.reactivex.Completable
-import io.reactivex.Single
 
 open class CreateRefillDetailsViewModel(
         private val refillDao: RefillDao) : BaseViewModel() {
@@ -20,88 +16,69 @@ open class CreateRefillDetailsViewModel(
     private fun Int.isEmpty() = this == Refill.UNSET_INT
 
     fun insert(refill: Refill) {
-        autoUnsubscribe(
-                calcConsumption(refill)
-                        .onErrorResumeNext {
-                            if (isFirstDbRecordError(it))
-                                Single.fromCallable { Consumption(true, 0f) }
-                            else
-                                throw it
-                        }
-                        .map { consumption ->
-                            if (consumption.isCalculated) {
-                                refill.consumption = consumption.consumption
-                            }
-                            refill
-                        }
-                        .flatMapCompletable { t: Refill ->  Completable.fromAction { refillDao.insert(t) } }
-                        .applySchedulers()
-                        .applyProgressBar(this)
-                        .subscribe(
-                                { onInsertedLiveData.value = true },
-                                this::showError)
-        )
+        launchBackgroundJob {
+            val consumption = calcConsumption(refill)
+            if (consumption.isCalculated) {
+                refill.consumption = consumption.consumption
+            }
+            refillDao.insert(refill)
+            onInsertedLiveData.postValue(true)
+        }
     }
 
     private fun isFirstDbRecordError(error: Throwable) = error is EmptyResultSetException
 
     fun onConsumptionRelatedDataChanged(refill: Refill) {
-        autoUnsubscribe(
-                calcConsumption(refill)
-                        .applySchedulers()
-                        .subscribe(
-                                { consumption -> onConsumptionCalculated.value = consumption },
-                                this::onCalcConsumptionError
-                        )
+        val backgroundJob = { onConsumptionCalculated.postValue(calcConsumption(refill)) }
+        launchBackgroundJob(
+                backgroundJob,
+                this::onCalcConsumptionError
         )
     }
 
     private fun onCalcConsumptionError(error: Throwable) {
-        if(isFirstDbRecordError(error))
+        if (isFirstDbRecordError(error))
             onConsumptionCalculated.value = Consumption(false)
         else
             showError(error)
     }
 
-    private fun calcConsumption(refill: Refill): Single<Consumption> {
+    private fun calcConsumption(refill: Refill): Consumption {
         return when (refill.fuelType()) {
             Refill.FuelType.LPG -> calcLpgConsumption(refill)
             Refill.FuelType.PETROL -> calcPetrolConsumption(refill)
         }
     }
 
-    private fun calcLpgConsumption(refill: Refill): Single<Consumption> {
-        val canCalcLocally = !refill.litersCount.isEmpty() && !refill.lastDistance.isEmpty()
-        return if (canCalcLocally) {
+    private fun Refill.canCalcLocally() = !this.litersCount.isEmpty() && !this.lastDistance.isEmpty()
+
+    private fun Refill.canCalcRemotely() = !this.litersCount.isEmpty() && !this.currentMileage.isEmpty()
+            && (this.currentMileage / 1000) >= 1
+
+    private fun calcLpgConsumption(refill: Refill): Consumption {
+        return if (refill.canCalcLocally()) {
             calcLocally(refill)
         } else {
-            Single.fromCallable { Consumption(false) }
+            Consumption(false)
         }
     }
 
-    private fun calcPetrolConsumption(refill: Refill): Single<Consumption> {
-        val canCalcRemotely = !refill.litersCount.isEmpty() && !refill.currentMileage.isEmpty()
-                && (refill.currentMileage / 1000) >= 1
-
-        return if (canCalcRemotely)
+    private fun calcPetrolConsumption(refill: Refill): Consumption {
+        return if (refill.canCalcRemotely())
             calcRemotely(refill)
         else
-            Single.fromCallable { Consumption(false) }
+            Consumption(false)
     }
 
-    private fun calcRemotely(refill: Refill): Single<Consumption> {
-        return refillDao.getPrevious(refill.createdAt)
-                .map { lastRefill ->
-                    Consumption(true,
-                            FuelConsumption.calcAvgConsumption(refill.currentMileage - lastRefill.currentMileage, refill.litersCount))
-                }
+    private fun calcRemotely(refill: Refill): Consumption {
+        val lastRefill = refillDao.getPrevious(refill.createdAt)
+        val avgConsumption = FuelConsumption.calcAvgConsumption(refill.currentMileage - lastRefill.currentMileage, refill.litersCount)
+        return Consumption(true, avgConsumption)
     }
 
-    private fun calcLocally(refill: Refill): Single<Consumption> {
-        return Single.fromCallable{
-            val consumption = FuelConsumption.calcAvgConsumption(refill.lastDistance, refill.litersCount)
-            Consumption(true, consumption)
-        }
+    private fun calcLocally(refill: Refill): Consumption {
+        val consumption = FuelConsumption.calcAvgConsumption(refill.lastDistance, refill.litersCount)
+        return Consumption(true, consumption)
     }
 
     data class Consumption(val isCalculated: Boolean, val consumption: Float = 0f)
