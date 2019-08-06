@@ -1,3 +1,3 @@
-package com.akhutornoy.carexpenses.exceptions
+package com.akhutornoy.carexpenses.data.db.exceptions
 
 class ItemNotFoundException(message: String = ""): RuntimeException()

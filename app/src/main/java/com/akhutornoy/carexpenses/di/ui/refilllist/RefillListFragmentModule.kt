@@ -1,14 +1,14 @@
-package com.akhutornoy.carexpenses.di.refilllist
+package com.akhutornoy.carexpenses.di.ui.refilllist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import com.akhutornoy.carexpenses.di.scopes.FragmentScope
-import com.akhutornoy.carexpenses.domain.RefillDao
-import com.akhutornoy.carexpenses.ui.list.dbbackup.BackupSourceHelper
-import com.akhutornoy.carexpenses.ui.list.dbbackup.TempDbHandler
-import com.akhutornoy.carexpenses.ui.list.dbbackup.Zipper
+import com.akhutornoy.carexpenses.data.db.RefillDao
+import com.akhutornoy.carexpenses.data.backup.BackupSourceHelper
+import com.akhutornoy.carexpenses.data.backup.TempDbHandler
+import com.akhutornoy.carexpenses.data.backup.Zipper
 import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.PetrolRefillListFragment

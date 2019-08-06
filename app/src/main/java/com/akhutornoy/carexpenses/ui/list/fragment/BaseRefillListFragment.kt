@@ -24,7 +24,7 @@ import com.akhutornoy.carexpenses.ui.list.model.RefillItem
 import com.akhutornoy.carexpenses.ui.list.model.RefillResult
 import com.akhutornoy.carexpenses.ui.list.recyclerview.RefillListAdapter
 import com.akhutornoy.carexpenses.ui.list.viewmodel.BaseRefillListViewModel
-import com.akhutornoy.carexpenses.utils.DATE_FORMAT
+import com.akhutornoy.carexpenses.ui.utils.DATE_FORMAT
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener

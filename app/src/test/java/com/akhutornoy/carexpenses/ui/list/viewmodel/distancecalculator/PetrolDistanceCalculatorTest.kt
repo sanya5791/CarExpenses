@@ -1,6 +1,6 @@
 package com.akhutornoy.carexpenses.ui.list.viewmodel.distancecalculator
 
-import com.akhutornoy.carexpenses.domain.Refill
+import com.akhutornoy.carexpenses.data.db.Refill
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import org.joda.time.DateTime
 import org.junit.Assert.assertEquals

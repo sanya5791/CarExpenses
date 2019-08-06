@@ -2,9 +2,9 @@ package com.akhutornoy.carexpenses.ui.refilldetails.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.akhutornoy.carexpenses.domain.Refill
-import com.akhutornoy.carexpenses.domain.RefillDao
-import com.akhutornoy.carexpenses.exceptions.ItemNotFoundException
+import com.akhutornoy.carexpenses.data.db.Refill
+import com.akhutornoy.carexpenses.data.db.RefillDao
+import com.akhutornoy.carexpenses.data.db.exceptions.ItemNotFoundException
 
 class EditRefillDetailsViewModel(
         private val refillDao: RefillDao

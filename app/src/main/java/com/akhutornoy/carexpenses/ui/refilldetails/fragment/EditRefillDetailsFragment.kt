@@ -6,7 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.ui.base.BaseFragment
-import com.akhutornoy.carexpenses.domain.Refill
+import com.akhutornoy.carexpenses.data.db.Refill
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.EditRefillDetailsViewModel

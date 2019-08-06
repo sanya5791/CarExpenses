@@ -1,6 +1,6 @@
 package com.akhutornoy.carexpenses.ui.list.model
 
-import com.akhutornoy.carexpenses.domain.Refill
+import com.akhutornoy.carexpenses.data.db.Refill
 import java.lang.IllegalArgumentException
 
 enum class FuelType {

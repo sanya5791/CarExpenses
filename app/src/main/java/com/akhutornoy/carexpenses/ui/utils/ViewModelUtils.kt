@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.utils
+package com.akhutornoy.carexpenses.ui.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStore

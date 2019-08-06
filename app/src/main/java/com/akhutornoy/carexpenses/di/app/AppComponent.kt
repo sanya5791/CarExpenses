@@ -2,8 +2,8 @@ package com.akhutornoy.carexpenses.di.app
 
 import com.akhutornoy.carexpenses.di.app.bins.AppModule
 import com.akhutornoy.carexpenses.di.app.bins.RoomModule
-import com.akhutornoy.carexpenses.di.refilldetails.RefillDetailsFragmentInjectorModule
-import com.akhutornoy.carexpenses.di.refilllist.RefillListFragmentInjectorModule
+import com.akhutornoy.carexpenses.di.ui.refilldetails.RefillDetailsFragmentInjectorModule
+import com.akhutornoy.carexpenses.di.ui.refilllist.RefillListFragmentInjectorModule
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule

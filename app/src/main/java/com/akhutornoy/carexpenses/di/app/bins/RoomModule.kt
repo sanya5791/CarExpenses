@@ -1,8 +1,8 @@
 package com.akhutornoy.carexpenses.di.app.bins
 
 import android.content.Context
-import com.akhutornoy.carexpenses.domain.Db
-import com.akhutornoy.carexpenses.domain.RefillDao
+import com.akhutornoy.carexpenses.data.db.Db
+import com.akhutornoy.carexpenses.data.db.RefillDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

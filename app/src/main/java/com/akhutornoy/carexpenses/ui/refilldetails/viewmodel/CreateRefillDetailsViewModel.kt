@@ -2,10 +2,10 @@ package com.akhutornoy.carexpenses.ui.refilldetails.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.room.EmptyResultSetException
-import com.akhutornoy.carexpenses.domain.Refill
-import com.akhutornoy.carexpenses.domain.RefillDao
+import com.akhutornoy.carexpenses.data.db.Refill
+import com.akhutornoy.carexpenses.data.db.RefillDao
 import com.akhutornoy.carexpenses.ui.base.BaseViewModel
-import com.akhutornoy.carexpenses.utils.FuelConsumption
+import com.akhutornoy.carexpenses.ui.utils.FuelConsumption
 
 open class CreateRefillDetailsViewModel(
         private val refillDao: RefillDao) : BaseViewModel() {

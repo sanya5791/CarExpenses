@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.ui.list.dbbackup
+package com.akhutornoy.carexpenses.data.backup
 
 import android.content.Context
 import com.github.ajalt.timberkt.Timber
@@ -8,8 +8,8 @@ private const val PRIVATE_APP_STORAGE_FOLDER_DB_NAME = "databases"
 private const val PRIVATE_APP_STORAGE_TEMP_FOLDER_DB_NAME = "temp"
 
 class BackupSourceHelper(private val context: Context) {
-    fun getDbSourceFolder(): File? {
 
+    fun getDbSourceFolder(): File? {
         val dataDir = context.dataDir
         val dataBaseFolder = File(dataDir, PRIVATE_APP_STORAGE_FOLDER_DB_NAME)
         if (!dataBaseFolder.exists()) {
@@ -43,4 +43,5 @@ class BackupSourceHelper(private val context: Context) {
 
         return tempFolder
     }
+
 }

@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.utils
+package com.akhutornoy.carexpenses.ui.utils
 
 /*
  *  Copyright 2017 Google Inc.

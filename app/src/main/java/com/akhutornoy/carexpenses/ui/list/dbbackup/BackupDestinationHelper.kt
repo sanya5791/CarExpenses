@@ -24,7 +24,7 @@ class BackupDestinationHelper {
      *
      * tip: override FragmentActivity#onActivityResult and pass result into {@link #getCreateBackupFileOutputStream}
      */
-    fun startCreateBackupFileOperation(fragment: androidx.fragment.app.Fragment) {
+    fun startCreateBackupFileOperation(fragment: Fragment) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
 
@@ -43,7 +43,7 @@ class BackupDestinationHelper {
      *
      * tip: override FragmentActivity#onActivityResult and pass result into {@link #getRestoreBackupInputStream}
      */
-    fun startRestoreBackupZipFile(fragment: androidx.fragment.app.Fragment) {
+    fun startRestoreBackupZipFile(fragment: Fragment) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = ZIP_MIME_TYPE
@@ -71,4 +71,5 @@ class BackupDestinationHelper {
             return null
         }
     }
+
 }

@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.domain
+package com.akhutornoy.carexpenses.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

@@ -1,10 +1,10 @@
-package com.akhutornoy.carexpenses.di.refilldetails
+package com.akhutornoy.carexpenses.di.ui.refilldetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.akhutornoy.carexpenses.di.scopes.FragmentScope
-import com.akhutornoy.carexpenses.domain.RefillDao
+import com.akhutornoy.carexpenses.data.db.RefillDao
 import com.akhutornoy.carexpenses.ui.refilldetails.fragment.CreateRefillDetailsFragment
 import com.akhutornoy.carexpenses.ui.refilldetails.fragment.EditRefillDetailsFragment
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel

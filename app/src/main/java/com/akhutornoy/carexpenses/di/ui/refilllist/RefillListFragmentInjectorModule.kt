@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.di.refilllist
+package com.akhutornoy.carexpenses.di.ui.refilllist
 
 import com.akhutornoy.carexpenses.di.scopes.FragmentScope
 import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment

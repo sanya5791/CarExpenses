@@ -2,7 +2,7 @@ package com.akhutornoy.carexpenses.ui.list.fragment
 
 import com.akhutornoy.carexpenses.R
 import com.akhutornoy.carexpenses.ui.base.BaseFragment
-import com.akhutornoy.carexpenses.di.refilllist.RefillListFragmentModule
+import com.akhutornoy.carexpenses.di.ui.refilllist.RefillListFragmentModule
 import com.akhutornoy.carexpenses.ui.list.viewmodel.BaseRefillListViewModel
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.list.model.Summary

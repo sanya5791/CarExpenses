@@ -1,16 +1,16 @@
 package com.akhutornoy.carexpenses.ui.list.viewmodel
 
 import androidx.lifecycle.LiveData
-import com.akhutornoy.carexpenses.domain.Refill
-import com.akhutornoy.carexpenses.domain.RefillDao
-import com.akhutornoy.carexpenses.ui.list.dbbackup.BackupSourceHelper
-import com.akhutornoy.carexpenses.ui.list.dbbackup.TempDbHandler
-import com.akhutornoy.carexpenses.ui.list.dbbackup.Zipper
+import com.akhutornoy.carexpenses.data.db.Refill
+import com.akhutornoy.carexpenses.data.db.RefillDao
+import com.akhutornoy.carexpenses.data.backup.BackupSourceHelper
+import com.akhutornoy.carexpenses.data.backup.TempDbHandler
+import com.akhutornoy.carexpenses.data.backup.Zipper
 import com.akhutornoy.carexpenses.ui.list.model.*
 import com.akhutornoy.carexpenses.ui.list.viewmodel.distancecalculator.DistanceCalculator
-import com.akhutornoy.carexpenses.utils.DATE_TIME_FORMAT
-import com.akhutornoy.carexpenses.utils.FuelConsumption
-import com.akhutornoy.carexpenses.utils.SingleLiveEvent
+import com.akhutornoy.carexpenses.ui.utils.DATE_TIME_FORMAT
+import com.akhutornoy.carexpenses.ui.utils.FuelConsumption
+import com.akhutornoy.carexpenses.ui.utils.SingleLiveEvent
 import org.joda.time.DateTime
 import java.io.InputStream
 import java.io.OutputStream

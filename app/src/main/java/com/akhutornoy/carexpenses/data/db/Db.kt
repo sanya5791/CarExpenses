@@ -1,4 +1,4 @@
-package com.akhutornoy.carexpenses.domain
+package com.akhutornoy.carexpenses.data.db
 
 import androidx.room.Database
 import androidx.room.Room
@@ -13,8 +13,9 @@ abstract class Db : RoomDatabase() {
         @Volatile private var INSTANCE: Db? = null
 
         fun getInstance(context: Context) =
-                INSTANCE?: synchronized(this) {
-                    INSTANCE?: createInstance(context)
+                INSTANCE ?: synchronized(this) {
+                    INSTANCE
+                            ?: createInstance(context)
                 }
 
         private fun createInstance(context: Context) =

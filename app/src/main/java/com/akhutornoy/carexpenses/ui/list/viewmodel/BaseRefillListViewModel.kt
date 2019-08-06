@@ -4,13 +4,12 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.akhutornoy.carexpenses.domain.Refill
-import com.akhutornoy.carexpenses.domain.RefillDao
+import com.akhutornoy.carexpenses.data.db.Refill
+import com.akhutornoy.carexpenses.data.db.RefillDao
 import com.akhutornoy.carexpenses.ui.base.BaseSavableViewModel
 import com.akhutornoy.carexpenses.ui.list.model.FilterDateRange
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.list.model.RefillResult
-import com.github.ajalt.timberkt.Timber
 
 abstract class BaseRefillListViewModel<T>(
         private val refillDao: RefillDao

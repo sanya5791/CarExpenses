@@ -10,8 +10,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.akhutornoy.carexpenses.R
-import com.akhutornoy.carexpenses.domain.Refill
-import com.akhutornoy.carexpenses.domain.Refill.TrafficMode
+import com.akhutornoy.carexpenses.data.db.Refill
+import com.akhutornoy.carexpenses.data.db.Refill.TrafficMode
 import com.akhutornoy.carexpenses.ui.base.*
 import com.akhutornoy.carexpenses.ui.list.model.FuelType
 import com.akhutornoy.carexpenses.ui.refilldetails.viewmodel.CreateRefillDetailsViewModel
@@ -143,17 +143,17 @@ abstract class BaseRefillDetailsFragment : BaseDaggerFragment() {
         createRefillDetailsViewModel.onConsumptionRelatedDataChanged(getRefillItem())
     }
 
-    private fun getRefillItem()=  Refill(
-                createdAt = getRefillItemCreatedAt(),
-                editedAt = getRefillItemEditedAt(),
-                litersCount = et_liters.getIntValue(),
-                moneyCount = et_money.getIntValue(),
-                currentMileage = et_current_mileage.getIntValue(),
-                lastDistance = et_last_distance.getIntValue(),
-                fuelType = FuelType.mapToDbFuelType(argFuelType).value,
-                trafficMode = getSelectedDistanceMode().value,
-                note = et_note.text.toString()
-        )
+    private fun getRefillItem()= Refill(
+            createdAt = getRefillItemCreatedAt(),
+            editedAt = getRefillItemEditedAt(),
+            litersCount = et_liters.getIntValue(),
+            moneyCount = et_money.getIntValue(),
+            currentMileage = et_current_mileage.getIntValue(),
+            lastDistance = et_last_distance.getIntValue(),
+            fuelType = FuelType.mapToDbFuelType(argFuelType).value,
+            trafficMode = getSelectedDistanceMode().value,
+            note = et_note.text.toString()
+    )
 
     abstract fun getRefillItemCreatedAt(): Long
 
