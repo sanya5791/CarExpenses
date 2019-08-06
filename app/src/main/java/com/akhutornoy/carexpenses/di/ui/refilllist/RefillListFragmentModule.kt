@@ -3,12 +3,9 @@ package com.akhutornoy.carexpenses.di.ui.refilllist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import android.content.Context
-import com.akhutornoy.carexpenses.di.scopes.FragmentScope
+import com.akhutornoy.carexpenses.data.backup.BackupRepository
 import com.akhutornoy.carexpenses.data.db.RefillDao
-import com.akhutornoy.carexpenses.data.backup.BackupSourceHelper
-import com.akhutornoy.carexpenses.data.backup.TempDbHandler
-import com.akhutornoy.carexpenses.data.backup.Zipper
+import com.akhutornoy.carexpenses.di.scopes.FragmentScope
 import com.akhutornoy.carexpenses.ui.list.fragment.AllRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.LpgRefillListFragment
 import com.akhutornoy.carexpenses.ui.list.fragment.PetrolRefillListFragment
@@ -52,22 +49,13 @@ class RefillListFragmentModule {
 
     @Provides
     @FragmentScope
-    fun provideLpgViewModelFactory(refillDao: RefillDao, backupSourceHelper: BackupSourceHelper): ViewModelFactory {
-        return ViewModelFactory(refillDao,
-                backupSourceHelper,
-                Zipper(),
-                TempDbHandler(backupSourceHelper))
+    fun provideLpgViewModelFactory(refillDao: RefillDao, backupRepository: BackupRepository): ViewModelFactory {
+        return ViewModelFactory(refillDao, backupRepository)
     }
-
-    @Provides
-    @FragmentScope
-    fun providePathProvider(context: Context) = BackupSourceHelper(context)
 
     class ViewModelFactory(
             private val refillDao: RefillDao,
-            private val backupSourceHelper: BackupSourceHelper,
-            private val zipper: Zipper,
-            private val tempDbHandler: TempDbHandler
+            private val backupRepository: BackupRepository
     ) : ViewModelProvider.Factory {
 
         lateinit var distanceCalculator: DistanceCalculator
@@ -78,9 +66,7 @@ class RefillListFragmentModule {
                 AllRefillListViewModel::class.java -> AllRefillListViewModel(
                         refillDao,
                         distanceCalculator,
-                        backupSourceHelper,
-                        zipper,
-                        tempDbHandler)
+                        backupRepository)
                 else -> RefillListViewModel(refillDao, distanceCalculator)
             }) as T
         }
@@ -90,4 +76,5 @@ class RefillListFragmentModule {
         const val NAMED_LPG = "lpg"
         const val NAMED_PETROL = "petrol"
     }
+
 }

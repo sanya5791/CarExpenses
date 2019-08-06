@@ -21,4 +21,5 @@ abstract class RefillListFragmentInjectorModule {
     @FragmentScope
     @ContributesAndroidInjector(modules = [RefillListFragmentModule::class])
     abstract fun fragmentAll(): AllRefillListFragment
+
 }
